@@ -8,7 +8,11 @@
 package org.lunatecs316.frc2014;
 
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import org.lunatecs316.frc2014.lib.XboxController;
+import org.lunatecs316.frc2014.subsystems.Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,12 +22,21 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * directory.
  */
 public class Robot extends IterativeRobot {
+    private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
+    private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
+    private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
+    
+    // Subsystems
+    private Drivetrain drivetrain = new Drivetrain();
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-
+        compressor.start();
+        
+        drivetrain.init();
     }
 
     /**
@@ -37,7 +50,12 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
         
+        if (driverJoystick.getLeftBumper())
+            drivetrain.shiftDown();
+        else if (driverJoystick.getRightBumper())
+            drivetrain.shiftUp();
     }
     
     /**

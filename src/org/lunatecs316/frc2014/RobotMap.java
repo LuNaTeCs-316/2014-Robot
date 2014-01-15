@@ -14,6 +14,7 @@ public class RobotMap {
     
     // Relay Output
     public static final int kCompressorRelay = 1;
+    public static final int kDrivetrainSolenoid = 2;
     
     // Solenoid Output
     //public static final int kExampleSolenoid = 1;
