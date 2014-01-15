@@ -11,6 +11,7 @@ package org.lunatecs316.frc2014;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 
@@ -27,7 +28,7 @@ public class Robot extends IterativeRobot {
     private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
     
     // Subsystems
-    private Drivetrain drivetrain = new Drivetrain();
+    public static Drivetrain drivetrain = new Drivetrain();
     
     /**
      * This function is run when the robot is first started up and should be
@@ -35,7 +36,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
         compressor.start();
-        
+
         drivetrain.init();
     }
 
@@ -62,7 +63,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    
+        LiveWindow.run();
     }
     
 }
