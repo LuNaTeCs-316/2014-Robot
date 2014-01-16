@@ -14,6 +14,7 @@ public class RobotMap {
     
     // Relay Output
     public static final int kCompressorRelay = 1;
+    public static final int kShiftingRelay = 2;
     
     // Solenoid Output
     //public static final int kExampleSolenoid = 1;
@@ -24,6 +25,10 @@ public class RobotMap {
     
     // Digital Input
     public static final int kPressureSwitch = 1;
+    public static final int kLeftDriveEncoderA = 2;
+    public static final int kLeftDriveEncoderB = 3;
+    public static final int kRightDriveEncoderA = 4;
+    public static final int kRightDriveEncoderB = 5;
     
     // Analog Input
     public static final int kGyro = 1;
