@@ -38,14 +38,14 @@ public class Pickup {
     /**
      * Move the pickup to the raised position. 
      */
-    public void raisePickup(){
+    public void raise(){
         solenoid.set(true);
     }
     
     /**
      * Move the pickup to the lowered position through actuation of the Solenoid
      */        
-    public void lowerPickup() {
+    public void lower() {
         solenoid.set(false);
     }
     

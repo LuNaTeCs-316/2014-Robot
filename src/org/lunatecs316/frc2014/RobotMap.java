@@ -32,6 +32,7 @@ public class RobotMap {
     public static final int kRightDriveEncoderB = 5;
     public static final int kPickupSensor = 6;
     public static final int kPickupLowerLimit = 7;
+    public static final int kPickupUpperLimit = 8;
     
     // Analog Input
     public static final int kGyro = 1;

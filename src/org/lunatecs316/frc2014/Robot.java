@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
+import org.lunatecs316.frc2014.subsystems.Pickup;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,8 +28,10 @@ public class Robot extends IterativeRobot {
     private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
     private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
     
+    
     // Subsystems
     public static Drivetrain drivetrain = new Drivetrain();
+    public static Pickup pickup = new Pickup();
     
     /**
      * This function is run when the robot is first started up and should be
@@ -38,6 +41,7 @@ public class Robot extends IterativeRobot {
         compressor.start();
 
         drivetrain.init();
+        pickup.init();
     }
 
     /**
@@ -51,12 +55,24 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+        // Drivetrain
         drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
         
         if (driverJoystick.getLeftBumper())
             drivetrain.shiftDown();
         else if (driverJoystick.getRightBumper())
             drivetrain.shiftUp();
+        
+        // Pickup
+        if (operatorJoystick.getRawButton(4))
+            pickup.raise();
+        else if (operatorJoystick.getRawButton(5))
+            pickup.lower();
+        
+        if (operatorJoystick.getRawButton(3))
+            pickup.setRollerSpeed(Pickup.kForward);
+        else if (operatorJoystick.getRawButton(2))
+            pickup.setRollerSpeed(Pickup.kReverse);
     }
     
     /**
