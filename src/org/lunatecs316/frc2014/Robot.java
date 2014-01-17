@@ -10,9 +10,7 @@ package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 
@@ -25,14 +23,12 @@ import org.lunatecs316.frc2014.subsystems.Pickup;
  */
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
-    private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
-    private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
-    private TeleopControl teleopcontrol = new TeleopControl();
-    
+    private TeleopControl teleop = new TeleopControl();
+
     // Subsystems
     public static Drivetrain drivetrain = new Drivetrain();
     public static Pickup pickup = new Pickup();
-    
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -45,6 +41,13 @@ public class Robot extends IterativeRobot {
     }
 
     /**
+     * This function is called once at the start of autonomous
+     */
+    public void autonomousInit() {
+
+    }
+
+    /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
@@ -52,10 +55,38 @@ public class Robot extends IterativeRobot {
     }
 
     /**
+     * This function is called once at the start of operator control
+     */
+    public void teleopInit() {
+        teleop.init();
+    }
+
+    /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        teleopcontrol.run();
+        teleop.run();
+    }
+
+    /**
+     * This function is called once at the start of being disabled
+     */
+    public void disabledInit() {
+
+    }
+
+    /**
+     * This function is called periodically while the robot is disabled
+     */
+    public void disabledPeriodic() {
+
+    }
+
+    /**
+     * This function is called once at the start of test mode
+     */
+    public void testInit() {
+
     }
     
     /**
@@ -64,5 +95,4 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-    
 }
