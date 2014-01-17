@@ -27,7 +27,7 @@ public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
     private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
     private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
-    
+    private TeleopControl teleopcontrol = new TeleopControl();
     
     // Subsystems
     public static Drivetrain drivetrain = new Drivetrain();
@@ -55,24 +55,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        // Drivetrain
-        drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
-        
-        if (driverJoystick.getLeftBumper())
-            drivetrain.shiftDown();
-        else if (driverJoystick.getRightBumper())
-            drivetrain.shiftUp();
-        
-        // Pickup
-        if (operatorJoystick.getRawButton(4))
-            pickup.raise();
-        else if (operatorJoystick.getRawButton(5))
-            pickup.lower();
-        
-        if (operatorJoystick.getRawButton(3))
-            pickup.setRollerSpeed(Pickup.kForward);
-        else if (operatorJoystick.getRawButton(2))
-            pickup.setRollerSpeed(Pickup.kReverse);
+        teleopcontrol.run();
     }
     
     /**
