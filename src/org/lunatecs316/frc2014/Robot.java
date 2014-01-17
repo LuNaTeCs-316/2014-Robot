@@ -10,10 +10,9 @@ package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
+import org.lunatecs316.frc2014.subsystems.Pickup;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,12 +23,12 @@ import org.lunatecs316.frc2014.subsystems.Drivetrain;
  */
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
-    private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
-    private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
-    
+    private TeleopControl teleop = new TeleopControl();
+
     // Subsystems
     public static Drivetrain drivetrain = new Drivetrain();
-    
+    public static Pickup pickup = new Pickup();
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -38,6 +37,14 @@ public class Robot extends IterativeRobot {
         compressor.start();
 
         drivetrain.init();
+        pickup.init();
+    }
+
+    /**
+     * This function is called once at the start of autonomous
+     */
+    public void autonomousInit() {
+
     }
 
     /**
@@ -48,15 +55,38 @@ public class Robot extends IterativeRobot {
     }
 
     /**
+     * This function is called once at the start of operator control
+     */
+    public void teleopInit() {
+        teleop.init();
+    }
+
+    /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
-        
-        if (driverJoystick.getLeftBumper())
-            drivetrain.shiftDown();
-        else if (driverJoystick.getRightBumper())
-            drivetrain.shiftUp();
+        teleop.run();
+    }
+
+    /**
+     * This function is called once at the start of being disabled
+     */
+    public void disabledInit() {
+
+    }
+
+    /**
+     * This function is called periodically while the robot is disabled
+     */
+    public void disabledPeriodic() {
+
+    }
+
+    /**
+     * This function is called once at the start of test mode
+     */
+    public void testInit() {
+
     }
     
     /**
@@ -65,5 +95,4 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-    
 }
