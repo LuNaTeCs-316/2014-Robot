@@ -26,10 +26,19 @@ public class Robot extends IterativeRobot {
     private TeleopControl teleop = new TeleopControl();
 
     // Subsystems
-    public static Drivetrain drivetrain = new Drivetrain();
-    public static Pickup pickup = new Pickup();
-    public static Shooter shooter = new Shooter();
+    public static Drivetrain drivetrain;
+    public static Pickup pickup;
+    public static Shooter shooter;
 
+    /**
+     * Robot Constructor
+     */
+    public Robot() {
+        drivetrain = new Drivetrain();
+        pickup = new Pickup();
+        shooter = new Shooter();
+    }
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -73,7 +82,7 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of being disabled
      */
     public void disabledInit() {
-
+        Constants.update();
     }
 
     /**
