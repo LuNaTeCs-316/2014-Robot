@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
+import org.lunatecs316.frc2014.subsystems.Shooter;
 
 /**
  * Manages control of the Robot during Teleop mode
@@ -22,6 +23,7 @@ public class TeleopControl {
     //
     private Drivetrain drivetrain = Robot.drivetrain;
     private Pickup pickup = Robot.pickup;
+    private Shooter shooter = Robot.shooter;
 
     /**
      * Default constructor
@@ -40,24 +42,34 @@ public class TeleopControl {
      * Run one iteration of Teleop mode
      */
     public void run() {
-        // Drivetrain
+        // Driving
         drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
 
+        // Shifting
         if (driverJoystick.getLeftBumper())
             drivetrain.shiftDown();
         else if (driverJoystick.getRightBumper())
             drivetrain.shiftUp();
 
-        // Pickup
+        // Pickup Position
         if (operatorJoystick.getRawButton(4))
             pickup.raise();
         else if (operatorJoystick.getRawButton(5))
             pickup.lower();
 
-        if (operatorJoystick.getRawButton(3))
+        // Pickup Rollers
+        if (operatorJoystick.getRawButton(3) && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kForward);
-        else if (operatorJoystick.getRawButton(2))
+        else if (operatorJoystick.getRawButton(2) && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kReverse);
+        else
+            pickup.setRollerSpeed(0.0);
+        
+        // Shooter
+        if (operatorJoystick.getRawButton(1) && pickup.isLowered())
+            shooter.fire();
+        else if (operatorJoystick.getRawButton(11) && pickup.isLowered())
+            shooter.reload();
     }
 
     /**

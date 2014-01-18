@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
-
+import org.lunatecs316.frc2014.subsystems.Shooter;
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -28,6 +28,7 @@ public class Robot extends IterativeRobot {
     // Subsystems
     public static Drivetrain drivetrain = new Drivetrain();
     public static Pickup pickup = new Pickup();
+    public static Shooter shooter = new Shooter();
 
     /**
      * This function is run when the robot is first started up and should be
