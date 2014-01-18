@@ -37,12 +37,23 @@ public class Drivetrain {
     
     private Gyro gyro = new Gyro(RobotMap.kGyro);
     
+    // Singleton instance
+    private static Drivetrain instance;
+
     /**
      * Default constructor
      */
-    public Drivetrain() {
+    private Drivetrain() {
     }
-    
+
+    public static Drivetrain getInstance() {
+        if (instance == null) {
+            instance = new Drivetrain();
+        }
+
+        return instance;
+    }
+
     /**
      * Initialize the subsystem
      */

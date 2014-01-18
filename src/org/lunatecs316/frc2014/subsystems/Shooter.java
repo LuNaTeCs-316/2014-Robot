@@ -15,11 +15,21 @@ public class Shooter {
     private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
+
+    private static Shooter instance;
     
     /**
      * Default constructor
      */
-    public Shooter() {
+    private Shooter() {
+    }
+
+    public static Shooter getInstance() {
+        if (instance == null) {
+            instance = new Shooter();
+        }
+
+        return instance;
     }
 
     /**

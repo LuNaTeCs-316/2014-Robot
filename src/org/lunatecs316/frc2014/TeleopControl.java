@@ -14,16 +14,9 @@ public class TeleopControl {
     private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
     private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
 
-    //
-    // Subsystem references
-    //
-    // It is important that there is only one copy of each subsystem. Instead of
-    // creating new instances of each subsystems, we make a reference to the
-    // shared instances from the Robot class.
-    //
-    private Drivetrain drivetrain = Robot.drivetrain;
-    private Pickup pickup = Robot.pickup;
-    private Shooter shooter = Robot.shooter;
+    private Drivetrain drivetrain = Drivetrain.getInstance();
+    private Pickup pickup = Pickup.getInstance();
+    private Shooter shooter = Shooter.getInstance();
 
     /**
      * Default constructor

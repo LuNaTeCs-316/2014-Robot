@@ -26,17 +26,14 @@ public class Robot extends IterativeRobot {
     private TeleopControl teleop = new TeleopControl();
 
     // Subsystems
-    public static Drivetrain drivetrain;
-    public static Pickup pickup;
-    public static Shooter shooter;
+    private Drivetrain drivetrain = Drivetrain.getInstance();
+    private Pickup pickup = Pickup.getInstance();
+    private Shooter shooter = Shooter.getInstance();
 
     /**
      * Robot Constructor
      */
     public Robot() {
-        drivetrain = new Drivetrain();
-        pickup = new Pickup();
-        shooter = new Shooter();
     }
     
     /**
@@ -48,6 +45,7 @@ public class Robot extends IterativeRobot {
 
         drivetrain.init();
         pickup.init();
+        shooter.init();
     }
 
     /**
