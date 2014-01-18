@@ -18,36 +18,38 @@ public class Shooter {
     private Victor winch = new Victor(RobotMap.kShooterWinch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
-    private Solenoid clutch =new Solenoid(RobotMap.kShooterClutch);
+    private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     
-    public static double kForward = 1.0;
-    public static double kReverse = -1.0;
-    
-    public Shooter(){
-       
+    public Shooter() {
     }
 
     /**
      * Initialize the subsystem
      */
     public void init(){
-        
     }
     
     /**
      * Prepare the shooter for firing
      */
-    public void load() {
-        while (!maxSwitch.get() )
-            winch.set(kForward);
+    public void reload() {
+         clutch.set(true);
+         if (!isReadyToLoad())
+             winch.set(1.0);
+         else 
+             winch.set(0.0);
     }
     
     public void fire() {
-        clutch.set(true);
+        if (!atFiringPosition())    
+            clutch.set(false);
     }
     
-    public boolean isLoadable() {
+    public boolean isReadyToLoad() {
         return loadSwitch.get();
     }
-    
+
+    public boolean atFiringPosition() {
+        return maxSwitch.get();
+    }
 }
