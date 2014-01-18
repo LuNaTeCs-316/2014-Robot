@@ -42,24 +42,28 @@ public class TeleopControl {
      * Run one iteration of Teleop mode
      */
     public void run() {
-        // Drivetrain
+        // Driving
         drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
 
+        // Shifting
         if (driverJoystick.getLeftBumper())
             drivetrain.shiftDown();
         else if (driverJoystick.getRightBumper())
             drivetrain.shiftUp();
 
-        // Pickup
+        // Pickup Position
         if (operatorJoystick.getRawButton(4))
             pickup.raise();
         else if (operatorJoystick.getRawButton(5))
             pickup.lower();
 
+        // Pickup Rollers
         if (operatorJoystick.getRawButton(3) && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kForward);
         else if (operatorJoystick.getRawButton(2) && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kReverse);
+        else
+            pickup.setRollerSpeed(0.0);
         
         // Shooter
         if (operatorJoystick.getRawButton(1) && pickup.isLowered())
