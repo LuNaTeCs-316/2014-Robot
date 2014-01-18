@@ -47,6 +47,12 @@ public class Pickup {
         LiveWindow.addSensor("Pickup", "Upper Limit", upperLimit);
         LiveWindow.addSensor("Pickup", "ballDetector", ballDetector);
     }
+    
+    /**
+     * Send data to the SmartDashboard
+     */
+    public void updateSmartDashboard() {
+    }
    
     /**
      * Move the pickup to the raised position. 

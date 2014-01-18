@@ -43,6 +43,13 @@ public class Shooter {
     }
     
     /**
+     * Send data to the SmartDashboard
+     */
+    public void updateSmartDashboard() {
+        
+    }
+    
+    /**
      * Reload the shooter
      */
     public void reload() {

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
 
 /**
@@ -79,6 +80,15 @@ public class Drivetrain {
         LiveWindow.addSensor("Drivetrain", "leftEncoder", leftEncoder);
         LiveWindow.addSensor("Drivetrain", "rightEncoder", rightEncoder);
         LiveWindow.addSensor("Drivetrain", "gyro", gyro);
+    }
+    
+    /**
+     * Send data to the SmartDashboard
+     */
+    public void updateSmartDashboard() {
+        SmartDashboard.putNumber("LeftEncoder", leftEncoder.get());
+        SmartDashboard.putNumber("RightEncoder", rightEncoder.get());
+        SmartDashboard.putNumber("Gyro", gyro.getAngle());
     }
     
     /**

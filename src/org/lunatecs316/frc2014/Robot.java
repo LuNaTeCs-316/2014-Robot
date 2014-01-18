@@ -30,6 +30,8 @@ public class Robot extends IterativeRobot {
     private Pickup pickup = Pickup.getInstance();
     private Shooter shooter = Shooter.getInstance();
 
+    private int loopCount = 0;
+    
     /**
      * Robot Constructor
      */
@@ -74,6 +76,15 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         teleop.run();
+        
+        if (loopCount >= Constants.get("kDashboardUpdateFrequency")) {
+            drivetrain.updateSmartDashboard();
+            pickup.updateSmartDashboard();
+            shooter.updateSmartDashboard();
+            loopCount = 0;
+        } else {
+            loopCount++;
+        }
     }
 
     /**
