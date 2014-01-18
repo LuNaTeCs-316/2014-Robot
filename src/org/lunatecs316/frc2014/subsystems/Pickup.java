@@ -21,9 +21,22 @@ public class Pickup {
     public static double kForward = 1.0;
     public static double kReverse = -1.0;
     
-    public Pickup() {
-    }
+    private static Pickup instance;
     
+    private Pickup() {
+    }
+
+    /**
+     * Get the shared instance
+     * @return the pickup subsystem
+     */
+    public static Pickup getInstance() {
+        if (instance == null) {
+            instance = new Pickup();
+        }
+        return instance;
+    }
+
     /**
      * Initialize the subsystem
      */
@@ -33,6 +46,12 @@ public class Pickup {
         LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
         LiveWindow.addSensor("Pickup", "Upper Limit", upperLimit);
         LiveWindow.addSensor("Pickup", "ballDetector", ballDetector);
+    }
+    
+    /**
+     * Send data to the SmartDashboard
+     */
+    public void updateSmartDashboard() {
     }
    
     /**

@@ -16,7 +16,7 @@ import javax.microedition.io.Connector;
 public class Constants {
     
     private static final String kFilename = "Constants.txt";
-    private static final Hashtable constants = new Hashtable();
+    private static Hashtable constants = new Hashtable();
     
     /**
      * Update the constants. Read the latest values from the constants file
@@ -43,14 +43,22 @@ public class Constants {
             while (e.hasMoreElements()) {
                 // Get the next line
                 l = (String) e.nextElement();
-                
+
+                // Ignore comment lines and whitespace
+                if (l.startsWith("#") || l.equals(""))
+                    continue;
+
                 // Seperate into name and value
                 int index = l.indexOf("=");
-                String key = l.substring(0, index);
-                double value = Double.parseDouble(l.substring(index + 1));
                 
-                // Add to the constants vector
-                constants.put(key, new Double(value));
+                // Ensure that the equals sign was found
+                if (index != -1) {
+                    String key = l.substring(0, index).trim();
+                    double value = Double.parseDouble(l.substring(index + 1));
+                
+                    // Add to the constants vector
+                    constants.put(key, new Double(value));
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading constants file!");
@@ -68,7 +76,9 @@ public class Constants {
         
         if (value != null)
             return value.doubleValue();
-        else
-            return 0.0;
+        else {
+            System.err.println("Error: key " + key + " not found!");
+            return -1.0;
+        }
     }
 }

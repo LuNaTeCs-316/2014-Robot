@@ -15,11 +15,21 @@ public class Shooter {
     private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
+
+    private static Shooter instance;
     
     /**
      * Default constructor
      */
-    public Shooter() {
+    private Shooter() {
+    }
+
+    public static Shooter getInstance() {
+        if (instance == null) {
+            instance = new Shooter();
+        }
+
+        return instance;
     }
 
     /**
@@ -30,6 +40,13 @@ public class Shooter {
         LiveWindow.addActuator("Shooter", "clutch", clutch);
         LiveWindow.addSensor("Shooter", "loadSwitch", loadSwitch);
         LiveWindow.addSensor("Shooter", "maxSwitch", maxSwitch);
+    }
+    
+    /**
+     * Send data to the SmartDashboard
+     */
+    public void updateSmartDashboard() {
+        
     }
     
     /**

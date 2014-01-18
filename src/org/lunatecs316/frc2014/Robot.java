@@ -26,10 +26,18 @@ public class Robot extends IterativeRobot {
     private TeleopControl teleop = new TeleopControl();
 
     // Subsystems
-    public static Drivetrain drivetrain = new Drivetrain();
-    public static Pickup pickup = new Pickup();
-    public static Shooter shooter = new Shooter();
+    private Drivetrain drivetrain = Drivetrain.getInstance();
+    private Pickup pickup = Pickup.getInstance();
+    private Shooter shooter = Shooter.getInstance();
 
+    private int loopCount = 0;
+    
+    /**
+     * Robot Constructor
+     */
+    public Robot() {
+    }
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -39,6 +47,7 @@ public class Robot extends IterativeRobot {
 
         drivetrain.init();
         pickup.init();
+        shooter.init();
     }
 
     /**
@@ -67,13 +76,22 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         teleop.run();
+        
+        if (loopCount >= Constants.get("kDashboardUpdateFrequency")) {
+            drivetrain.updateSmartDashboard();
+            pickup.updateSmartDashboard();
+            shooter.updateSmartDashboard();
+            loopCount = 0;
+        } else {
+            loopCount++;
+        }
     }
 
     /**
      * This function is called once at the start of being disabled
      */
     public void disabledInit() {
-
+        Constants.update();
     }
 
     /**
