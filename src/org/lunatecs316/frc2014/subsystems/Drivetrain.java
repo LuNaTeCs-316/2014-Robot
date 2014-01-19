@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 
 /**
@@ -102,6 +103,20 @@ public class Drivetrain implements Subsystem {
      */
     public void arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
+
+        // Calculate left and right motor values
+        //double t_left = move + turn;
+        //double t_right = move - turn;
+
+        // Skim values and apply to the opposite side
+        //double left = t_left - (skim(t_right) * Constants.kDrivetrainSkimGain.getValue());
+        //double right = t_right - (skim(t_left) * Constants.kDrivetrainSkimGain.getValue());
+
+        // Apply power to the motors
+        //frontLeft.set(left);
+        //rearLeft.set(left);
+        //frontRight.set(right);
+        //rearRight.set(right);
     }
     
     /**
@@ -131,5 +146,20 @@ public class Drivetrain implements Subsystem {
     public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
+    }
+
+    /**
+     * Utility function. Skim excess values above 1.0
+     * @param value the value to skim
+     * @return If value is positive and greater than 1.0, return value - 1.0.
+     * If value is negative and less than -1.0, return value + 1.0.
+     */
+    private double skim(double value) {
+        if (value > 1.0)
+            return value - 1.0;
+        else if (value < -1.0)
+            return value + 1.0;
+        else
+            return 0.0;
     }
 }

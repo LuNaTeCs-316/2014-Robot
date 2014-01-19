@@ -20,6 +20,7 @@ public class Constants {
     
     public static final Constant kDashboardUpdateFrequency = new Constant("kDashboardUpdateFrequency", 10.0);
     public static final Constant kJoystickDeadband = new Constant("kJoystickDeadband", 0.2);
+    public static final Constant kDrivetrainSkimGain = new Constant("kDrivetrainSkimGain", 0.5);
     
     /**
      * Representation of a single constant value
