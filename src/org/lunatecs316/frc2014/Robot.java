@@ -7,13 +7,13 @@
 
 package org.lunatecs316.frc2014;
 
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
@@ -31,13 +31,13 @@ public class Robot extends IterativeRobot {
     private Shooter shooter = Shooter.getInstance();
 
     private int loopCount = 0;
-    
+
     /**
      * Robot Constructor
      */
     public Robot() {
     }
-    
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -77,7 +77,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         teleop.run();
         
-        if (loopCount >= Constants.get("kDashboardUpdateFrequency")) {
+        // Update SmartDashboard
+        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
             drivetrain.updateSmartDashboard();
             pickup.updateSmartDashboard();
             shooter.updateSmartDashboard();
@@ -107,7 +108,7 @@ public class Robot extends IterativeRobot {
     public void testInit() {
 
     }
-    
+
     /**
      * This function is called periodically during test mode
      */
