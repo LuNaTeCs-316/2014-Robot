@@ -14,7 +14,7 @@ import org.lunatecs316.frc2014.RobotMap;
  * Drivetrain subsystem
  * @author 316Programming
  */
-public class Drivetrain {
+public class Drivetrain implements Subsystem {
     // Drive Motors
     private Jaguar frontLeft = new Jaguar(RobotMap.kFrontLeftMotor);
     private Jaguar frontRight = new Jaguar(RobotMap.kFrontRightMotor);
@@ -47,6 +47,10 @@ public class Drivetrain {
     private Drivetrain() {
     }
 
+    /**
+     * Get the shared instance of the subsystem
+     * @return the drivetrain subsystem
+     */
     public static Drivetrain getInstance() {
         if (instance == null) {
             instance = new Drivetrain();
@@ -56,7 +60,7 @@ public class Drivetrain {
     }
 
     /**
-     * Initialize the subsystem
+     * @inheritDoc
      */
     public void init() {
         // Setup RobotDrive
@@ -83,7 +87,7 @@ public class Drivetrain {
     }
     
     /**
-     * Send data to the SmartDashboard
+     * @inheritDoc
      */
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("LeftEncoder", leftEncoder.get());
@@ -117,14 +121,14 @@ public class Drivetrain {
     /**
      * Reset the gyro angle
      */
-    void resetGyro() {
+    public void resetGyro() {
         gyro.reset();
     }
     
     /**
      * Reset the left and right encoders
      */
-    void resetEncoders() {
+    public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
     }

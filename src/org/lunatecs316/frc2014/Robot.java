@@ -99,7 +99,13 @@ public class Robot extends IterativeRobot {
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
+        if (teleop.getDriverJoystick().getButtonA()) {
+            drivetrain.resetGyro();
+        }
 
+        if (teleop.getDriverJoystick().getButtonB()) {
+            drivetrain.resetEncoders();
+        }
     }
 
     /**

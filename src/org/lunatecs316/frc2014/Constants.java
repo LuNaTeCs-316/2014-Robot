@@ -14,7 +14,6 @@ import javax.microedition.io.Connector;
  * @author Domenic
  */
 public class Constants {
-    
     private static final String kFilename = "Constants.txt";
     // This MUST come before the creation of any constants!
     private static Hashtable constants = new Hashtable();
