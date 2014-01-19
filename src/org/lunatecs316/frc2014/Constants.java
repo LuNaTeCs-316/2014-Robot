@@ -19,6 +19,7 @@ public class Constants {
     private static Hashtable constants = new Hashtable();
     
     public static final Constant kDashboardUpdateFrequency = new Constant("kDashboardUpdateFrequency", 10.0);
+    public static final Constant kJoystickDeadband = new Constant("kJoystickDeadband", 0.2);
     
     /**
      * Representation of a single constant value
