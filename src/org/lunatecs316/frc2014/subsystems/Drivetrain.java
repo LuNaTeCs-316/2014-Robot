@@ -4,17 +4,17 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
 
 /**
  * Drivetrain subsystem
- * @author 316Programming
+ * @author Domenic Rodriguez
  */
-public class Drivetrain {
+public class Drivetrain implements Subsystem {
     // Drive Motors
     private Jaguar frontLeft = new Jaguar(RobotMap.kFrontLeftMotor);
     private Jaguar frontRight = new Jaguar(RobotMap.kFrontRightMotor);
@@ -23,7 +23,7 @@ public class Drivetrain {
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     
     // Shifter
-    private Relay shiftingRelay = new Relay(RobotMap.kShiftingRelay);
+    private Solenoid shiftingSolenoid = new Solenoid(RobotMap.kShiftingSolenoid);
     
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA,
@@ -47,6 +47,10 @@ public class Drivetrain {
     private Drivetrain() {
     }
 
+    /**
+     * Get the shared instance of the subsystem
+     * @return the drivetrain subsystem
+     */
     public static Drivetrain getInstance() {
         if (instance == null) {
             instance = new Drivetrain();
@@ -56,7 +60,7 @@ public class Drivetrain {
     }
 
     /**
-     * Initialize the subsystem
+     * @inheritDoc
      */
     public void init() {
         // Setup RobotDrive
@@ -83,7 +87,7 @@ public class Drivetrain {
     }
     
     /**
-     * Send data to the SmartDashboard
+     * @inheritDoc
      */
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("LeftEncoder", leftEncoder.get());
@@ -98,34 +102,63 @@ public class Drivetrain {
      */
     public void arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
+
+        // Calculate left and right motor values
+        //double t_left = move + turn;
+        //double t_right = move - turn;
+
+        // Skim values and apply to the opposite side
+        //double left = t_left - (skim(t_right) * Constants.kDrivetrainSkimGain.getValue());
+        //double right = t_right - (skim(t_left) * Constants.kDrivetrainSkimGain.getValue());
+
+        // Apply power to the motors
+        //frontLeft.set(left);
+        //rearLeft.set(left);
+        //frontRight.set(right);
+        //rearRight.set(right);
     }
     
     /**
      * Shift into high gear
      */
     public void shiftUp() {
-        shiftingRelay.set(Relay.Value.kForward);
+        shiftingSolenoid.set(true);
     }
     
     /**
      * Shift into low gear
      */
     public void shiftDown() {
-        shiftingRelay.set(Relay.Value.kReverse);
+        shiftingSolenoid.set(false);
     }
     
     /**
      * Reset the gyro angle
      */
-    void resetGyro() {
+    public void resetGyro() {
         gyro.reset();
     }
     
     /**
      * Reset the left and right encoders
      */
-    void resetEncoders() {
+    public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
+    }
+
+    /**
+     * Utility function. Skim excess values above 1.0
+     * @param value the value to skim
+     * @return If value is positive and greater than 1.0, return value - 1.0.
+     * If value is negative and less than -1.0, return value + 1.0.
+     */
+    private double skim(double value) {
+        if (value > 1.0)
+            return value - 1.0;
+        else if (value < -1.0)
+            return value + 1.0;
+        else
+            return 0.0;
     }
 }

@@ -11,13 +11,43 @@ import javax.microedition.io.Connector;
 
 /**
  * Robot Constants manager. All constants have a String key and double value
- * @author Domenic
+ * @author Domenic Rodriguez
  */
 public class Constants {
-    
     private static final String kFilename = "Constants.txt";
+    // This MUST come before the creation of any constants!
     private static Hashtable constants = new Hashtable();
     
+    public static final Constant kDashboardUpdateFrequency = new Constant("kDashboardUpdateFrequency", 10.0);
+    public static final Constant kJoystickDeadband = new Constant("kJoystickDeadband", 0.2);
+    public static final Constant kDrivetrainSkimGain = new Constant("kDrivetrainSkimGain", 0.5);
+    
+    /**
+     * Representation of a single constant value
+     */
+    public static final class Constant {
+        private String name;
+        private double value;
+        
+        public Constant(String name, double val) {
+            this.name = name;
+            value = val;
+            Constants.constants.put(name, this);
+        }
+        
+        public void setValue(double val) {
+            value = val;
+        }
+        
+        public double getValue() {
+            return value;
+        }
+        
+        public String getName() {
+            return name;
+        }
+    }
+
     /**
      * Update the constants. Read the latest values from the constants file
      */
@@ -56,29 +86,18 @@ public class Constants {
                     String key = l.substring(0, index).trim();
                     double value = Double.parseDouble(l.substring(index + 1));
                 
-                    // Add to the constants vector
-                    constants.put(key, new Double(value));
+                    // Look for the matching Constant
+                    Constant c = (Constant) constants.get(key);
+                    if (c != null) {
+                        c.setValue(value);
+                    } else {
+                        System.err.println("Constant '" + key + "' not found");
+                    }
                 }
             }
         } catch (IOException e) {
             System.err.println("Error reading constants file!");
             System.err.println(e.getMessage());
-        }
-    }
-    
-    /**
-     * Get the value for the specified constant
-     * @param key the name of the constant
-     * @return the value for the specified constant; 0.0 if constant is not found
-     */
-    public static double get(String key) {
-        Double value = (Double) constants.get(key);
-        
-        if (value != null)
-            return value.doubleValue();
-        else {
-            System.err.println("Error: key " + key + " not found!");
-            return -1.0;
         }
     }
 }

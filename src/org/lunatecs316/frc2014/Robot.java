@@ -7,19 +7,22 @@
 
 package org.lunatecs316.frc2014;
 
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the IterativeRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
+ * 
+ * @author Domenic Rodriguez
+ * @author Christian Steward
  */
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
@@ -30,14 +33,15 @@ public class Robot extends IterativeRobot {
     private Pickup pickup = Pickup.getInstance();
     private Shooter shooter = Shooter.getInstance();
 
+    // Teleop loop count
     private int loopCount = 0;
-    
+
     /**
      * Robot Constructor
      */
     public Robot() {
     }
-    
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -77,7 +81,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         teleop.run();
         
-        if (loopCount >= Constants.get("kDashboardUpdateFrequency")) {
+        // Update SmartDashboard
+        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
             drivetrain.updateSmartDashboard();
             pickup.updateSmartDashboard();
             shooter.updateSmartDashboard();
@@ -98,7 +103,13 @@ public class Robot extends IterativeRobot {
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
+        if (teleop.getDriverJoystick().getButtonA()) {
+            drivetrain.resetGyro();
+        }
 
+        if (teleop.getDriverJoystick().getButtonB()) {
+            drivetrain.resetEncoders();
+        }
     }
 
     /**
@@ -107,7 +118,7 @@ public class Robot extends IterativeRobot {
     public void testInit() {
 
     }
-    
+
     /**
      * This function is called periodically during test mode
      */

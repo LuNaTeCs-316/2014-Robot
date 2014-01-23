@@ -9,20 +9,24 @@ import org.lunatecs316.frc2014.RobotMap;
 /**
  * Pickup subsystem. <br>
  * Picks stuff up - what more do you need?
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
-public class Pickup {
+public class Pickup implements Subsystem {
+    public static final double kForward = 1.0;
+    public static final double kReverse = -1.0;
+    
     private Victor roller = new Victor(RobotMap.kPickupRoller);
     private Solenoid solenoid = new Solenoid(RobotMap.kPickupSolenoid);
     private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
     private DigitalInput upperLimit = new DigitalInput(RobotMap.kPickupUpperLimit);
     private DigitalInput ballDetector = new DigitalInput(RobotMap.kPickupSensor);
     
-    public static double kForward = 1.0;
-    public static double kReverse = -1.0;
-    
     private static Pickup instance;
     
+    /**
+     * Default constructor
+     */
     private Pickup() {
     }
 
@@ -38,7 +42,7 @@ public class Pickup {
     }
 
     /**
-     * Initialize the subsystem
+     * @inheritDoc
      */
     public void init() {
         LiveWindow.addActuator("Pickup", "Roller", roller);
@@ -49,7 +53,7 @@ public class Pickup {
     }
     
     /**
-     * Send data to the SmartDashboard
+     * @inheritDoc
      */
     public void updateSmartDashboard() {
     }

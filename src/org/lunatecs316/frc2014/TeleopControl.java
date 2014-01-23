@@ -1,6 +1,7 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
+import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
@@ -8,7 +9,8 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
 
 /**
  * Manages control of the Robot during Teleop mode
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
 public class TeleopControl {
     private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
@@ -36,7 +38,9 @@ public class TeleopControl {
      */
     public void run() {
         // Driving
-        drivetrain.arcadeDrive(driverJoystick.getLeftY(), driverJoystick.getRightX());
+        double move = Util.deadband(driverJoystick.getLeftY(), Constants.kJoystickDeadband.getValue());
+        double turn = Util.deadband(driverJoystick.getRightX(), Constants.kJoystickDeadband.getValue());
+        drivetrain.arcadeDrive(move, turn);
 
         // Shifting
         if (driverJoystick.getLeftBumper())

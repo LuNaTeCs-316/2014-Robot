@@ -4,10 +4,31 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * Wrapper class for the Xbox Controller
- * @author domenicpaul
+ * @author Domenic Rodriguez
  */
 public class XboxController extends Joystick {
-
+    
+    public static final Button kButtonA = new Button(1);
+    public static final Button kButtonB = new Button(2);
+    public static final Button kButtonX = new Button(3);
+    public static final Button kButtonY = new Button(4);
+    public static final Button kLeftBumper = new Button(5);
+    public static final Button kRightBumper = new Button(6);
+    
+    public static class Button {
+        private int number;
+        
+        public Button(int number) {
+            this.number = number;
+        }
+        
+        public int getNumber() {
+            return number;
+        }
+    }
+    
+    private boolean[] previous = { false, false, false, false, false, false };
+    
     public XboxController(final int port) {
         super(port);
     }
@@ -29,26 +50,68 @@ public class XboxController extends Joystick {
     }
 
     public boolean getButtonA() {
-        return getRawButton(1);
+        boolean current = getRawButton(1);
+        previous[0] = current;
+        return current;
     }
 
     public boolean getButtonB() {
-        return getRawButton(2);
+        boolean current = getRawButton(2);
+        previous[1] = current;
+        return current;
     }
 
     public boolean getButtonX() {
-        return getRawButton(3);
+        boolean current = getRawButton(3);
+        previous[2] = current;
+        return current;
     }
 
     public boolean getButtonY() {
-        return getRawButton(4);
+        boolean current = getRawButton(4);
+        previous[3] = current;
+        return current;
     }
 
     public boolean getLeftBumper() {
-        return getRawButton(5);
+        boolean current = getRawButton(5);
+        previous[4] = current;
+        return current;
     }
 
     public boolean getRightBumper() {
-        return getRawButton(6);
+        boolean current = getRawButton(6);
+        previous[5] = current;
+        return current;
+    }
+    
+    public boolean getButton(Button button) {
+        boolean current = getRawButton(button.getNumber());
+        previous[button.getNumber()-1] = current;
+        return current;
+    }
+    
+    public boolean getButtonPressed(Button button) {
+        int number = button.getNumber();
+        boolean current = getRawButton(number);
+        boolean result = current && !previous[number-1];
+        previous[number-1] = current;
+        return result;
+    }
+    
+    public boolean getButtonHeld(Button button) {
+        int number = button.getNumber();
+        boolean current = getRawButton(number);
+        boolean result = current && previous[number-1];
+        previous[number-1] = current;
+        return result;
+    }
+    
+    public boolean getButtonReleased(Button button) {
+        int number = button.getNumber();
+        boolean current = getRawButton(number);
+        boolean result = !current && previous[number-1];
+        previous[number-1] = current;
+        return result;
     }
 }

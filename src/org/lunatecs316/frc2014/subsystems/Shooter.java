@@ -8,9 +8,10 @@ import org.lunatecs316.frc2014.RobotMap;
 
 /**
  * Shooter subsystem
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
-public class Shooter {
+public class Shooter implements Subsystem {
     private Victor winch = new Victor(RobotMap.kShooterWinch);
     private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
@@ -24,6 +25,10 @@ public class Shooter {
     private Shooter() {
     }
 
+    /**
+     * Get the shared instance of the subsystem
+     * @return the shooter subsystem
+     */
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -33,7 +38,7 @@ public class Shooter {
     }
 
     /**
-     * Initialize the subsystem
+     * @inheritDoc
      */
     public void init(){
         LiveWindow.addActuator("Shooter", "winch", winch);
@@ -43,7 +48,7 @@ public class Shooter {
     }
     
     /**
-     * Send data to the SmartDashboard
+     * @inheritDoc
      */
     public void updateSmartDashboard() {
         
