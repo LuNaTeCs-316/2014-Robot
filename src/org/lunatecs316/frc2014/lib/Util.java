@@ -2,7 +2,7 @@ package org.lunatecs316.frc2014.lib;
 
 /**
  * Utility functions
- * @author Domenic
+ * @author Domenic Rodriguez
  */
 public class Util {
     /**

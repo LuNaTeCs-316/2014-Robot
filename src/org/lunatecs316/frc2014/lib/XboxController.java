@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * Wrapper class for the Xbox Controller
- * @author domenicpaul
+ * @author Domenic Rodriguez
  */
 public class XboxController extends Joystick {
     

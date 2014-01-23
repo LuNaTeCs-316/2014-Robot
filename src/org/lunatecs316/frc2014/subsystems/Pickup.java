@@ -9,7 +9,8 @@ import org.lunatecs316.frc2014.RobotMap;
 /**
  * Pickup subsystem. <br>
  * Picks stuff up - what more do you need?
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
 public class Pickup implements Subsystem {
     public static final double kForward = 1.0;

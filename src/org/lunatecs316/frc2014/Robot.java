@@ -20,6 +20,9 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
+ * 
+ * @author Domenic Rodriguez
+ * @author Christian Steward
  */
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
@@ -30,6 +33,7 @@ public class Robot extends IterativeRobot {
     private Pickup pickup = Pickup.getInstance();
     private Shooter shooter = Shooter.getInstance();
 
+    // Teleop loop count
     private int loopCount = 0;
 
     /**

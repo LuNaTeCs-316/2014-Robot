@@ -9,7 +9,8 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
 
 /**
  * Manages control of the Robot during Teleop mode
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
 public class TeleopControl {
     private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);

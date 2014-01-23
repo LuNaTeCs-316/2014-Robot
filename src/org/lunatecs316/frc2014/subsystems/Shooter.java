@@ -8,7 +8,8 @@ import org.lunatecs316.frc2014.RobotMap;
 
 /**
  * Shooter subsystem
- * @author christiansteward
+ * @author Christian Steward
+ * @author Domenic Rodriguez
  */
 public class Shooter implements Subsystem {
     private Victor winch = new Victor(RobotMap.kShooterWinch);

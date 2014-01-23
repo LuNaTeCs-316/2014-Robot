@@ -11,7 +11,7 @@ import javax.microedition.io.Connector;
 
 /**
  * Robot Constants manager. All constants have a String key and double value
- * @author Domenic
+ * @author Domenic Rodriguez
  */
 public class Constants {
     private static final String kFilename = "Constants.txt";

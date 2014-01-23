@@ -2,7 +2,7 @@ package org.lunatecs316.frc2014;
 
 /**
  * Mapping of robot IO ports to constants
- * @author Domenic
+ * @author Domenic Rodriguez
  */
 public class RobotMap {
     
@@ -16,11 +16,11 @@ public class RobotMap {
     
     // Relay Output
     public static final int kCompressorRelay = 1;
-    public static final int kShiftingRelay = 2;
     
     // Solenoid Output
-    public static final int kPickupSolenoid = 1;
-    public static final int kShooterClutch = 2;
+    public static final int kShiftingSolenoid = 1;
+    public static final int kPickupSolenoid = 2;
+    public static final int kShooterClutch = 3;
     
     // Joystick Input
     public static final int kDriverJoystick = 1;

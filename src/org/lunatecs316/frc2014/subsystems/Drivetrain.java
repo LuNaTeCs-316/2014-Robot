@@ -4,16 +4,15 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 
 /**
  * Drivetrain subsystem
- * @author 316Programming
+ * @author Domenic Rodriguez
  */
 public class Drivetrain implements Subsystem {
     // Drive Motors
@@ -24,7 +23,7 @@ public class Drivetrain implements Subsystem {
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     
     // Shifter
-    private Relay shiftingRelay = new Relay(RobotMap.kShiftingRelay);
+    private Solenoid shiftingSolenoid = new Solenoid(RobotMap.kShiftingSolenoid);
     
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA,
@@ -123,14 +122,14 @@ public class Drivetrain implements Subsystem {
      * Shift into high gear
      */
     public void shiftUp() {
-        shiftingRelay.set(Relay.Value.kForward);
+        shiftingSolenoid.set(true);
     }
     
     /**
      * Shift into low gear
      */
     public void shiftDown() {
-        shiftingRelay.set(Relay.Value.kReverse);
+        shiftingSolenoid.set(false);
     }
     
     /**

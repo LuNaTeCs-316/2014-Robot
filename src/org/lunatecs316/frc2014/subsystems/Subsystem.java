@@ -2,7 +2,7 @@ package org.lunatecs316.frc2014.subsystems;
 
 /**
  * Interface for all robot subsystems
- * @author Domenic
+ * @author Domenic Rodriguez
  */
 public interface Subsystem {
     /**
