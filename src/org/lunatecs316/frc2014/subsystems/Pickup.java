@@ -20,7 +20,6 @@ public class Pickup implements Subsystem {
     private Solenoid solenoid = new Solenoid(RobotMap.kPickupSolenoid);
     private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
     private DigitalInput upperLimit = new DigitalInput(RobotMap.kPickupUpperLimit);
-    private DigitalInput ballDetector = new DigitalInput(RobotMap.kPickupSensor);
     
     private static Pickup instance;
     
@@ -49,7 +48,6 @@ public class Pickup implements Subsystem {
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
         LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
         LiveWindow.addSensor("Pickup", "Upper Limit", upperLimit);
-        LiveWindow.addSensor("Pickup", "ballDetector", ballDetector);
     }
     
     /**
@@ -83,7 +81,7 @@ public class Pickup implements Subsystem {
     /**
      * Get the state of the upper limit switch
      * @return true if pickup is raised
-     */
+      */
     public boolean isRaised() {
         return upperLimit.get();
     }
@@ -94,13 +92,5 @@ public class Pickup implements Subsystem {
      */
     public boolean isLowered() {
         return lowerLimit.get();
-    }
-    
-    /**
-     * Does it haz Ball?
-     * @return Y/N
-     */
-    public boolean hasBall() {
-        return ballDetector.get();
     }
 }

@@ -73,6 +73,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopInit() {
         teleop.init();
+        loopCount = 0;
     }
 
     /**
@@ -81,15 +82,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         teleop.run();
         
-        // Update SmartDashboard
-        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
-            drivetrain.updateSmartDashboard();
-            pickup.updateSmartDashboard();
-            shooter.updateSmartDashboard();
-            loopCount = 0;
-        } else {
-            loopCount++;
-        }
+        updateSmartDashboard();
     }
 
     /**
@@ -97,6 +90,7 @@ public class Robot extends IterativeRobot {
      */
     public void disabledInit() {
         Constants.update();
+        loopCount = 0;
     }
 
     /**
@@ -110,6 +104,8 @@ public class Robot extends IterativeRobot {
         if (teleop.getDriverJoystick().getButtonB()) {
             drivetrain.resetEncoders();
         }
+        
+        updateSmartDashboard();
     }
 
     /**
@@ -124,5 +120,19 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+    }
+    
+    /**
+     * Send data to the SmartDashboard
+     */
+    private void updateSmartDashboard() {
+        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
+            drivetrain.updateSmartDashboard();
+            pickup.updateSmartDashboard();
+            shooter.updateSmartDashboard();
+            loopCount = 0;
+        } else {
+            loopCount++;
+        }
     }
 }

@@ -43,29 +43,31 @@ public class TeleopControl {
         drivetrain.arcadeDrive(move, turn);
 
         // Shifting
-        if (driverJoystick.getLeftBumper())
+        if (driverJoystick.getButtonPressed(XboxController.kLeftBumper)) {
             drivetrain.shiftDown();
-        else if (driverJoystick.getRightBumper())
+        } else if (driverJoystick.getButtonPressed(XboxController.kRightBumper)) {
             drivetrain.shiftUp();
+        }
 
         // Pickup Position
-        if (operatorJoystick.getRawButton(4))
+        if (operatorJoystick.getRawButton(4)) {
             pickup.raise();
-        else if (operatorJoystick.getRawButton(5))
+        } else if (operatorJoystick.getRawButton(5)) {
             pickup.lower();
+        }
 
         // Pickup Rollers
-        if (operatorJoystick.getRawButton(3) && shooter.isReadyToLoad())
+        if (operatorJoystick.getRawButton(3))// && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kForward);
-        else if (operatorJoystick.getRawButton(2) && shooter.isReadyToLoad())
+        else if (operatorJoystick.getRawButton(2))// && shooter.isReadyToLoad())
             pickup.setRollerSpeed(Pickup.kReverse);
         else
             pickup.setRollerSpeed(0.0);
         
         // Shooter
-        if (operatorJoystick.getRawButton(1) && pickup.isLowered())
+        if (operatorJoystick.getRawButton(1))// && pickup.isLowered())
             shooter.fire();
-        else if (operatorJoystick.getRawButton(11) && pickup.isLowered())
+        else if (operatorJoystick.getRawButton(11))// && pickup.isLowered())
             shooter.reload();
     }
 

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
@@ -37,6 +38,7 @@ public class Drivetrain implements Subsystem {
                                                CounterBase.EncodingType.k4X);
     
     private Gyro gyro = new Gyro(RobotMap.kGyro);
+    private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.kRangeFinderPing, RobotMap.kRangeFinderEcho);
     
     // Singleton instance
     private static Drivetrain instance;
@@ -76,6 +78,9 @@ public class Drivetrain implements Subsystem {
         rightEncoder.start();
         resetEncoders();
         
+        // Setup range finder
+        rangeFinder.setAutomaticMode(true);
+        
         // Setup LiveWindow for test mode
         LiveWindow.addActuator("Drivetrain", "frontLeft", frontLeft);
         LiveWindow.addActuator("Drivetrain", "rearLeft", rearLeft);
@@ -93,6 +98,7 @@ public class Drivetrain implements Subsystem {
         SmartDashboard.putNumber("LeftEncoder", leftEncoder.get());
         SmartDashboard.putNumber("RightEncoder", rightEncoder.get());
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
+        SmartDashboard.putNumber("Range Finder", rangeFinder.getRangeInches());
     }
     
     /**

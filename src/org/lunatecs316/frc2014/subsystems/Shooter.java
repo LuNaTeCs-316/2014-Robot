@@ -69,7 +69,7 @@ public class Shooter implements Subsystem {
      * Fire the ball
      */
     public void fire() {
-        if (!atFiringPosition())    
+        //if (!atFiringPosition())    
             clutch.set(false);
     }
     
