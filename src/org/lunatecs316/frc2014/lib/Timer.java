@@ -1,4 +1,4 @@
-package org.lunatecs316.frc2014;
+package org.lunatecs316.frc2014.lib;
 
 /**
  * Time things within iterative loops
