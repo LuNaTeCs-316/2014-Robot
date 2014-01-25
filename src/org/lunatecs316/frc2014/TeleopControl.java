@@ -60,10 +60,11 @@ public class TeleopControl {
         }
 
         // Pickup Rollers
+        double rollerSpeed = ((0.25 * operatorJoystick.getZ()) + 0.75);
         if (operatorJoystick.getRawButton(3) && (shooter.isReadyToLoad() || emergencyMode)) {
-            pickup.setRollerSpeed(Pickup.kForward);
+            pickup.setRollerSpeed(rollerSpeed);
         } else if (operatorJoystick.getRawButton(2) && (shooter.isReadyToLoad()) || emergencyMode) {
-            pickup.setRollerSpeed(Pickup.kReverse);
+            pickup.setRollerSpeed(-rollerSpeed);
         } else {
             pickup.setRollerSpeed(0.0);
         }
