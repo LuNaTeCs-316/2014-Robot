@@ -1,6 +1,7 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
@@ -37,6 +38,8 @@ public class TeleopControl {
      * Run one iteration of Teleop mode
      */
     public void run() {
+        boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
+        
         // Driving
         double move = Util.deadband(driverJoystick.getLeftY(), Constants.kJoystickDeadband.getValue());
         double turn = Util.deadband(driverJoystick.getRightX(), Constants.kJoystickDeadband.getValue());
@@ -50,25 +53,27 @@ public class TeleopControl {
         }
 
         // Pickup Position
-        if (operatorJoystick.getRawButton(4)) {
+        if (operatorJoystick.getRawButton(4) && (shooter.isReadyToLoad() || emergencyMode)) {
             pickup.raise();
         } else if (operatorJoystick.getRawButton(5)) {
             pickup.lower();
         }
 
         // Pickup Rollers
-        if (operatorJoystick.getRawButton(3))// && shooter.isReadyToLoad())
+        if (operatorJoystick.getRawButton(3) && (shooter.isReadyToLoad() || emergencyMode)) {
             pickup.setRollerSpeed(Pickup.kForward);
-        else if (operatorJoystick.getRawButton(2))// && shooter.isReadyToLoad())
+        } else if (operatorJoystick.getRawButton(2) && (shooter.isReadyToLoad()) || emergencyMode) {
             pickup.setRollerSpeed(Pickup.kReverse);
-        else
+        } else {
             pickup.setRollerSpeed(0.0);
+        }
         
         // Shooter
-        if (operatorJoystick.getRawButton(1))// && pickup.isLowered())
+        if (operatorJoystick.getRawButton(1) && (pickup.isLowered() || emergencyMode)) {
             shooter.fire();
-        else if (operatorJoystick.getRawButton(11))// && pickup.isLowered())
+        } else if (operatorJoystick.getRawButton(11) && (pickup.isLowered() || emergencyMode)) {
             shooter.reload();
+        }
     }
 
     /**

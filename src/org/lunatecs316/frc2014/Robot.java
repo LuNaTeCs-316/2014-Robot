@@ -10,6 +10,7 @@ package org.lunatecs316.frc2014;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -52,6 +53,9 @@ public class Robot extends IterativeRobot {
         drivetrain.init();
         pickup.init();
         shooter.init();
+        
+        SmartDashboard.putBoolean("EmergencyMode", false);
+        SmartDashboard.putBoolean("DebugMode", false);
     }
 
     /**
