@@ -89,6 +89,7 @@ public class Drivetrain implements Subsystem {
         LiveWindow.addSensor("Drivetrain", "leftEncoder", leftEncoder);
         LiveWindow.addSensor("Drivetrain", "rightEncoder", rightEncoder);
         LiveWindow.addSensor("Drivetrain", "gyro", gyro);
+        LiveWindow.addSensor("Drivetrain", "rangeFinder", rangeFinder);
     }
     
     /**

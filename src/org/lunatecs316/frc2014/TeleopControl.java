@@ -53,27 +53,30 @@ public class TeleopControl {
         }
 
         // Pickup Position
-        if (operatorJoystick.getRawButton(4) && (shooter.isReadyToLoad() || emergencyMode)) {
+        if (operatorJoystick.getRawButton(4) && (shooter.atLoadingPosition() || emergencyMode)) {
             pickup.raise();
         } else if (operatorJoystick.getRawButton(5)) {
             pickup.lower();
         }
 
         // Pickup Rollers
-        double rollerSpeed = ((0.25 * operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getRawButton(3) && (shooter.isReadyToLoad() || emergencyMode)) {
+        double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
+        if (operatorJoystick.getRawButton(3) && (shooter.atLoadingPosition() || emergencyMode)) {
             pickup.setRollerSpeed(rollerSpeed);
-        } else if (operatorJoystick.getRawButton(2) && (shooter.isReadyToLoad()) || emergencyMode) {
+        } else if (operatorJoystick.getRawButton(2) && (shooter.atLoadingPosition()) || emergencyMode) {
             pickup.setRollerSpeed(-rollerSpeed);
         } else {
             pickup.setRollerSpeed(0.0);
         }
+        System.out.println(rollerSpeed);
         
         // Shooter
         if (operatorJoystick.getRawButton(1) && (pickup.isLowered() || emergencyMode)) {
             shooter.fire();
         } else if (operatorJoystick.getRawButton(11) && (pickup.isLowered() || emergencyMode)) {
             shooter.reload();
+        } else {
+            shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.kJoystickDeadband.getValue()));
         }
     }
 

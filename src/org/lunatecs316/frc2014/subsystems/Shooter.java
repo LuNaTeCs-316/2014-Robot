@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
 
 /**
@@ -59,7 +60,7 @@ public class Shooter implements Subsystem {
      */
     public void reload() {
          clutch.set(true);
-         if (!isReadyToLoad())
+         if (!atLoadingPosition() || SmartDashboard.getBoolean("EmergencyMode"))
              winch.set(1.0);
          else 
              winch.set(0.0);
@@ -69,15 +70,22 @@ public class Shooter implements Subsystem {
      * Fire the ball
      */
     public void fire() {
-        if (!atFiringPosition())    
+        if (!atFiringPosition() || SmartDashboard.getBoolean("EmergencyMode"))    
             clutch.set(false);
+    }
+    
+    /**
+     * Stop movement of the winch
+     */
+    public void setWinch(double speed) {
+        winch.set(speed);
     }
     
     /**
      * Check if the shooter is in the loading position
      * @return the status of the loading limit switch
      */
-    public boolean isReadyToLoad() {
+    public boolean atLoadingPosition() {
         return loadSwitch.get();
     }
 
