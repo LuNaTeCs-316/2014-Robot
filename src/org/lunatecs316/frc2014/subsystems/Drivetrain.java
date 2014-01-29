@@ -3,10 +3,10 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
@@ -17,10 +17,10 @@ import org.lunatecs316.frc2014.RobotMap;
  */
 public class Drivetrain implements Subsystem {
     // Drive Motors
-    private Jaguar frontLeft = new Jaguar(RobotMap.kFrontLeftMotor);
-    private Jaguar frontRight = new Jaguar(RobotMap.kFrontRightMotor);
-    private Jaguar rearLeft = new Jaguar(RobotMap.kRearLeftMotor);
-    private Jaguar rearRight = new Jaguar(RobotMap.kRearRightMotor);
+    private Victor frontLeft = new Victor(RobotMap.kFrontLeftMotor);
+    private Victor frontRight = new Victor(RobotMap.kFrontRightMotor);
+    private Victor rearLeft = new Victor(RobotMap.kRearLeftMotor);
+    private Victor rearRight = new Victor(RobotMap.kRearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     
     // Shifter
@@ -89,6 +89,7 @@ public class Drivetrain implements Subsystem {
         LiveWindow.addSensor("Drivetrain", "leftEncoder", leftEncoder);
         LiveWindow.addSensor("Drivetrain", "rightEncoder", rightEncoder);
         LiveWindow.addSensor("Drivetrain", "gyro", gyro);
+        LiveWindow.addSensor("Drivetrain", "rangeFinder", rangeFinder);
     }
     
     /**
