@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.microedition.io.Connector;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Robot Constants manager. All constants have a String key and double value
@@ -53,6 +54,7 @@ public class Constants {
      * Update the constants. Read the latest values from the constants file
      */
     public static void update() {
+        Logger.info("Constants.update()", "Reading constants from file '" + kFilename + "'");
         try {
             // Open the connection to the file
             FileConnection file = (FileConnection) Connector.open("file:///" + kFilename, Connector.READ);
@@ -92,13 +94,13 @@ public class Constants {
                     if (c != null) {
                         c.setValue(value);
                     } else {
-                        System.err.println("Constant '" + key + "' not found");
+                        Logger.error("Constants.update()", "Constant '" + key + "' not found");
                     }
                 }
             }
         } catch (IOException e) {
-            System.err.println("Error reading constants file!");
-            System.err.println(e.getMessage());
+            Logger.error("Constants.update()", "Error reading constants file!");
+            Logger.error("Constants.update()", e.getMessage());
         }
     }
 }

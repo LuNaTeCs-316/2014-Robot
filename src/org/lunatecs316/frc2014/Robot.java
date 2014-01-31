@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -63,12 +64,16 @@ public class Robot extends IterativeRobot {
         
         SmartDashboard.putBoolean("EmergencyMode", false);
         SmartDashboard.putBoolean("DebugMode", false);
+
+        Logger.setLevel(Logger.Level.DEBUG);
+        Logger.info("Robot#robotInit()", "Robot initalization complete!");
     }
 
     /**
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
+        Logger.info("Robot#autonomousInit()", "Entering autonomous mode...");
         auto.init();
     }
 
@@ -83,6 +88,7 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of operator control
      */
     public void teleopInit() {
+        Logger.info("Robot#teleopInit()", "Entering teleop mode...");
         teleop.init();
         loopCount = 0;
     }
@@ -100,6 +106,7 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of being disabled
      */
     public void disabledInit() {
+        Logger.info("Robot#disabledInit()", "Entering disabled mode...");
         Constants.update();
         loopCount = 0;
     }

@@ -2,6 +2,7 @@ package org.lunatecs316.frc2014.autonomous;
 
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.Robot;
+import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.Timer;
 
 /**
@@ -76,7 +77,7 @@ public class BasicAutonomous extends AutonomousMode {
             case kDone:
                 shooter.setWinch(0.0);
             default:
-                System.err.println("Error: invalid autonomous state");
+                Logger.error("BasicAutonomous#run()", "Invalid autonomous state");
                 break;
         }
     }
