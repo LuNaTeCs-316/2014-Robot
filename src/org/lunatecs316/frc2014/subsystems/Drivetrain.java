@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
+import org.lunatecs316.frc2014.lib.PIDController;
 
 /**
  * Drivetrain subsystem
@@ -25,10 +27,18 @@ public class Drivetrain implements Subsystem {
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.kShiftingSolenoid);
     
     // Sensors
-    private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA, RobotMap.kLeftDriveEncoderB, false, CounterBase.EncodingType.k4X);
-    private Encoder rightEncoder = new Encoder(RobotMap.kRightDriveEncoderA, RobotMap.kRightDriveEncoderB, false, CounterBase.EncodingType.k4X);
+    private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA, RobotMap.kLeftDriveEncoderB,
+            false, CounterBase.EncodingType.k4X);
+    private Encoder rightEncoder = new Encoder(RobotMap.kRightDriveEncoderA, RobotMap.kRightDriveEncoderB,
+            false, CounterBase.EncodingType.k4X);
     private Gyro gyro = new Gyro(RobotMap.kGyro);
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.kRangeFinderPing, RobotMap.kRangeFinderEcho);
+
+    // PID Controllers
+    private PIDController distanceController = new PIDController(Constants.DrivetrainDistanceP.getValue(),
+            Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
+    private PIDController angleController = new PIDController(Constants.DrivetrainAngleP.getValue(),
+            Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     
     // Singleton instance
     private static Drivetrain instance;
@@ -88,6 +98,16 @@ public class Drivetrain implements Subsystem {
         SmartDashboard.putNumber("RightEncoder", rightEncoder.get());
         SmartDashboard.putNumber("Gyro", gyro.getAngle());
         SmartDashboard.putNumber("Range Finder", rangeFinder.getRangeInches());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void updateConstants() {
+        distanceController.setPID(Constants.DrivetrainDistanceP.getValue(),
+                Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
+        angleController.setPID(Constants.DrivetrainAngleP.getValue(),
+            Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     }
     
     /**

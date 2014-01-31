@@ -9,6 +9,9 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.microedition.io.Connector;
 import org.lunatecs316.frc2014.lib.Logger;
+import org.lunatecs316.frc2014.subsystems.Drivetrain;
+import org.lunatecs316.frc2014.subsystems.Pickup;
+import org.lunatecs316.frc2014.subsystems.Shooter;
 
 /**
  * Robot Constants manager. All constants have a String key and double value
@@ -19,10 +22,16 @@ public class Constants {
     // This MUST come before the creation of any constants!
     private static Hashtable constants = new Hashtable();
     
-    public static final Constant kDashboardUpdateFrequency = new Constant("kDashboardUpdateFrequency", 10.0);
-    public static final Constant kJoystickDeadband = new Constant("kJoystickDeadband", 0.2);
-    public static final Constant kDrivetrainSkimGain = new Constant("kDrivetrainSkimGain", 0.5);
-    public static final Constant kShooterResetTime = new Constant("kShooterResetTime", 3000);
+    public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
+    public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
+    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.5);
+    public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
+    public static final Constant DrivetrainDistanceI = new Constant("DrivetrainDistanceI", 0.0);
+    public static final Constant DrivetrainDistanceD = new Constant("DrivetrainDistanceD", 0.0);
+    public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", 1.0);
+    public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
+    public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
+    public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 3000);
     
     /**
      * Representation of a single constant value
@@ -102,5 +111,10 @@ public class Constants {
             Logger.error("Constants.update()", "Error reading constants file!");
             Logger.error("Constants.update()", e.getMessage());
         }
+
+        // Trigger update in subsystems
+        Drivetrain.getInstance().updateConstants();
+        Pickup.getInstance().updateConstants();
+        Shooter.getInstance().updateConstants();
     }
 }

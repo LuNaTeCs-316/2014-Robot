@@ -59,6 +59,12 @@ public class Shooter implements Subsystem {
      */
     public void updateSmartDashboard() {
     }
+
+    /**
+     * @inheritDoc
+     */
+    public void updateConstants() {
+    }
     
     /**
      * Reload the shooter
@@ -80,7 +86,7 @@ public class Shooter implements Subsystem {
         clutch.set(false);
 
         // Timer ensures we don't try to re-engage the clutch too soon
-        resetTimer.setExpiration(Constants.kShooterResetTime.getValue());
+        resetTimer.setExpiration(Constants.ShooterResetTime.getValue());
     }
     
     /**

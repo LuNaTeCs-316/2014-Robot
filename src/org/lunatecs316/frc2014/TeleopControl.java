@@ -40,8 +40,8 @@ public class TeleopControl {
         boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
         
         // Driving
-        double move = Util.deadband(driverController.getLeftY(), Constants.kJoystickDeadband.getValue());
-        double turn = Util.deadband(driverController.getRightX(), Constants.kJoystickDeadband.getValue());
+        double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
+        double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
         drivetrain.arcadeDrive(move, turn);
 
         // Shifting
@@ -68,7 +68,7 @@ public class TeleopControl {
             } else if (operatorJoystick.getRawButton(3)) {
                 shooter.reload();
             } else {
-                shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.kJoystickDeadband.getValue()));
+                shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue()));
             }
         }
     }

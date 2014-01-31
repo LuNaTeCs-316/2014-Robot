@@ -51,6 +51,12 @@ public class Pickup implements Subsystem {
      */
     public void updateSmartDashboard() {
     }
+
+    /**
+     * @inheritDoc
+     */
+    public void updateConstants() {
+    }
    
     /**
      * Move the pickup to the raised position. 

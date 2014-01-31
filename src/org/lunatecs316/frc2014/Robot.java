@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
 import org.lunatecs316.frc2014.lib.Logger;
+import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -115,13 +116,14 @@ public class Robot extends IterativeRobot {
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
-        if (teleop.getDriverController().getButtonA()) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
             drivetrain.resetGyro();
         }
-
-        if (teleop.getDriverController().getButtonB()) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
             drivetrain.resetEncoders();
         }
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
+            Constants.update();
         
         updateSmartDashboard();
     }
@@ -137,7 +139,7 @@ public class Robot extends IterativeRobot {
      * Send data to the SmartDashboard
      */
     private void updateSmartDashboard() {
-        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
+        if (loopCount >= Constants.DashboardUpdateFrequency.getValue()) {
             drivetrain.updateSmartDashboard();
             pickup.updateSmartDashboard();
             shooter.updateSmartDashboard();

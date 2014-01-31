@@ -65,7 +65,7 @@ public class BasicAutonomous extends AutonomousMode {
                 shooter.fire();
                 if (timer.hasExpired()) {
                     state = kReload;
-                    timer.setExpiration(Constants.kShooterResetTime.getValue() + 250);
+                    timer.setExpiration(Constants.ShooterResetTime.getValue() + 250);
                 }
                 break;
             case kReload:
