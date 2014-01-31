@@ -19,7 +19,7 @@ public class Timer {
     /**
      * Start the timer
      */
-    public void reset() {
+    public final void reset() {
         m_startTime = System.currentTimeMillis();
     }
     
