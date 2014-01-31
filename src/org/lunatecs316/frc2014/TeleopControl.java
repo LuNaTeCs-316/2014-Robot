@@ -14,7 +14,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Domenic Rodriguez
  */
 public class TeleopControl {
-    private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
+    private XboxController driverController = new XboxController(RobotMap.kDriverController);
     private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
 
     private Drivetrain drivetrain = Drivetrain.getInstance();
@@ -31,7 +31,6 @@ public class TeleopControl {
      * Setup for Teleop mode
      */
     public void init() {
-        // Nothing to do yet
     }
 
     /**
@@ -41,42 +40,38 @@ public class TeleopControl {
         boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
         
         // Driving
-        double move = Util.deadband(driverJoystick.getLeftY(), Constants.kJoystickDeadband.getValue());
-        double turn = Util.deadband(driverJoystick.getRightX(), Constants.kJoystickDeadband.getValue());
+        double move = Util.deadband(driverController.getLeftY(), Constants.kJoystickDeadband.getValue());
+        double turn = Util.deadband(driverController.getRightX(), Constants.kJoystickDeadband.getValue());
         drivetrain.arcadeDrive(move, turn);
 
         // Shifting
-        if (driverJoystick.getButtonPressed(XboxController.kLeftBumper)) {
+        if (driverController.getButtonPressed(XboxController.LeftBumper)) {
             drivetrain.shiftDown();
-        } else if (driverJoystick.getButtonPressed(XboxController.kRightBumper)) {
+        } else if (driverController.getButtonPressed(XboxController.RightBumper)) {
             drivetrain.shiftUp();
         }
 
         // Pickup Position
-        if (operatorJoystick.getRawButton(4) && (shooter.atLoadingPosition() || emergencyMode)) {
+        if (driverController.getButtonPressed(XboxController.ButtonY) && (shooter.atLoadingPosition() || emergencyMode)) {
             pickup.raise();
-        } else if (operatorJoystick.getRawButton(5)) {
+        } else if (driverController.getButtonPressed(XboxController.ButtonX)) {
             pickup.lower();
         }
 
         // Pickup Rollers
-        double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getRawButton(3) && (shooter.atLoadingPosition() || emergencyMode)) {
-            pickup.setRollerSpeed(rollerSpeed);
-        } else if (operatorJoystick.getRawButton(2) && (shooter.atLoadingPosition()) || emergencyMode) {
-            pickup.setRollerSpeed(-rollerSpeed);
-        } else {
-            pickup.setRollerSpeed(0.0);
+        if ((pickup.isLowered() && shooter.atLoadingPosition()) || emergencyMode) {
+            pickup.setRollerSpeed(driverController.getZ());
         }
-        System.out.println(rollerSpeed);
         
         // Shooter
-        if (operatorJoystick.getRawButton(1) && (pickup.isLowered() || emergencyMode)) {
-            shooter.fire();
-        } else if (operatorJoystick.getRawButton(11) && (pickup.isLowered() || emergencyMode)) {
-            shooter.reload();
-        } else {
-            shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.kJoystickDeadband.getValue()));
+        if (pickup.isLowered() || emergencyMode) {
+            if (operatorJoystick.getRawButton(1)) {
+                shooter.fire();
+            } else if (operatorJoystick.getRawButton(11)) {
+                shooter.reload();
+            } else {
+                shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.kJoystickDeadband.getValue()));
+            }
         }
     }
 
@@ -84,8 +79,8 @@ public class TeleopControl {
      * Get the driver's joystick
      * @return the driver controller
      */
-    public XboxController getDriverJoystick() {
-        return driverJoystick;
+    public XboxController getDriverController() {
+        return driverController;
     }
 
     /**

@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class XboxController extends Joystick {
     
-    public static final Button kButtonA = new Button(1);
-    public static final Button kButtonB = new Button(2);
-    public static final Button kButtonX = new Button(3);
-    public static final Button kButtonY = new Button(4);
-    public static final Button kLeftBumper = new Button(5);
-    public static final Button kRightBumper = new Button(6);
+    public static final Button ButtonA = new Button(1);
+    public static final Button ButtonB = new Button(2);
+    public static final Button ButtonX = new Button(3);
+    public static final Button ButtonY = new Button(4);
+    public static final Button LeftBumper = new Button(5);
+    public static final Button RightBumper = new Button(6);
     
     public static class Button {
         private int number;

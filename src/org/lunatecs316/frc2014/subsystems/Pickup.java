@@ -1,6 +1,7 @@
 package org.lunatecs316.frc2014.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -17,7 +18,7 @@ public class Pickup implements Subsystem {
     public static final double kReverse = -1.0;
     
     private Talon roller = new Talon(RobotMap.kPickupRoller);
-    private Solenoid solenoid = new Solenoid(RobotMap.kPickupSolenoid);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.kPickupSolenoidForward, RobotMap.kPickupSolenoidReverse);
     private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
     private DigitalInput upperLimit = new DigitalInput(RobotMap.kPickupUpperLimit);
     
@@ -34,9 +35,8 @@ public class Pickup implements Subsystem {
      * @return the pickup subsystem
      */
     public static Pickup getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new Pickup();
-        }
         return instance;
     }
 
@@ -60,14 +60,14 @@ public class Pickup implements Subsystem {
      * Move the pickup to the raised position. 
      */
     public void raise(){
-        solenoid.set(true);
+        solenoid.set(DoubleSolenoid.Value.kForward);
     }
     
     /**
      * Move the pickup to the lowered position through actuation of the Solenoid
      */        
     public void lower() {
-        solenoid.set(false);
+        solenoid.set(DoubleSolenoid.Value.kReverse);
     }
     
     /**

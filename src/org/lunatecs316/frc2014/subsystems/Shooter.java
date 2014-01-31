@@ -13,7 +13,8 @@ import org.lunatecs316.frc2014.RobotMap;
  * @author Domenic Rodriguez
  */
 public class Shooter implements Subsystem {
-    private Victor winch = new Victor(RobotMap.kShooterWinch);
+    private Victor winchLeft = new Victor(RobotMap.kShooterWinchLeft);
+    private Victor winchRight = new Victor(RobotMap.kShooterWinchRight);
     private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
@@ -31,10 +32,8 @@ public class Shooter implements Subsystem {
      * @return the shooter subsystem
      */
     public static Shooter getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new Shooter();
-        }
-
         return instance;
     }
 
@@ -42,7 +41,7 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
-        LiveWindow.addActuator("Shooter", "winch", winch);
+        LiveWindow.addActuator("Shooter", "winch", winchLeft);
         LiveWindow.addActuator("Shooter", "clutch", clutch);
         LiveWindow.addSensor("Shooter", "loadSwitch", loadSwitch);
         LiveWindow.addSensor("Shooter", "maxSwitch", maxSwitch);
@@ -52,7 +51,6 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void updateSmartDashboard() {
-        
     }
     
     /**
@@ -61,9 +59,9 @@ public class Shooter implements Subsystem {
     public void reload() {
          clutch.set(true);
          if (!atLoadingPosition() || SmartDashboard.getBoolean("EmergencyMode"))
-             winch.set(1.0);
+             setWinch(1.0);
          else 
-             winch.set(0.0);
+             setWinch(0.0);
     }
     
     /**
@@ -75,10 +73,12 @@ public class Shooter implements Subsystem {
     }
     
     /**
-     * Stop movement of the winch
+     * Directly control the winch
+     * @param speed the speed of the winch
      */
     public void setWinch(double speed) {
-        winch.set(speed);
+        winchLeft.set(speed);
+        winchRight.set(speed);
     }
     
     /**

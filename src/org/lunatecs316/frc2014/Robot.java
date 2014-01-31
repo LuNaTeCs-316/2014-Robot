@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -28,6 +29,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
     private TeleopControl teleop = new TeleopControl();
+    private AutonomousMode auto;
 
     // Subsystems
     private Drivetrain drivetrain = Drivetrain.getInstance();
@@ -62,14 +64,14 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
-
+        auto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
+        auto.run();
     }
 
     /**
@@ -101,22 +103,15 @@ public class Robot extends IterativeRobot {
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
-        if (teleop.getDriverJoystick().getButtonA()) {
+        if (teleop.getDriverController().getButtonA()) {
             drivetrain.resetGyro();
         }
 
-        if (teleop.getDriverJoystick().getButtonB()) {
+        if (teleop.getDriverController().getButtonB()) {
             drivetrain.resetEncoders();
         }
         
         updateSmartDashboard();
-    }
-
-    /**
-     * This function is called once at the start of test mode
-     */
-    public void testInit() {
-
     }
 
     /**

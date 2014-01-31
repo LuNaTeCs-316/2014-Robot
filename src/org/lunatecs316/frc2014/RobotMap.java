@@ -12,18 +12,20 @@ public class RobotMap {
     public static final int kFrontRightMotor = 3;
     public static final int kRearRightMotor = 4;
     public static final int kPickupRoller = 5;
-    public static final int kShooterWinch = 6;
+    public static final int kShooterWinchLeft = 6;
+    public static final int kShooterWinchRight = 7;
     
     // Relay Output (Max 8)
     public static final int kCompressorRelay = 1;
     
     // Solenoid Output (Max 8)
     public static final int kShiftingSolenoid = 1;
-    public static final int kPickupSolenoid = 2;
-    public static final int kShooterClutch = 3;
+    public static final int kPickupSolenoidForward = 2;
+    public static final int kPickupSolenoidReverse = 3;
+    public static final int kShooterClutch = 4;
     
     // Joystick Input (Max 6)
-    public static final int kDriverJoystick = 1;
+    public static final int kDriverController = 1;
     public static final int kOperatorJoystick = 2;
     
     // Digital I/O (Max 14)

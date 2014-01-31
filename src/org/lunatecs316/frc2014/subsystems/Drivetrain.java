@@ -22,21 +22,11 @@ public class Drivetrain implements Subsystem {
     private Victor rearLeft = new Victor(RobotMap.kRearLeftMotor);
     private Victor rearRight = new Victor(RobotMap.kRearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
-    
-    // Shifter
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.kShiftingSolenoid);
     
     // Sensors
-    private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA,
-                                              RobotMap.kLeftDriveEncoderB,
-                                              false,
-                                              CounterBase.EncodingType.k4X);
-    
-    private Encoder rightEncoder = new Encoder(RobotMap.kRightDriveEncoderA,
-                                               RobotMap.kRightDriveEncoderB,
-                                               false,
-                                               CounterBase.EncodingType.k4X);
-    
+    private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA, RobotMap.kLeftDriveEncoderB, false, CounterBase.EncodingType.k4X);
+    private Encoder rightEncoder = new Encoder(RobotMap.kRightDriveEncoderA, RobotMap.kRightDriveEncoderB, false, CounterBase.EncodingType.k4X);
     private Gyro gyro = new Gyro(RobotMap.kGyro);
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.kRangeFinderPing, RobotMap.kRangeFinderEcho);
     
@@ -54,10 +44,8 @@ public class Drivetrain implements Subsystem {
      * @return the drivetrain subsystem
      */
     public static Drivetrain getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new Drivetrain();
-        }
-
         return instance;
     }
 
@@ -123,6 +111,12 @@ public class Drivetrain implements Subsystem {
         //rearLeft.set(left);
         //frontRight.set(right);
         //rearRight.set(right);
+    }
+
+    public void turn(double angle, double speed) {
+    }
+
+    public void driveStraight(double distance, double speed) {
     }
     
     /**
