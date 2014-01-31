@@ -10,8 +10,10 @@ package org.lunatecs316.frc2014;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
+import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -27,9 +29,10 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Christian Steward
  */
 public class Robot extends IterativeRobot {
+    public static NetworkTable visionData;
     private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
     private TeleopControl teleop = new TeleopControl();
-    private AutonomousMode auto;
+    private AutonomousMode auto = new BasicAutonomous();
 
     // Subsystems
     private Drivetrain drivetrain = Drivetrain.getInstance();
@@ -55,6 +58,8 @@ public class Robot extends IterativeRobot {
         drivetrain.init();
         pickup.init();
         shooter.init();
+
+        visionData = NetworkTable.getTable("visionData");
         
         SmartDashboard.putBoolean("EmergencyMode", false);
         SmartDashboard.putBoolean("DebugMode", false);

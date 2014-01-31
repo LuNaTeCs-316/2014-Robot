@@ -107,16 +107,33 @@ public class Drivetrain implements Subsystem {
         //double right = t_right - (skim(t_left) * Constants.kDrivetrainSkimGain.getValue());
 
         // Apply power to the motors
-        //frontLeft.set(left);
-        //rearLeft.set(left);
-        //frontRight.set(right);
-        //rearRight.set(right);
+        //setLeftAndRightMotors(left, right);
     }
 
+    /**
+     * Drive the robot straight forwards
+     * @param speed the speed at which to move
+     */
+    public void driveStraight(double speed) {
+        // TODO: needs to be implemented
+    }
+
+    /**
+     * Drive the robot straight for a specified distance
+     * @param distance the distance to move
+     * @param speed the speed at which to move
+     */
+    public void driveStraightDistance(double distance, double speed) {
+        // TODO: needs to be implemented
+    }
+    
+    /**
+     * Turn the robot in place
+     * @param angle the amount to turn by
+     * @param speed the speed at which to make the turn
+     */
     public void turn(double angle, double speed) {
-    }
-
-    public void driveStraight(double distance, double speed) {
+        // TODO: needs to be implemented
     }
     
     /**
@@ -161,5 +178,17 @@ public class Drivetrain implements Subsystem {
             return value + 1.0;
         else
             return 0.0;
+    }
+
+    /**
+     * Set the values of the left and right drive motors
+     * @param left the value for the left motors
+     * @param right the value for the right motors
+     */
+    private void setLeftAndRightMotors(double left, double right) {
+        frontLeft.set(left);
+        rearLeft.set(left);
+        frontRight.set(right);
+        rearRight.set(right);
     }
 }

@@ -2,7 +2,6 @@ package org.lunatecs316.frc2014.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.RobotMap;
@@ -14,9 +13,6 @@ import org.lunatecs316.frc2014.RobotMap;
  * @author Domenic Rodriguez
  */
 public class Pickup implements Subsystem {
-    public static final double kForward = 1.0;
-    public static final double kReverse = -1.0;
-    
     private Talon roller = new Talon(RobotMap.kPickupRoller);
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.kPickupSolenoidForward, RobotMap.kPickupSolenoidReverse);
     private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
@@ -72,7 +68,8 @@ public class Pickup implements Subsystem {
     
     /**
      * Sets speed of the roller for max versatility 
-     * @param speed the speed of the roller
+     * @param speed the speed of the roller. Use negative values for picking up
+     * the ball, and positive values for letting go of the ball.
      */
     public void setRollerSpeed(double speed) {
         roller.set(speed);

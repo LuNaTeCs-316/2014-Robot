@@ -12,12 +12,14 @@ public class Timer {
      * Create a new Timer object
      */
     public Timer() {
+        m_expiration = 0;
+        reset();
     }
     
     /**
      * Start the timer
      */
-    public void start() {
+    public void reset() {
         m_startTime = System.currentTimeMillis();
     }
     
@@ -34,14 +36,15 @@ public class Timer {
      * @param ms the number of milliseconds until the timer expires
      */
     public void setExpiration(double ms) {
+        reset();
         m_expiration = ms;
     }
     
     /**
      * Check if the timer has expired
-     * @return 
+     * @return if the timer value has exceeded the expiration value
      */
     public boolean hasExpired() {
-        return ((System.currentTimeMillis() - m_startTime) >= m_expiration);
+        return (getValue() >= m_expiration);
     }
 }

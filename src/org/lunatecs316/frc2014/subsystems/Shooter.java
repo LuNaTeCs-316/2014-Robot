@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
+import org.lunatecs316.frc2014.lib.Timer;
 
 /**
  * Shooter subsystem
@@ -18,6 +20,7 @@ public class Shooter implements Subsystem {
     private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
+    private Timer resetTimer = new Timer();
 
     private static Shooter instance;
     
@@ -41,6 +44,10 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
+        // Default to clutch being engaged
+        clutch.set(true);
+
+        // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winch", winchLeft);
         LiveWindow.addActuator("Shooter", "clutch", clutch);
         LiveWindow.addSensor("Shooter", "loadSwitch", loadSwitch);
@@ -57,19 +64,23 @@ public class Shooter implements Subsystem {
      * Reload the shooter
      */
     public void reload() {
-         clutch.set(true);
-         if (!atLoadingPosition() || SmartDashboard.getBoolean("EmergencyMode"))
-             setWinch(1.0);
-         else 
-             setWinch(0.0);
+        // Ensure we've waited long enough after firing
+        if (resetTimer.hasExpired()) {
+            if (!atLoadingPosition() || SmartDashboard.getBoolean("EmergencyMode"))
+                setWinch(1.0);
+            else
+                setWinch(0.0);
+        }
     }
     
     /**
      * Fire the ball
      */
     public void fire() {
-        if (!atFiringPosition() || SmartDashboard.getBoolean("EmergencyMode"))    
-            clutch.set(false);
+        clutch.set(false);
+
+        // Timer ensures we don't try to re-engage the clutch too soon
+        resetTimer.setExpiration(Constants.kShooterResetTime.getValue());
     }
     
     /**
@@ -77,8 +88,15 @@ public class Shooter implements Subsystem {
      * @param speed the speed of the winch
      */
     public void setWinch(double speed) {
-        winchLeft.set(speed);
-        winchRight.set(speed);
+        // Ensure we've waited long enough after firing
+        if (resetTimer.hasExpired()) {
+            // If we're trying to move, make sure the clutch is engaged
+            clutch.set(true);
+
+            // Set the winch motors
+            winchLeft.set(speed);
+            winchRight.set(speed);
+        }
     }
     
     /**
