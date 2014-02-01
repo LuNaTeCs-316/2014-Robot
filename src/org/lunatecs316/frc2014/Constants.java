@@ -63,7 +63,7 @@ public class Constants {
      * Update the constants. Read the latest values from the constants file
      */
     public static void update() {
-        Logger.info("Constants.update()", "Reading constants from file '" + kFilename + "'");
+        Logger.info("Constants.update", "Reading constants from file '" + kFilename + "'");
         try {
             // Open the connection to the file
             FileConnection file = (FileConnection) Connector.open("file:///" + kFilename, Connector.READ);
@@ -103,13 +103,13 @@ public class Constants {
                     if (c != null) {
                         c.setValue(value);
                     } else {
-                        Logger.error("Constants.update()", "Constant '" + key + "' not found");
+                        Logger.error("Constants.update", "Constant '" + key + "' not found");
                     }
                 }
             }
         } catch (IOException e) {
-            Logger.error("Constants.update()", "Error reading constants file!");
-            Logger.error("Constants.update()", e.getMessage());
+            Logger.error("Constants.update", "Error reading constants file!");
+            Logger.error("Constants.update", e.getMessage());
         }
 
         // Trigger update in subsystems

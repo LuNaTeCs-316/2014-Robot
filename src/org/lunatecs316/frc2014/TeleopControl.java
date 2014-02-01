@@ -14,8 +14,8 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Domenic Rodriguez
  */
 public class TeleopControl {
-    private XboxController driverController = new XboxController(RobotMap.kDriverController);
-    private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
+    private XboxController driverController = new XboxController(RobotMap.DriverController);
+    private Joystick operatorJoystick = new Joystick(RobotMap.OperatorJoystick);
 
     private Drivetrain drivetrain = Drivetrain.getInstance();
     private Pickup pickup = Pickup.getInstance();

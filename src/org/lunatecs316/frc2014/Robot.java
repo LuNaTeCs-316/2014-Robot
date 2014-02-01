@@ -32,7 +32,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  */
 public class Robot extends IterativeRobot {
     public static NetworkTable visionData;
-    private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
+    private Compressor compressor = new Compressor(RobotMap.PressureSwitch, RobotMap.CompressorRelay);
     private TeleopControl teleop = new TeleopControl();
     private AutonomousMode auto = new BasicAutonomous();
 
@@ -67,14 +67,14 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("DebugMode", false);
 
         Logger.setLevel(Logger.Level.DEBUG);
-        Logger.info("Robot#robotInit()", "Robot initalization complete!");
+        Logger.info("robotInit", "Robot initalization complete!");
     }
 
     /**
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
-        Logger.info("Robot#autonomousInit()", "Entering autonomous mode...");
+        Logger.info("autonomousInit", "Entering autonomous mode...");
         auto.init();
     }
 
@@ -89,7 +89,7 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of operator control
      */
     public void teleopInit() {
-        Logger.info("Robot#teleopInit()", "Entering teleop mode...");
+        Logger.info("teleopInit", "Entering teleop mode...");
         teleop.init();
         loopCount = 0;
     }
@@ -107,7 +107,7 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of being disabled
      */
     public void disabledInit() {
-        Logger.info("Robot#disabledInit()", "Entering disabled mode...");
+        Logger.info("disabledInit", "Entering disabled mode...");
         Constants.update();
         loopCount = 0;
     }

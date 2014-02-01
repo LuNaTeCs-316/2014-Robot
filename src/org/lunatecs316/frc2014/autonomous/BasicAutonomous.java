@@ -77,7 +77,7 @@ public class BasicAutonomous extends AutonomousMode {
             case kDone:
                 shooter.setWinch(0.0);
             default:
-                Logger.error("BasicAutonomous#run()", "Invalid autonomous state");
+                Logger.error("BasicAutonomous", "Invalid autonomous state");
                 break;
         }
     }

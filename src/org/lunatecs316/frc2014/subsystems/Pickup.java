@@ -13,10 +13,10 @@ import org.lunatecs316.frc2014.RobotMap;
  * @author Domenic Rodriguez
  */
 public class Pickup implements Subsystem {
-    private Talon roller = new Talon(RobotMap.kPickupRoller);
-    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.kPickupSolenoidForward, RobotMap.kPickupSolenoidReverse);
-    private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
-    private DigitalInput upperLimit = new DigitalInput(RobotMap.kPickupUpperLimit);
+    private Talon roller = new Talon(RobotMap.PickupRoller);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
+    private DigitalInput lowerLimit = new DigitalInput(RobotMap.PickupLoweredSwitch);
+    private DigitalInput upperLimit = new DigitalInput(RobotMap.PickupRaisedSwitch);
     
     private static Pickup instance;
     

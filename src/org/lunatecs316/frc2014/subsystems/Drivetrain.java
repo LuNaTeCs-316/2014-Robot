@@ -19,20 +19,20 @@ import org.lunatecs316.frc2014.lib.PIDController;
  */
 public class Drivetrain implements Subsystem {
     // Drive Motors
-    private Victor frontLeft = new Victor(RobotMap.kFrontLeftMotor);
-    private Victor frontRight = new Victor(RobotMap.kFrontRightMotor);
-    private Victor rearLeft = new Victor(RobotMap.kRearLeftMotor);
+    private Victor frontLeft = new Victor(RobotMap.FrontLeftMotor);
+    private Victor frontRight = new Victor(RobotMap.FrontRightMotor);
+    private Victor rearLeft = new Victor(RobotMap.RearLeftMotor);
     private Victor rearRight = new Victor(RobotMap.kRearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
-    private Solenoid shiftingSolenoid = new Solenoid(RobotMap.kShiftingSolenoid);
+    private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
     
     // Sensors
-    private Encoder leftEncoder = new Encoder(RobotMap.kLeftDriveEncoderA, RobotMap.kLeftDriveEncoderB,
+    private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
             false, CounterBase.EncodingType.k4X);
-    private Encoder rightEncoder = new Encoder(RobotMap.kRightDriveEncoderA, RobotMap.kRightDriveEncoderB,
+    private Encoder rightEncoder = new Encoder(RobotMap.RightDriveEncoderA, RobotMap.RightDriveEncoderB,
             false, CounterBase.EncodingType.k4X);
     private Gyro gyro = new Gyro(RobotMap.kGyro);
-    private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.kRangeFinderPing, RobotMap.kRangeFinderEcho);
+    private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.RangeFinderPing, RobotMap.RangeFinderEcho);
 
     // PID Controllers
     private PIDController distanceController = new PIDController(Constants.DrivetrainDistanceP.getValue(),

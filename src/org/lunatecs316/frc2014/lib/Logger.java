@@ -93,9 +93,9 @@ public class Logger {
     private static void log(Level level, String context, String message) {
         if (currentLevel.getValue() >= level.getValue()) {
             if (level == Level.WARNING || level == Level.ERROR)
-                System.err.println(timer.getValue() + "[" + context + "] " + level + ": " + message);
+                System.err.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
             else
-                System.out.println(timer.getValue() + "[" + context + "] " + level + ": " + message);
+                System.out.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
         }
     }
 }

@@ -15,11 +15,12 @@ import org.lunatecs316.frc2014.lib.Timer;
  * @author Domenic Rodriguez
  */
 public class Shooter implements Subsystem {
-    private Victor winchLeft = new Victor(RobotMap.kShooterWinchLeft);
-    private Victor winchRight = new Victor(RobotMap.kShooterWinchRight);
-    private DoubleSolenoid clutch = new DoubleSolenoid(RobotMap.kShooterClutchForward, RobotMap.kShooterClutchReverse);
-    private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
-    private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
+    private Victor winchLeft = new Victor(RobotMap.ShooterWinchLeft);
+    private Victor winchRight = new Victor(RobotMap.ShooterWinchRight);
+    private DoubleSolenoid clutch = new DoubleSolenoid(RobotMap.ShooterClutchForward, RobotMap.ShooterClutchReverse);
+    private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoad);
+    private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMax);
+    private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
     private Timer resetTimer = new Timer();
 
     private static Shooter instance;
@@ -65,20 +66,7 @@ public class Shooter implements Subsystem {
      */
     public void updateConstants() {
     }
-    
-    /**
-     * Reload the shooter
-     */
-    public void reload() {
-        // Ensure we've waited long enough after firing
-        if (resetTimer.hasExpired()) {
-            if (!atLoadingPosition() || SmartDashboard.getBoolean("EmergencyMode"))
-                setWinch(1.0);
-            else
-                setWinch(0.0);
-        }
-    }
-    
+
     /**
      * Fire the ball
      */
@@ -88,6 +76,15 @@ public class Shooter implements Subsystem {
         // Timer ensures we don't try to re-engage the clutch too soon
         resetTimer.setExpiration(Constants.ShooterResetTime.getValue());
     }
+
+    /**
+     * Reload the shooter
+     */
+    public void reload() {
+        // Ensure we've waited long enough after firing
+        if (resetTimer.hasExpired())
+            setWinch(1.0);
+    }
     
     /**
      * Directly control the winch
@@ -96,6 +93,10 @@ public class Shooter implements Subsystem {
     public void setWinch(double speed) {
         // Ensure we've waited long enough after firing
         if (resetTimer.hasExpired()) {
+            if (SmartDashboard.getBoolean("EmergencyMode", false) ||
+                    ((speed > 0 && atLoadingPosition()) || (speed < 0 && atMaxPosition())))
+                speed = 0;
+
             // If we're trying to move, make sure the clutch is engaged
             clutch.set(DoubleSolenoid.Value.kReverse);
 
@@ -117,7 +118,11 @@ public class Shooter implements Subsystem {
      * Check if the shooter is at the max firing position
      * @return the status of the firing limit switch
      */
-    public boolean atFiringPosition() {
+    public boolean atMaxPosition() {
         return maxSwitch.get();
+    }
+
+    public boolean ballIsLoaded() {
+        return ballSwitch.get();
     }
 }
