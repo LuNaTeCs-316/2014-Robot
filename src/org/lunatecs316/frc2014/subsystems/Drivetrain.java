@@ -39,6 +39,8 @@ public class Drivetrain implements Subsystem {
             Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
     private PIDController angleController = new PIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
+    private boolean pidControl = false;
+    private double startAngle;
     
     // Singleton instance
     private static Drivetrain instance;
@@ -116,6 +118,17 @@ public class Drivetrain implements Subsystem {
      * @param turn left-right turning value
      */
     public void arcadeDrive(double move, double turn) {
+        arcadeDrive(move, turn, false);
+    }
+
+    /**
+     * Arcade drive
+     * @param move forward-reverse movement value
+     * @param turn left-right turning value
+     * @param pid is PID control enabled?
+     */
+    private void arcadeDrive(double move, double turn, boolean pid) {
+        pidControl = pid;
         driveMotors.arcadeDrive(move, turn);
 
         // Calculate left and right motor values
@@ -135,7 +148,13 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to move
      */
     public void driveStraight(double speed) {
-        // TODO: needs to be implemented
+        if (!pidControl) {
+            startAngle = gyro.getAngle();
+            angleController.reset();
+            pidControl = true;
+        }
+        double turn = angleController.run(startAngle, gyro.getAngle());
+        arcadeDrive(speed, turn, pidControl);
     }
 
     /**
@@ -153,7 +172,17 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to make the turn
      */
     public void turn(double angle, double speed) {
-        // TODO: needs to be implemented
+        if (!pidControl) {
+            startAngle = gyro.getAngle();
+            angleController.reset();
+            pidControl = true;
+        }
+        double turn;
+        if (speed > 0)
+            turn = angleController.run(startAngle, gyro.getAngle(), -1.0, speed);
+        else
+            turn = angleController.run(startAngle, gyro.getAngle(), -1.0, speed);
+        arcadeDrive(0, turn, pidControl);
     }
     
     /**

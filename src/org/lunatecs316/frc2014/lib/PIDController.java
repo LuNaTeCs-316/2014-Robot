@@ -4,7 +4,7 @@ package org.lunatecs316.frc2014.lib;
  * PID Controller that can run in an iterative loop
  * @author Domenic Rodriguez
  */
-public class PIDController {
+public final class PIDController {
     private double kP, kI, kD;
     private double integral, prev_error;
 
@@ -18,8 +18,7 @@ public class PIDController {
      */
     public PIDController(double kP, double kI, double kD) {
         setPID(kP, kI, kD);
-        integral = prev_error = 0;
-        deltaTimer.reset();
+        reset();
     }
 
     /**
@@ -28,10 +27,28 @@ public class PIDController {
      * @param kI integral constant
      * @param kD derivative constant
      */
-    public final void setPID(double kP, double kI, double kD) {
+    public void setPID(double kP, double kI, double kD) {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
+    }
+
+    /**
+     * Reset the controller
+     */
+    public void reset() {
+        integral = prev_error = 0;
+        deltaTimer.reset();
+    }
+
+    /**
+     * Run one iteration of the PID controller
+     * @param sp setpoint (target value)
+     * @param pv process variable (current value)
+     * @return output of the PID algorithm
+     */
+    public double run(double sp, double pv) {
+        return run(sp, pv, -1.0, 1.0);
     }
 
     /**
@@ -39,7 +56,7 @@ public class PIDController {
      * @param sp setpoint (target value)
      * @param pv process variable (current value)
      * @param min the minimum output
-     * @param max th maximum output
+     * @param max the maximum output
      * @return output of the PID algorithm
      */
     public double run(double sp, double pv, double min, double max) {

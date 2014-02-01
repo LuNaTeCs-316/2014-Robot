@@ -38,11 +38,17 @@ public class TeleopControl {
      */
     public void run() {
         boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
-        
+
         // Driving
-        double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
-        double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
-        drivetrain.arcadeDrive(move, turn);
+        if (driverController.getButton(XboxController.ButtonA)) {
+            drivetrain.driveStraight(0.5);
+        } else if (driverController.getButton(XboxController.ButtonB)) {
+            drivetrain.turn(90, 0.5);
+        } else {
+            double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
+            double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
+            drivetrain.arcadeDrive(move, turn);
+        }
 
         // Shifting
         if (driverController.getButtonPressed(XboxController.LeftBumper)) {

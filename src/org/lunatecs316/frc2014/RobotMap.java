@@ -22,7 +22,8 @@ public class RobotMap {
     public static final int kShiftingSolenoid = 1;
     public static final int kPickupSolenoidForward = 2;
     public static final int kPickupSolenoidReverse = 3;
-    public static final int kShooterClutch = 4;
+    public static final int kShooterClutchForward = 4;
+    public static final int kShooterClutchReverse = 5;
     
     // Joystick Input (Max 6)
     public static final int kDriverController = 1;

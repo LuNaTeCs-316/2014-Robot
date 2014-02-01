@@ -28,7 +28,11 @@ public class XboxController extends Joystick {
     }
     
     private boolean[] previous = { false, false, false, false, false, false };
-    
+
+    /**
+     * Default constructor
+     * @param port USB port of the controller
+     */
     public XboxController(final int port) {
         super(port);
     }
@@ -49,48 +53,70 @@ public class XboxController extends Joystick {
         return getRawAxis(5);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getButtonA() {
-        boolean current = getRawButton(1);
-        previous[0] = current;
-        return current;
+        return getButton(ButtonA);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getButtonB() {
-        boolean current = getRawButton(2);
-        previous[1] = current;
-        return current;
+        return getButton(ButtonB);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getButtonX() {
-        boolean current = getRawButton(3);
-        previous[2] = current;
-        return current;
+        return getButton(ButtonX);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getButtonY() {
-        boolean current = getRawButton(4);
-        previous[3] = current;
-        return current;
+        return getButton(ButtonY);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getLeftBumper() {
-        boolean current = getRawButton(5);
-        previous[4] = current;
-        return current;
+        return getButton(LeftBumper);
     }
 
+    /**
+     * @deprecated Use XboxController#getButton() instead.
+     * @return the button value
+     */
     public boolean getRightBumper() {
-        boolean current = getRawButton(6);
-        previous[5] = current;
-        return current;
+        return getButton(LeftBumper);
     }
-    
+
+    /**
+     * Get the value of the specified button
+     * @param button the button to check
+     * @return the value of the button
+     */
     public boolean getButton(Button button) {
         boolean current = getRawButton(button.getNumber());
         previous[button.getNumber()-1] = current;
         return current;
     }
-    
+
+    /**
+     * Check if the specified button was pressed
+     * @param button the button to check
+     * @return whether or not the button was pressed
+     */
     public boolean getButtonPressed(Button button) {
         int number = button.getNumber();
         boolean current = getRawButton(number);
@@ -98,7 +124,12 @@ public class XboxController extends Joystick {
         previous[number-1] = current;
         return result;
     }
-    
+
+    /**
+     * Check if the specified button is being held
+     * @param button the button to check
+     * @return whether or not the button is being held
+     */
     public boolean getButtonHeld(Button button) {
         int number = button.getNumber();
         boolean current = getRawButton(number);
@@ -106,7 +137,12 @@ public class XboxController extends Joystick {
         previous[number-1] = current;
         return result;
     }
-    
+
+    /**
+     * Check if the specified button was released
+     * @param button the button to check
+     * @return whether or not the button was released
+     */
     public boolean getButtonReleased(Button button) {
         int number = button.getNumber();
         boolean current = getRawButton(number);

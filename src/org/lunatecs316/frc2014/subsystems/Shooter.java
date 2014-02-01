@@ -1,7 +1,7 @@
 package org.lunatecs316.frc2014.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,7 +17,7 @@ import org.lunatecs316.frc2014.lib.Timer;
 public class Shooter implements Subsystem {
     private Victor winchLeft = new Victor(RobotMap.kShooterWinchLeft);
     private Victor winchRight = new Victor(RobotMap.kShooterWinchRight);
-    private Solenoid clutch = new Solenoid(RobotMap.kShooterClutch);
+    private DoubleSolenoid clutch = new DoubleSolenoid(RobotMap.kShooterClutchForward, RobotMap.kShooterClutchReverse);
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.kShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.kShooterMax);
     private Timer resetTimer = new Timer();
@@ -45,7 +45,7 @@ public class Shooter implements Subsystem {
      */
     public void init(){
         // Default to clutch being engaged
-        clutch.set(true);
+        clutch.set(DoubleSolenoid.Value.kReverse);
 
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winch", winchLeft);
@@ -83,7 +83,7 @@ public class Shooter implements Subsystem {
      * Fire the ball
      */
     public void fire() {
-        clutch.set(false);
+        clutch.set(DoubleSolenoid.Value.kForward);
 
         // Timer ensures we don't try to re-engage the clutch too soon
         resetTimer.setExpiration(Constants.ShooterResetTime.getValue());
@@ -97,7 +97,7 @@ public class Shooter implements Subsystem {
         // Ensure we've waited long enough after firing
         if (resetTimer.hasExpired()) {
             // If we're trying to move, make sure the clutch is engaged
-            clutch.set(true);
+            clutch.set(DoubleSolenoid.Value.kReverse);
 
             // Set the winch motors
             winchLeft.set(speed);
