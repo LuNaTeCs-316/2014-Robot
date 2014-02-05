@@ -1,12 +1,10 @@
 package org.lunatecs316.frc2014.lib;
 
-import edu.wpi.first.wpilibj.Joystick;
-
 /**
  * Wrapper class for the Xbox Controller
  * @author Domenic Rodriguez
  */
-public class XboxController extends Joystick {
+public class XboxController extends EnhancedJoystick {
     
     public static final Button ButtonA = new Button(1);
     public static final Button ButtonB = new Button(2);
@@ -27,8 +25,6 @@ public class XboxController extends Joystick {
         }
     }
     
-    private boolean[] previous = { false, false, false, false, false, false };
-
     /**
      * Default constructor
      * @param port USB port of the controller
@@ -54,62 +50,12 @@ public class XboxController extends Joystick {
     }
 
     /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getButtonA() {
-        return getButton(ButtonA);
-    }
-
-    /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getButtonB() {
-        return getButton(ButtonB);
-    }
-
-    /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getButtonX() {
-        return getButton(ButtonX);
-    }
-
-    /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getButtonY() {
-        return getButton(ButtonY);
-    }
-
-    /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getLeftBumper() {
-        return getButton(LeftBumper);
-    }
-
-    /**
-     * @deprecated Use XboxController#getButton() instead.
-     * @return the button value
-     */
-    public boolean getRightBumper() {
-        return getButton(LeftBumper);
-    }
-
-    /**
      * Get the value of the specified button
      * @param button the button to check
      * @return the value of the button
      */
     public boolean getButton(Button button) {
-        boolean current = getRawButton(button.getNumber());
-        previous[button.getNumber()-1] = current;
-        return current;
+        return getButton(button.getNumber());
     }
 
     /**
@@ -118,11 +64,7 @@ public class XboxController extends Joystick {
      * @return whether or not the button was pressed
      */
     public boolean getButtonPressed(Button button) {
-        int number = button.getNumber();
-        boolean current = getRawButton(number);
-        boolean result = current && !previous[number-1];
-        previous[number-1] = current;
-        return result;
+        return getButtonPressed(button.getNumber());
     }
 
     /**
@@ -131,11 +73,7 @@ public class XboxController extends Joystick {
      * @return whether or not the button is being held
      */
     public boolean getButtonHeld(Button button) {
-        int number = button.getNumber();
-        boolean current = getRawButton(number);
-        boolean result = current && previous[number-1];
-        previous[number-1] = current;
-        return result;
+        return getButtonHeld(button.getNumber());
     }
 
     /**
@@ -144,10 +82,6 @@ public class XboxController extends Joystick {
      * @return whether or not the button was released
      */
     public boolean getButtonReleased(Button button) {
-        int number = button.getNumber();
-        boolean current = getRawButton(number);
-        boolean result = !current && previous[number-1];
-        previous[number-1] = current;
-        return result;
+        return getButtonReleased(button);
     }
 }

@@ -2,6 +2,7 @@ package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.lib.EnhancedJoystick;
 import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
@@ -15,7 +16,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  */
 public class TeleopControl {
     private XboxController driverController = new XboxController(RobotMap.DriverController);
-    private Joystick operatorJoystick = new Joystick(RobotMap.OperatorJoystick);
+    private EnhancedJoystick operatorJoystick = new EnhancedJoystick(RobotMap.OperatorJoystick);
 
     private Drivetrain drivetrain = Drivetrain.getInstance();
     private Pickup pickup = Pickup.getInstance();
