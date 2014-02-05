@@ -63,9 +63,6 @@ public class Robot extends IterativeRobot {
 
         visionData = NetworkTable.getTable("visionData");
         
-        SmartDashboard.putBoolean("EmergencyMode", false);
-        SmartDashboard.putBoolean("DebugMode", false);
-
         Logger.setLevel(Logger.Level.DEBUG);
         Logger.info("robotInit", "Robot initalization complete!");
     }

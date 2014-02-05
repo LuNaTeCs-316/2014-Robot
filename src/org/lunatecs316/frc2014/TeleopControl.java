@@ -1,7 +1,6 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.lib.EnhancedJoystick;
 import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
@@ -38,18 +37,10 @@ public class TeleopControl {
      * Run one iteration of Teleop mode
      */
     public void run() {
-        boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
-
         // Driving
-        if (driverController.getButton(XboxController.ButtonA)) {
-            drivetrain.driveStraight(0.5);
-        } else if (driverController.getButton(XboxController.ButtonB)) {
-            drivetrain.turn(90, 0.5);
-        } else {
-            double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
-            double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
-            drivetrain.arcadeDrive(move, turn);
-        }
+        double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
+        double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
+        drivetrain.arcadeDrive(move, turn);
 
         // Shifting
         if (driverController.getButtonPressed(XboxController.LeftBumper)) {
@@ -59,7 +50,7 @@ public class TeleopControl {
         }
 
         // Pickup Position
-        if (driverController.getButtonPressed(XboxController.ButtonY) && (shooter.atLoadingPosition() || emergencyMode)) {
+        if (driverController.getButtonPressed(XboxController.ButtonY)) {
             pickup.raise();
         } else if (driverController.getButtonPressed(XboxController.ButtonX)) {
             pickup.lower();
@@ -69,15 +60,19 @@ public class TeleopControl {
         pickup.setRollerSpeed(driverController.getZ());
         
         // Shooter
-        //if (pickup.isLowered() || emergencyMode) {
-            if (operatorJoystick.getRawButton(1)) {
-                shooter.fire();
-            } else if (operatorJoystick.getRawButton(3)) {
-                shooter.reload();
-            } else {
-                shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue()));
-            }
-        //}
+        if (operatorJoystick.getButtonPressed(1)) {
+            shooter.fire();
+        } else if (operatorJoystick.getButton(3)) {
+            shooter.reload();
+        } else if (operatorJoystick.getButtonPressed(6)) {
+            shooter.bumpUp();
+        } else if (operatorJoystick.getButtonPressed(7)) {
+            shooter.bumpDown();
+        } else if (operatorJoystick.getButtonHeld(6) || operatorJoystick.getButtonHeld(7)) {
+            // Do nothing, but prevent the code from reaching the else statement
+        } else {
+            shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue()));
+        }
     }
 
     /**

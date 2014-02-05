@@ -44,5 +44,5 @@ public class RobotMap {
     public static final int BallSwitch = 12;
     
     // Analog I/O (Max 8)
-    public static final int kGyro = 1;
+    public static final int Gyro = 1;
 }

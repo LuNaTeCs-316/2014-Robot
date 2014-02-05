@@ -3,8 +3,8 @@ package org.lunatecs316.frc2014.lib;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
- * Better version of the WPILib Joystick class
- * @author Domenic
+ * WPILib Joystick class with edge detection methods
+ * @author Domenic Rodriguez
  */
 public class EnhancedJoystick extends Joystick {
     public static final int kNumberOfButtons = 12;

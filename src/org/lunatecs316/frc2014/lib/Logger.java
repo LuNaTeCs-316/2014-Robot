@@ -5,9 +5,8 @@ package org.lunatecs316.frc2014.lib;
  * @author Domenic Rodriguez
  */
 public class Logger {
-
     /**
-     * Class to represent detail currentLevel of the logger
+     * Class to represent the detail level of the logger
      */
     public static class Level {
         public static final Level INFO = new Level("INFO", 1);

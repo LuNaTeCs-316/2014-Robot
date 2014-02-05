@@ -5,7 +5,6 @@ package org.lunatecs316.frc2014.lib;
  * @author Domenic Rodriguez
  */
 public class XboxController extends EnhancedJoystick {
-    
     public static final Button ButtonA = new Button(1);
     public static final Button ButtonB = new Button(2);
     public static final Button ButtonX = new Button(3);

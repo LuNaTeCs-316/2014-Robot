@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Drivetrain subsystem
@@ -31,7 +32,7 @@ public class Drivetrain implements Subsystem {
             false, CounterBase.EncodingType.k4X);
     private Encoder rightEncoder = new Encoder(RobotMap.RightDriveEncoderA, RobotMap.RightDriveEncoderB,
             false, CounterBase.EncodingType.k4X);
-    private Gyro gyro = new Gyro(RobotMap.kGyro);
+    private Gyro gyro = new Gyro(RobotMap.Gyro);
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.RangeFinderPing, RobotMap.RangeFinderEcho);
 
     // PID Controllers
@@ -39,7 +40,6 @@ public class Drivetrain implements Subsystem {
             Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
-    private boolean pidControl = false;
     private double startAngle;
     
     // Singleton instance
@@ -111,24 +111,13 @@ public class Drivetrain implements Subsystem {
         angleController.setPID(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     }
-    
-    /**
-     * Arcade-style driving
-     * @param move forward-reverse movement value
-     * @param turn left-right turning value
-     */
-    public void arcadeDrive(double move, double turn) {
-        arcadeDrive(move, turn, false);
-    }
 
     /**
      * Arcade drive
      * @param move forward-reverse movement value
      * @param turn left-right turning value
-     * @param pid is PID control enabled?
      */
-    private void arcadeDrive(double move, double turn, boolean pid) {
-        pidControl = pid;
+    public void arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
 
         // Calculate left and right motor values
@@ -148,13 +137,8 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to move
      */
     public void driveStraight(double speed) {
-        if (!pidControl) {
-            startAngle = gyro.getAngle();
-            angleController.reset();
-            pidControl = true;
-        }
-        double turn = angleController.run(startAngle, gyro.getAngle());
-        arcadeDrive(speed, turn, pidControl);
+        // TODO: implement method
+        Logger.warning("Drivetrain#driveStraight", "Method not yet implemented");
     }
 
     /**
@@ -164,6 +148,7 @@ public class Drivetrain implements Subsystem {
      */
     public void driveStraightDistance(double distance, double speed) {
         // TODO: needs to be implemented
+        Logger.warning("Drivetrain#driveStraightDistance", "Method not yet implemented");
     }
     
     /**
@@ -172,17 +157,7 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to make the turn
      */
     public void turn(double angle, double speed) {
-        if (!pidControl) {
-            startAngle = gyro.getAngle();
-            angleController.reset();
-            pidControl = true;
-        }
-        double turn;
-        if (speed > 0)
-            turn = angleController.run(startAngle, gyro.getAngle(), -1.0, speed);
-        else
-            turn = angleController.run(startAngle, gyro.getAngle(), -1.0, speed);
-        arcadeDrive(0, turn, pidControl);
+        Logger.warning("Drivetrain#turn", "Method not yet implemented");
     }
     
     /**
