@@ -19,8 +19,8 @@ public class Shooter implements Subsystem {
     private Victor winchLeft = new Victor(RobotMap.ShooterWinchLeft);
     private Victor winchRight = new Victor(RobotMap.ShooterWinchRight);
     private DoubleSolenoid clutch = new DoubleSolenoid(RobotMap.ShooterClutchForward, RobotMap.ShooterClutchReverse);
-    private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoad);
-    private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMax);
+    private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoadSwitch);
+    private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMaxSwitch);
     private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
     private IterativeTimer resetTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
@@ -47,9 +47,6 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
-        // Default to clutch being engaged
-        clutch.set(DoubleSolenoid.Value.kReverse);
-
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winch", winchLeft);
         LiveWindow.addActuator("Shooter", "clutch", clutch);
@@ -83,9 +80,7 @@ public class Shooter implements Subsystem {
      * Reload the shooter
      */
     public void reload() {
-        // Ensure we've waited long enough after firing
-        if (resetTimer.hasExpired())
-            setWinch(1.0);
+        _setWinch(1.0);
     }
 
     /**
@@ -100,6 +95,7 @@ public class Shooter implements Subsystem {
                 } catch (InterruptedException ex) {
                 }
                 setWinch(0.0);
+                taskTimer.cancel();
             }
         }, 0);
     }
@@ -116,6 +112,7 @@ public class Shooter implements Subsystem {
                 } catch (InterruptedException ex) {
                 }
                 setWinch(0.0);
+                taskTimer.cancel();
             }
         }, 0);
     }

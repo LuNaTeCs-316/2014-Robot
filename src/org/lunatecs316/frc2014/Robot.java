@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
 import org.lunatecs316.frc2014.lib.Logger;
@@ -88,7 +87,6 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
         Logger.info("teleopInit", "Entering teleop mode...");
         teleop.init();
-        loopCount = 0;
     }
 
     /**
@@ -96,7 +94,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         teleop.run();
-        
         updateSmartDashboard();
     }
 
@@ -106,7 +103,12 @@ public class Robot extends IterativeRobot {
     public void disabledInit() {
         Logger.info("disabledInit", "Entering disabled mode...");
         Constants.update();
-        loopCount = 0;
+
+        // Set default states of the subsystems
+        drivetrain.arcadeDrive(0, 0);
+        drivetrain.shiftDown();
+        pickup.setRollerSpeed(0.0);
+        shooter.setWinch(0.0);
     }
 
     /**

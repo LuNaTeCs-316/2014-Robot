@@ -29,7 +29,7 @@ public class BasicAutonomous extends AutonomousMode {
         drivetrain.shiftDown();
 
         // Reset the state timer
-        timer.setExpiration(3000);
+        timer.setExpiration(2000);
 
         // Set the default state
         state = kDrivingForwards;
@@ -52,20 +52,20 @@ public class BasicAutonomous extends AutonomousMode {
                     state = kFire;
                 } else {
                     state = kWaitForHotGoal;
-                    timer.setExpiration(5000);
+                    timer.setExpiration(3000);
                 }
                 break;
             case kWaitForHotGoal:
                 if (timer.hasExpired()) {
                     state = kFire;
-                    timer.setExpiration(3500);
+                    timer.setExpiration(Constants.ShooterResetTime.getValue() + 250);
                 }
                 break;
             case kFire:
                 shooter.fire();
                 if (timer.hasExpired()) {
                     state = kReload;
-                    timer.setExpiration(Constants.ShooterResetTime.getValue() + 250);
+                    timer.setExpiration(3000);
                 }
                 break;
             case kReload:

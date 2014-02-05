@@ -16,7 +16,6 @@ public class Pickup implements Subsystem {
     private Talon roller = new Talon(RobotMap.PickupRoller);
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
     private DigitalInput lowerLimit = new DigitalInput(RobotMap.PickupLoweredSwitch);
-    private DigitalInput upperLimit = new DigitalInput(RobotMap.PickupRaisedSwitch);
     
     private static Pickup instance;
     
@@ -43,7 +42,6 @@ public class Pickup implements Subsystem {
         LiveWindow.addActuator("Pickup", "Roller", roller);
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
         LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
-        LiveWindow.addSensor("Pickup", "Upper Limit", upperLimit);
     }
     
     /**
@@ -62,14 +60,14 @@ public class Pickup implements Subsystem {
      * Move the pickup to the raised position. 
      */
     public void raise(){
-        solenoid.set(DoubleSolenoid.Value.kForward);
+        solenoid.set(DoubleSolenoid.Value.kReverse);
     }
     
     /**
      * Move the pickup to the lowered position through actuation of the Solenoid
      */        
     public void lower() {
-        solenoid.set(DoubleSolenoid.Value.kReverse);
+        solenoid.set(DoubleSolenoid.Value.kForward);
     }
     
     /**
@@ -79,14 +77,6 @@ public class Pickup implements Subsystem {
      */
     public void setRollerSpeed(double speed) {
         roller.set(speed);
-    }
-    
-    /**
-     * Get the state of the upper limit switch
-     * @return true if pickup is raised
-      */
-    public boolean isRaised() {
-        return upperLimit.get();
     }
     
     /**

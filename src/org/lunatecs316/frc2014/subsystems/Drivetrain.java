@@ -120,12 +120,16 @@ public class Drivetrain implements Subsystem {
     public void arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
 
+        // Amp up the turn value
+        //if (move > 0.5)
+        //    turn = turn * (turn_gain * Math.abs(move));
+
         // Calculate left and right motor values
         //double t_left = move + turn;
         //double t_right = move - turn;
 
         // Skim values and apply to the opposite side
-        //double left = t_left - (skim(t_right) * Constants.kDrivetrainSkimGain.getValue());
+        //double left = t_left + (skim(t_right));
         //double right = t_right - (skim(t_left) * Constants.kDrivetrainSkimGain.getValue());
 
         // Apply power to the motors
@@ -197,9 +201,9 @@ public class Drivetrain implements Subsystem {
      */
     private double skim(double value) {
         if (value > 1.0)
-            return value - 1.0;
+            return -((value - 1.0) * Constants.DrivetrainSkimGain.getValue());
         else if (value < -1.0)
-            return value + 1.0;
+            return -((value + 1.0) * Constants.DrivetrainSkimGain.getValue());
         else
             return 0.0;
     }

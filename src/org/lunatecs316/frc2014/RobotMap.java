@@ -38,10 +38,9 @@ public class RobotMap {
     public static final int RangeFinderPing = 6;
     public static final int RangeFinderEcho = 7;
     public static final int PickupLoweredSwitch = 8;
-    public static final int PickupRaisedSwitch = 9;
-    public static final int ShooterLoad = 10;
-    public static final int ShooterMax = 11;
-    public static final int BallSwitch = 12;
+    public static final int ShooterLoadSwitch = 9;
+    public static final int ShooterMaxSwitch = 10;
+    public static final int BallSwitch = 11;
     
     // Analog I/O (Max 8)
     public static final int Gyro = 1;

@@ -24,14 +24,15 @@ public class Constants {
     
     public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
-    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.5);
+    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
+    public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 0.2);
     public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
     public static final Constant DrivetrainDistanceI = new Constant("DrivetrainDistanceI", 0.0);
     public static final Constant DrivetrainDistanceD = new Constant("DrivetrainDistanceD", 0.0);
     public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", 1.0);
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
-    public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 3000);
+    public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
     
     /**
      * Representation of a single constant value
