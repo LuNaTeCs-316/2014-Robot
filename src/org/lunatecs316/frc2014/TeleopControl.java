@@ -68,7 +68,7 @@ public class TeleopControl {
         pickup.setRollerSpeed(driverController.getZ());
         
         // Shooter
-        if (pickup.isLowered() || emergencyMode) {
+        //if (pickup.isLowered() || emergencyMode) {
             if (operatorJoystick.getRawButton(1)) {
                 shooter.fire();
             } else if (operatorJoystick.getRawButton(3)) {
@@ -76,7 +76,7 @@ public class TeleopControl {
             } else {
                 shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue()));
             }
-        }
+        //}
     }
 
     /**
