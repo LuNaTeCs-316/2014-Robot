@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
-import org.lunatecs316.frc2014.lib.PIDController;
+import org.lunatecs316.frc2014.lib.IterativePIDController;
 
 /**
  * Drivetrain subsystem
@@ -35,9 +35,9 @@ public class Drivetrain implements Subsystem {
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.RangeFinderPing, RobotMap.RangeFinderEcho);
 
     // PID Controllers
-    private PIDController distanceController = new PIDController(Constants.DrivetrainDistanceP.getValue(),
+    private IterativePIDController distanceController = new IterativePIDController(Constants.DrivetrainDistanceP.getValue(),
             Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
-    private PIDController angleController = new PIDController(Constants.DrivetrainAngleP.getValue(),
+    private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     private boolean pidControl = false;
     private double startAngle;

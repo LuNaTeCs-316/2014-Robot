@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
-import org.lunatecs316.frc2014.lib.Timer;
+import org.lunatecs316.frc2014.lib.IterativeTimer;
 
 /**
  * Shooter subsystem
@@ -21,7 +21,7 @@ public class Shooter implements Subsystem {
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoad);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMax);
     private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
-    private Timer resetTimer = new Timer();
+    private IterativeTimer resetTimer = new IterativeTimer();
 
     private static Shooter instance;
     
@@ -73,7 +73,7 @@ public class Shooter implements Subsystem {
     public void fire() {
         clutch.set(DoubleSolenoid.Value.kForward);
 
-        // Timer ensures we don't try to re-engage the clutch too soon
+        // IterativeTimer ensures we don't try to re-engage the clutch too soon
         resetTimer.setExpiration(Constants.ShooterResetTime.getValue());
     }
 

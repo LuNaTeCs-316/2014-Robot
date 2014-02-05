@@ -3,7 +3,7 @@ package org.lunatecs316.frc2014.autonomous;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.Robot;
 import org.lunatecs316.frc2014.lib.Logger;
-import org.lunatecs316.frc2014.lib.Timer;
+import org.lunatecs316.frc2014.lib.IterativeTimer;
 
 /**
  * Basic autonomous mode. Score the ball in the high goal
@@ -17,7 +17,7 @@ public class BasicAutonomous extends AutonomousMode {
     private static final int kReload = 4;
     private static final int kDone = 5;
 
-    private Timer timer = new Timer();
+    private IterativeTimer timer = new IterativeTimer();
     private int state;
 
     /**

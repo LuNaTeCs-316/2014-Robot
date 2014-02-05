@@ -4,11 +4,11 @@ package org.lunatecs316.frc2014.lib;
  * PID Controller that can run in an iterative loop
  * @author Domenic Rodriguez
  */
-public final class PIDController {
+public final class IterativePIDController {
     private double kP, kI, kD;
     private double integral, prev_error;
 
-    private Timer deltaTimer = new Timer();
+    private IterativeTimer deltaTimer = new IterativeTimer();
 
     /**
      * Construct a new PIDController
@@ -16,7 +16,7 @@ public final class PIDController {
      * @param kI integral constant
      * @param kD derivative constant
      */
-    public PIDController(double kP, double kI, double kD) {
+    public IterativePIDController(double kP, double kI, double kD) {
         setPID(kP, kI, kD);
         reset();
     }

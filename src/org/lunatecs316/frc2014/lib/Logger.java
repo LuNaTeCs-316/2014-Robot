@@ -32,11 +32,11 @@ public class Logger {
         }
     }
 
-    private static Timer timer;
+    private static IterativeTimer timer;
     private static Level currentLevel;
 
     static {
-        timer = new Timer();
+        timer = new IterativeTimer();
         currentLevel = Level.DEBUG;
     }
 

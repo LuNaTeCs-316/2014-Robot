@@ -4,14 +4,14 @@ package org.lunatecs316.frc2014.lib;
  * Time things within iterative loops
  * @author Domenic Rodriguez
  */
-public class Timer {
+public class IterativeTimer {
     private double m_startTime;
     private double m_expiration;
     
     /**
      * Create a new Timer object
      */
-    public Timer() {
+    public IterativeTimer() {
         m_expiration = 0;
         reset();
     }
