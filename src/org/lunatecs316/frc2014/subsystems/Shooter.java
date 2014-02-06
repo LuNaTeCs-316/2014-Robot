@@ -19,6 +19,8 @@ import org.lunatecs316.frc2014.lib.Logger;
  * @author Domenic Rodriguez
  */
 public class Shooter implements Subsystem {
+    private static Shooter instance;
+
     private Victor winchLeft = new Victor(RobotMap.ShooterWinchLeft);
     private Victor winchRight = new Victor(RobotMap.ShooterWinchRight);
     private DoubleSolenoid clutch = new DoubleSolenoid(RobotMap.ShooterClutchForward, RobotMap.ShooterClutchReverse);
@@ -26,10 +28,11 @@ public class Shooter implements Subsystem {
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMaxSwitch);
     private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
     private AnalogChannel armPot = new AnalogChannel(RobotMap.ShooterPot);
-    private IterativeTimer resetTimer = new IterativeTimer();
+    private IterativeTimer clutchTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
-    private static Shooter instance;
+    private double period = 2.0 / 100.0;
+    private boolean manualControl;
 
     /**
      * Default constructor
@@ -81,57 +84,67 @@ public class Shooter implements Subsystem {
         clutch.set(DoubleSolenoid.Value.kForward);
 
         // IterativeTimer ensures we don't try to re-engage the clutch too soon
-        resetTimer.setExpiration(Constants.ShooterResetTime.getValue());
+        clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
     }
 
     /**
      * Reload the shooter
      */
     public void reload() {
-        _setWinch(1.0);
+        manualControl = false;
+        taskTimer.schedule(new TimerTask() {
+            public void run() {
+                _setWinch(1.0);
+                if (atLoadingPosition() || manualControl) {
+                    _setWinch(0.0);
+                    cancel();
+                }
+            }
+        }, 0L, (long) period * 1000);
     }
 
     /**
      * Move the shooter up by a tiny bit
      */
     public void bumpUp() {
+        manualControl = false;
         taskTimer.schedule(new TimerTask() {
+            private int count = 0;
             public void run() {
-                Logger.debug("Shooter#bumpUp", "Entering thread");
-                setWinch(-0.2);
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ex) {
+                count++;
+                _setWinch(-0.3);
+                if (count >= 20 || manualControl) {
+                    _setWinch(0.0);
+                    cancel();
                 }
-                setWinch(0.0);
-                taskTimer.cancel();
-                Logger.debug("Shooter#bumpUp", "Exiting thread");
             }
-        }, 0);
+        }, 0L, (long) period * 1000);
     }
 
     /**
      * Move the shooter down by a tiny bit
      */
     public void bumpDown() {
+        manualControl = false;
         taskTimer.schedule(new TimerTask() {
+            private int count = 0;
             public void run() {
-                setWinch(0.2);
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException ex) {
+                count++;
+                _setWinch(0.3);
+                if (count >= 20 || manualControl) {
+                    _setWinch(0.0);
+                    cancel();
                 }
-                setWinch(0.0);
-                taskTimer.cancel();
             }
-        }, 0);
+        }, 0L, (long) period * 1000);
     }
     
     /**
      * Directly control the winch
      * @param speed the speed of the winch
      */
-    public synchronized void setWinch(double speed) {
+    public void setWinch(double speed) {
+        manualControl = true;
         _setWinch(speed);
     }
 
@@ -139,9 +152,9 @@ public class Shooter implements Subsystem {
      * Control the winch motors
      * @param speed the output value for the winch motors
      */
-    private void _setWinch(double speed) {
+    private synchronized void _setWinch(double speed) {
         // Ensure we've waited long enough after firing
-        if (resetTimer.hasExpired()) {
+        if (clutchTimer.hasExpired()) {
             if ((speed > 0 && atLoadingPosition()))// || (speed < 0 && atMaxPosition()))
                 speed = 0;
 

@@ -19,6 +19,8 @@ import org.lunatecs316.frc2014.lib.Logger;
  * @author Domenic Rodriguez
  */
 public class Drivetrain implements Subsystem {
+    private static Drivetrain instance;
+
     // Drive Motors
     private Victor frontLeft = new Victor(RobotMap.FrontLeftMotor);
     private Victor frontRight = new Victor(RobotMap.FrontRightMotor);
@@ -41,9 +43,6 @@ public class Drivetrain implements Subsystem {
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     private double startAngle;
-    
-    // Singleton instance
-    private static Drivetrain instance;
 
     /**
      * Default constructor

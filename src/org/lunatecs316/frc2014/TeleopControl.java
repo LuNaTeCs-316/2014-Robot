@@ -63,16 +63,16 @@ public class TeleopControl {
         // Shooter
         if (operatorJoystick.getButtonPressed(1)) {
             shooter.fire();
-        } else if (operatorJoystick.getButton(3)) {
+        } else if (operatorJoystick.getButtonReleased(1)) {
             shooter.reload();
         } else if (operatorJoystick.getButtonPressed(6)) {
             shooter.bumpUp();
         } else if (operatorJoystick.getButtonPressed(7)) {
             shooter.bumpDown();
-        } else if (operatorJoystick.getButtonHeld(6) || operatorJoystick.getButtonHeld(7)) {
-            // Do nothing, but prevent the code from reaching the else statement
         } else {
-            shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue()));
+            double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
+            if (value != 0)
+                shooter.setWinch(value);
         }
     }
 
