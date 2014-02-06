@@ -1,14 +1,17 @@
 package org.lunatecs316.frc2014.subsystems;
 
+import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Shooter subsystem
@@ -22,6 +25,7 @@ public class Shooter implements Subsystem {
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoadSwitch);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMaxSwitch);
     private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
+    private AnalogChannel armPot = new AnalogChannel(RobotMap.ShooterPot);
     private IterativeTimer resetTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
@@ -48,16 +52,20 @@ public class Shooter implements Subsystem {
      */
     public void init(){
         // Setup LiveWindow
-        LiveWindow.addActuator("Shooter", "winch", winchLeft);
+        LiveWindow.addActuator("Shooter", "winchLeft", winchLeft);
+        LiveWindow.addActuator("Shooter", "winchRight", winchRight);
         LiveWindow.addActuator("Shooter", "clutch", clutch);
         LiveWindow.addSensor("Shooter", "loadSwitch", loadSwitch);
         LiveWindow.addSensor("Shooter", "maxSwitch", maxSwitch);
+        LiveWindow.addSensor("Shooter", "ballSwitch", ballSwitch);
+        LiveWindow.addSensor("Shooter", "armPot", armPot);
     }
     
     /**
      * @inheritDoc
      */
     public void updateSmartDashboard() {
+        SmartDashboard.putNumber("Arm Position", getArmPosition());
     }
 
     /**
@@ -89,6 +97,7 @@ public class Shooter implements Subsystem {
     public void bumpUp() {
         taskTimer.schedule(new TimerTask() {
             public void run() {
+                Logger.debug("Shooter#bumpUp", "Entering thread");
                 setWinch(-0.2);
                 try {
                     Thread.sleep(200);
@@ -96,6 +105,7 @@ public class Shooter implements Subsystem {
                 }
                 setWinch(0.0);
                 taskTimer.cancel();
+                Logger.debug("Shooter#bumpUp", "Exiting thread");
             }
         }, 0);
     }
@@ -122,7 +132,6 @@ public class Shooter implements Subsystem {
      * @param speed the speed of the winch
      */
     public synchronized void setWinch(double speed) {
-        taskTimer.cancel();
         _setWinch(speed);
     }
 
@@ -133,8 +142,8 @@ public class Shooter implements Subsystem {
     private void _setWinch(double speed) {
         // Ensure we've waited long enough after firing
         if (resetTimer.hasExpired()) {
-            //if ((speed > 0 && atLoadingPosition()) || (speed < 0 && atMaxPosition()))
-            //    speed = 0;
+            if ((speed > 0 && atLoadingPosition()))// || (speed < 0 && atMaxPosition()))
+                speed = 0;
 
             // If we're trying to move, make sure the clutch is engaged
             clutch.set(DoubleSolenoid.Value.kReverse);
@@ -167,5 +176,13 @@ public class Shooter implements Subsystem {
      */
     public boolean ballIsLoaded() {
         return ballSwitch.get();
+    }
+
+    /**
+     * Get the position of the arm
+     * @return the value of the potentiometer
+     */
+    public double getArmPosition() {
+        return armPot.getAverageVoltage();
     }
 }

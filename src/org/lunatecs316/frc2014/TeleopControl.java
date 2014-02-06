@@ -2,6 +2,7 @@ package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
 import org.lunatecs316.frc2014.lib.EnhancedJoystick;
+import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
@@ -50,9 +51,9 @@ public class TeleopControl {
         }
 
         // Pickup Position
-        if (driverController.getButtonPressed(XboxController.ButtonY)) {
+        if (driverController.getButtonPressed(XboxController.ButtonX)) {
             pickup.raise();
-        } else if (driverController.getButtonPressed(XboxController.ButtonX)) {
+        } else if (driverController.getButtonPressed(XboxController.ButtonY)) {
             pickup.lower();
         }
 

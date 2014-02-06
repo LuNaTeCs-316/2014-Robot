@@ -44,4 +44,5 @@ public class RobotMap {
     
     // Analog I/O (Max 8)
     public static final int Gyro = 1;
+    public static final int ShooterPot = 3;
 }
