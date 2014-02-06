@@ -1,5 +1,6 @@
 package org.lunatecs316.frc2014.autonomous;
 
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.Robot;
 import org.lunatecs316.frc2014.lib.Logger;
@@ -17,6 +18,7 @@ public class BasicAutonomous extends AutonomousMode {
     private static final int kReload = 4;
     private static final int kDone = 5;
 
+    private NetworkTable visionData;
     private IterativeTimer timer = new IterativeTimer();
     private int state;
 
@@ -24,6 +26,10 @@ public class BasicAutonomous extends AutonomousMode {
      * @see AutonomousMode#init()
      */
     public void init() {
+        // Get the NetworkTable
+        visionData = NetworkTable.getTable("visionData");
+        visionData.putBoolean("enabled", true);
+
         // Set the intial states for the robot subsystems
         pickup.lower();
         drivetrain.shiftDown();
@@ -48,7 +54,7 @@ public class BasicAutonomous extends AutonomousMode {
                 }
                 break;
             case kCheckForHotGoal:
-                if (Robot.visionData.getBoolean("goalIsHot", true)) {
+                if (visionData.getBoolean("goalIsHot", true)) {
                     state = kFire;
                 } else {
                     state = kWaitForHotGoal;

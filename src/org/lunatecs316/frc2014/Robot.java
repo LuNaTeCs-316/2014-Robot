@@ -30,7 +30,6 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Christian Steward
  */
 public class Robot extends IterativeRobot {
-    public static NetworkTable visionData;
     private Compressor compressor = new Compressor(RobotMap.PressureSwitch, RobotMap.CompressorRelay);
     private TeleopControl teleop = new TeleopControl();
     private AutonomousMode auto = new BasicAutonomous();
@@ -59,8 +58,6 @@ public class Robot extends IterativeRobot {
         drivetrain.init();
         pickup.init();
         shooter.init();
-
-        visionData = NetworkTable.getTable("visionData");
         
         Logger.setLevel(Logger.Level.DEBUG);
         Logger.info("robotInit", "Robot initalization complete!");
