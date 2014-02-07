@@ -42,7 +42,10 @@ public class Drivetrain implements Subsystem {
             Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
+
     private double startAngle;
+    private boolean manualControl;
+    private boolean highGear;
 
     /**
      * Default constructor
@@ -112,11 +115,21 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
-     * Arcade drive
+     * Arcade-style driving
      * @param move forward-reverse movement value
      * @param turn left-right turning value
      */
     public void arcadeDrive(double move, double turn) {
+        manualControl = true;
+        _arcadeDrive(move, turn);
+    }
+
+    /**
+     * Arcade drive implementation
+     * @param move the "throttle" value
+     * @param turn the "steering" value
+     */
+    private void _arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
 
         // Amp up the turn value
@@ -153,6 +166,23 @@ public class Drivetrain implements Subsystem {
         // TODO: needs to be implemented
         Logger.warning("Drivetrain#driveStraightDistance", "Method not yet implemented");
     }
+
+    /**
+     * Use the range finder to drive the robot a set distance from whatever is
+     * in front of it (typically the wall).
+     * @param distance the desired distance between the bot and the wall
+     * @param speed how fast to drive
+     */
+    public void driveToDistance(double distance, double speed) {
+        manualControl = false;
+        double current = rangeFinder.getRangeInches();
+        if (distance > current)
+            _arcadeDrive(speed, 0.0);
+        else if (distance < current)
+            _arcadeDrive(-speed, 0.0);
+        else
+            _arcadeDrive(0.0, 0.0);
+    }
     
     /**
      * Turn the robot in place
@@ -160,13 +190,19 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to make the turn
      */
     public void turn(double angle, double speed) {
-        Logger.warning("Drivetrain#turn", "Method not yet implemented");
+        if (manualControl) {
+            startAngle = getGyroAngle();
+            manualControl = false;
+        }
+        double turn = angleController.run(startAngle, getGyroAngle());
+        _arcadeDrive(0.0, turn);
     }
     
     /**
      * Shift into high gear
      */
     public void shiftUp() {
+        highGear = true;
         shiftingSolenoid.set(true);
     }
     
@@ -174,7 +210,32 @@ public class Drivetrain implements Subsystem {
      * Shift into low gear
      */
     public void shiftDown() {
+        highGear = false;
         shiftingSolenoid.set(false);
+    }
+
+    /**
+     * Get the average value of the left and right encoders
+     * @return the average between the left and right encoders
+     */
+    public double getAverageEncoderValue() {
+        return (leftEncoder.get() + rightEncoder.get()) / 2;
+    }
+
+    /**
+     * Get the current angle measured by the gyro
+     * @return the gyro angle
+     */
+    public double getGyroAngle() {
+        return gyro.getAngle();
+    }
+
+    /**
+     * Check if the robot is being controlled manually
+     * @return if the robot is being controlled manually
+     */
+    public boolean isManualControl() {
+        return manualControl;
     }
     
     /**

@@ -10,7 +10,6 @@ package org.lunatecs316.frc2014;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
 import org.lunatecs316.frc2014.lib.Logger;
@@ -41,12 +40,6 @@ public class Robot extends IterativeRobot {
 
     // Teleop loop count
     private int loopCount = 0;
-
-    /**
-     * Robot Constructor
-     */
-    public Robot() {
-    }
 
     /**
      * This function is run when the robot is first started up and should be
@@ -104,6 +97,7 @@ public class Robot extends IterativeRobot {
         // Set default states of the subsystems
         drivetrain.arcadeDrive(0, 0);
         drivetrain.shiftDown();
+        pickup.raise();
         pickup.setRollerSpeed(0.0);
         shooter.setWinch(0.0);
     }
