@@ -3,6 +3,8 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,14 +13,13 @@ import java.util.TimerTask;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
-import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Shooter subsystem
  * @author Christian Steward
  * @author Domenic Rodriguez
  */
-public class Shooter implements Subsystem {
+public class Shooter implements Subsystem, PIDOutput {
     private static Shooter instance;
 
     private Victor winchLeft = new Victor(RobotMap.ShooterWinchLeft);
@@ -27,11 +28,12 @@ public class Shooter implements Subsystem {
     private DigitalInput loadSwitch = new DigitalInput(RobotMap.ShooterLoadSwitch);
     private DigitalInput maxSwitch = new DigitalInput(RobotMap.ShooterMaxSwitch);
     private DigitalInput ballSwitch = new DigitalInput(RobotMap.BallSwitch);
-    private AnalogChannel armPot = new AnalogChannel(RobotMap.ShooterPot);
+    private AnalogChannel positionPot = new AnalogChannel(RobotMap.ShooterPot);
+    private PIDController positionController = new PIDController(Constants.ShooterPositionP.getValue(),
+                Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue(), positionPot, this);
     private IterativeTimer clutchTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
-    private double period = 2.0 / 100.0;
     private boolean manualControl;
 
     /**
@@ -54,6 +56,10 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
+        positionPot.setVoltageForPID(true);
+        positionController.setOutputRange(-1.0, 1.0);
+        positionController.setPercentTolerance(0.5);
+
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winchLeft", winchLeft);
         LiveWindow.addActuator("Shooter", "winchRight", winchRight);
@@ -61,7 +67,7 @@ public class Shooter implements Subsystem {
         LiveWindow.addSensor("Shooter", "loadSwitch", loadSwitch);
         LiveWindow.addSensor("Shooter", "maxSwitch", maxSwitch);
         LiveWindow.addSensor("Shooter", "ballSwitch", ballSwitch);
-        LiveWindow.addSensor("Shooter", "armPot", armPot);
+        LiveWindow.addSensor("Shooter", "positionPot", positionPot);
     }
     
     /**
@@ -75,6 +81,8 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void updateConstants() {
+        positionController.setPID(Constants.ShooterPositionP.getValue(),
+                Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
     }
 
     /**
@@ -92,6 +100,7 @@ public class Shooter implements Subsystem {
      */
     public void reload() {
         manualControl = false;
+        positionController.disable();
         taskTimer.schedule(new TimerTask() {
             public void run() {
                 _setWinch(1.0);
@@ -100,7 +109,7 @@ public class Shooter implements Subsystem {
                     cancel();
                 }
             }
-        }, 0L, (long) period * 1000);
+        }, 0L, 50);
     }
 
     /**
@@ -108,17 +117,18 @@ public class Shooter implements Subsystem {
      */
     public void bumpUp() {
         manualControl = false;
+        positionController.disable();
         taskTimer.schedule(new TimerTask() {
             private int count = 0;
             public void run() {
                 count++;
                 _setWinch(-0.3);
-                if (count >= 20 || manualControl) {
+                if (count >= Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
                 }
             }
-        }, 0L, (long) period * 1000);
+        }, 0L, 50);
     }
 
     /**
@@ -126,17 +136,28 @@ public class Shooter implements Subsystem {
      */
     public void bumpDown() {
         manualControl = false;
+        positionController.disable();
         taskTimer.schedule(new TimerTask() {
             private int count = 0;
             public void run() {
                 count++;
                 _setWinch(0.3);
-                if (count >= 20 || manualControl) {
+                if (count >= Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
                 }
             }
-        }, 0L, (long) period * 1000);
+        }, 0L, 50);
+    }
+
+    /**
+     * Set the target position for the shooter arm
+     * @param target 
+     */
+    public void setTargetPosition(double target) {
+        manualControl = false;
+        positionController.setSetpoint(target);
+        positionController.enable();
     }
     
     /**
@@ -145,6 +166,7 @@ public class Shooter implements Subsystem {
      */
     public void setWinch(double speed) {
         manualControl = true;
+        positionController.disable();
         _setWinch(speed);
     }
 
@@ -192,10 +214,34 @@ public class Shooter implements Subsystem {
     }
 
     /**
+     * Check if the PID Controller is on target
+     * @return if the arm is at position
+     */
+    public boolean atTarget() {
+        return positionController.onTarget();
+    }
+
+    /**
+     * Check if the shooter is under manual control
+     * @return if the shooter is being controlled manually
+     */
+    public boolean isManualControl() {
+        return manualControl;
+    }
+
+    /**
      * Get the position of the arm
      * @return the value of the potentiometer
      */
     public double getArmPosition() {
-        return armPot.getAverageVoltage();
+        return positionPot.getAverageVoltage();
+    }
+
+    /**
+     * Set the motor to the output from the PID Controller
+     * @param output
+     */
+    public void pidWrite(double output) {
+        _setWinch(output);
     }
 }

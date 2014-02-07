@@ -63,15 +63,19 @@ public class TeleopControl {
         // Shooter
         if (operatorJoystick.getButtonPressed(1)) {
             shooter.fire();
-        } else if (operatorJoystick.getButtonReleased(1)) {
-            shooter.reload();
+        //} else if (operatorJoystick.getButtonReleased(1)) {
+        //    shooter.reload();
         } else if (operatorJoystick.getButtonPressed(6)) {
             shooter.bumpUp();
         } else if (operatorJoystick.getButtonPressed(7)) {
             shooter.bumpDown();
+        } else if (operatorJoystick.getButtonPressed(11)) {
+            shooter.setTargetPosition(Constants.Shooter8Inch.getValue());
+        } else if (operatorJoystick.getButtonPressed(10)) {
+            shooter.setTargetPosition(Constants.Shooter10Inch.getValue());
         } else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
-            if (value != 0)
+            if (value != 0 || shooter.isManualControl())
                 shooter.setWinch(value);
         }
     }

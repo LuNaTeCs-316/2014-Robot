@@ -24,6 +24,7 @@ public class Constants {
     
     public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
+
     public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
     public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 0.2);
     public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
@@ -32,7 +33,16 @@ public class Constants {
     public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", 1.0);
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
+
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
+    public static final Constant ShooterBump = new Constant("ShooterBump", 5);
+    public static final Constant ShooterPositionP = new Constant("ShooterPositionP", 1.0);
+    public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 0.0);
+    public static final Constant ShooterPositionD = new Constant("ShooterPositionD", 0.0);
+    public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 4.95);
+    public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 3.332);
+    public static final Constant Shooter10Inch = new Constant("Shooter10Inch", 3.650);
+    public static final Constant Shooter8Inch = new Constant("Shooter8Inch", 3.800);
     
     /**
      * Representation of a single constant value
