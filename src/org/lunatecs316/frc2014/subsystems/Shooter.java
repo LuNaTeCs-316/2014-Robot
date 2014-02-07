@@ -93,6 +93,8 @@ public class Shooter implements Subsystem, PIDOutput {
 
         // IterativeTimer ensures we don't try to re-engage the clutch too soon
         clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
+
+        reload();
     }
 
     /**
@@ -122,7 +124,7 @@ public class Shooter implements Subsystem, PIDOutput {
             private int count = 0;
             public void run() {
                 count++;
-                _setWinch(-0.3);
+                _setWinch(-0.6);
                 if (count >= Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
@@ -141,7 +143,7 @@ public class Shooter implements Subsystem, PIDOutput {
             private int count = 0;
             public void run() {
                 count++;
-                _setWinch(0.3);
+                _setWinch(0.6);
                 if (count >= Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
