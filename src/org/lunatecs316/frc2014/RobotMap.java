@@ -10,7 +10,7 @@ public class RobotMap {
     public static final int FrontLeftMotor = 1;
     public static final int RearLeftMotor = 2;
     public static final int FrontRightMotor = 3;
-    public static final int kRearRightMotor = 4;
+    public static final int RearRightMotor = 4;
     public static final int PickupRoller = 5;
     public static final int ShooterWinchLeft = 6;
     public static final int ShooterWinchRight = 7;

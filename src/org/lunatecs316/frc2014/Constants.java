@@ -26,7 +26,7 @@ public class Constants {
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
 
     public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
-    public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 0.2);
+    public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 1.2);
     public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
     public static final Constant DrivetrainDistanceI = new Constant("DrivetrainDistanceI", 0.0);
     public static final Constant DrivetrainDistanceD = new Constant("DrivetrainDistanceD", 0.0);
@@ -39,10 +39,11 @@ public class Constants {
     public static final Constant ShooterPositionP = new Constant("ShooterPositionP", 1.0);
     public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 0.0);
     public static final Constant ShooterPositionD = new Constant("ShooterPositionD", 0.0);
+    public static final Constant ShooterPositionTolerance = new Constant("ShooterPositionTolerance", 0.05);
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 4.95);
     public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 3.332);
-    public static final Constant Shooter10Inch = new Constant("Shooter10Inch", 3.650);
-    public static final Constant Shooter8Inch = new Constant("Shooter8Inch", 3.800);
+    public static final Constant ShooterNearShot = new Constant("ShooterNearShot", 4.175);
+    public static final Constant ShooterFarShot = new Constant("ShooterFarShot", 4.318);
     
     /**
      * Representation of a single constant value
@@ -116,6 +117,8 @@ public class Constants {
                     } else {
                         Logger.error("Constants.update", "Constant '" + key + "' not found");
                     }
+                } else {
+                    Logger.error("Constants.update", "Invalid syntax: '=' not found");
                 }
             }
         } catch (IOException e) {

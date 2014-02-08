@@ -39,26 +39,41 @@ public class TeleopControl {
      */
     public void run() {
         // Driving
-        double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
-        double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
-        drivetrain.arcadeDrive(move, turn);
+        if (driverController.getButton(XboxController.ButtonA)) {
+            drivetrain.driveStraight(0.6);
+        } else if (driverController.getButton(XboxController.ButtonB)) {
+            drivetrain.turn(90, 50);
+        } else {
+            double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
+            double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
+
+            // TODO: try using Drivetrain#driveStraight() when turn == 0
+            drivetrain.arcadeDrive(move, turn);
+        }
+        
 
         // Shifting
-        if (driverController.getButtonPressed(XboxController.LeftBumper)) {
-            drivetrain.shiftDown();
-        } else if (driverController.getButtonPressed(XboxController.RightBumper)) {
+        if (driverController.getButton(XboxController.RightBumper)) {
             drivetrain.shiftUp();
+        } else {
+            drivetrain.shiftDown();
         }
 
         // Pickup Position
-        if (driverController.getButtonPressed(XboxController.ButtonX)) {
+        if (operatorJoystick.getButtonPressed(4)) {
             pickup.raise();
-        } else if (driverController.getButtonPressed(XboxController.ButtonY)) {
+        } else if (operatorJoystick.getButtonPressed(5)) {
             pickup.lower();
         }
 
         // Pickup Rollers
-        pickup.setRollerSpeed(driverController.getZ());
+        double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
+        if (operatorJoystick.getRawButton(2))
+            pickup.setRollerSpeed(-rollerSpeed);
+        else if (operatorJoystick.getRawButton(3))
+            pickup.setRollerSpeed(rollerSpeed);
+        else
+            pickup.setRollerSpeed(0.0);
         
         // Shooter
         if (operatorJoystick.getButtonPressed(1)) {
@@ -67,15 +82,15 @@ public class TeleopControl {
             shooter.bumpUp();
         } else if (operatorJoystick.getButtonPressed(7)) {
             shooter.bumpDown();
-        } else if (operatorJoystick.getButtonPressed(11)) {
-            shooter.setTargetPosition(Constants.Shooter8Inch.getValue());
-        } else if (operatorJoystick.getButtonPressed(10)) {
-            shooter.setTargetPosition(Constants.Shooter10Inch.getValue());
+        } else if (operatorJoystick.getRawButton(11)) {
+            shooter.setPosition(Constants.ShooterNearShot.getValue());
+        } else if (operatorJoystick.getRawButton(10)) {
+            shooter.setPosition(Constants.ShooterFarShot.getValue());
         } else if (operatorJoystick.getButtonPressed(9)) {
             shooter.reload();
         } else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
-            if (value != 0 || shooter.isManualControl())
+            if (value != 0 || shooter.isManualControl() || operatorJoystick.getRawButton(8))
                 shooter.setWinch(value);
         }
     }

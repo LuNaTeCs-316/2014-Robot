@@ -47,6 +47,7 @@ public class Robot extends IterativeRobot {
      */
     public void robotInit() {
         compressor.start();
+        LiveWindow.addActuator("Default", "Compressor", compressor);
 
         drivetrain.init();
         pickup.init();
@@ -97,7 +98,6 @@ public class Robot extends IterativeRobot {
         // Set default states of the subsystems
         drivetrain.arcadeDrive(0, 0);
         drivetrain.shiftDown();
-        pickup.raise();
         pickup.setRollerSpeed(0.0);
         shooter.setWinch(0.0);
     }

@@ -25,7 +25,7 @@ public class Drivetrain implements Subsystem {
     private Victor frontLeft = new Victor(RobotMap.FrontLeftMotor);
     private Victor frontRight = new Victor(RobotMap.FrontRightMotor);
     private Victor rearLeft = new Victor(RobotMap.RearLeftMotor);
-    private Victor rearRight = new Victor(RobotMap.kRearRightMotor);
+    private Victor rearRight = new Victor(RobotMap.RearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
     
@@ -153,8 +153,12 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to move
      */
     public void driveStraight(double speed) {
-        // TODO: implement method
-        Logger.warning("Drivetrain#driveStraight", "Method not yet implemented");
+        if (manualControl) {
+            manualControl = false;
+            startAngle = getGyroAngle();
+        }
+        double turn = angleController.run(startAngle, getGyroAngle());
+        _arcadeDrive(speed, turn);
     }
 
     /**
@@ -163,8 +167,14 @@ public class Drivetrain implements Subsystem {
      * @param speed the speed at which to move
      */
     public void driveStraightDistance(double distance, double speed) {
-        // TODO: needs to be implemented
-        Logger.warning("Drivetrain#driveStraightDistance", "Method not yet implemented");
+        if (manualControl) {
+            manualControl = false;
+            startAngle = getGyroAngle();
+            resetEncoders();
+        }
+        double move = distanceController.run(distance, getAverageEncoderValue());
+        double turn = angleController.run(startAngle, getGyroAngle());
+        _arcadeDrive(move, turn);
     }
 
     /**
@@ -194,7 +204,7 @@ public class Drivetrain implements Subsystem {
             startAngle = getGyroAngle();
             manualControl = false;
         }
-        double turn = angleController.run(startAngle, getGyroAngle());
+        double turn = angleController.run(startAngle + angle, getGyroAngle());
         _arcadeDrive(0.0, turn);
     }
     
