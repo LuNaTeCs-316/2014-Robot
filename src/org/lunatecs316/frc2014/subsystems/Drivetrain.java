@@ -28,7 +28,7 @@ public class Drivetrain implements Subsystem {
     private Victor rearRight = new Victor(RobotMap.RearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
-    
+
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
             false, CounterBase.EncodingType.k4X);
@@ -70,19 +70,19 @@ public class Drivetrain implements Subsystem {
         // Setup RobotDrive
         driveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         driveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-        
+
         // Setup Gyro
         gyro.setSensitivity(0.007);
         resetGyro();
-        
+
         // Setup Encoders
         leftEncoder.start();
         rightEncoder.start();
         resetEncoders();
-        
+
         // Setup range finder
         rangeFinder.setAutomaticMode(true);
-        
+
         // Setup LiveWindow for test mode
         LiveWindow.addActuator("Drivetrain", "frontLeft", frontLeft);
         LiveWindow.addActuator("Drivetrain", "rearLeft", rearLeft);
@@ -93,7 +93,7 @@ public class Drivetrain implements Subsystem {
         LiveWindow.addSensor("Drivetrain", "gyro", gyro);
         LiveWindow.addSensor("Drivetrain", "rangeFinder", rangeFinder);
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -131,21 +131,31 @@ public class Drivetrain implements Subsystem {
      */
     private void _arcadeDrive(double move, double turn) {
         driveMotors.arcadeDrive(move, turn);
+    }
+
+    /**
+     * Custom arcade drive inspired by Team 254
+     * @param throttle forward-reverse movement
+     * @param turn left-right steering
+     */
+    public void cheesyDrive(double throttle, double turn) {
+        // Negate throttle to remain consistent with Joysticks
+        throttle = -throttle;
 
         // Amp up the turn value
-        //if (Math.abs(move) > 0.5)
-        //    turn = turn * (Constants.DrivetrainTurnGain.getValue() * Math.abs(move));
+        if (Math.abs(throttle) > 0.5)
+            turn = turn * (Constants.DrivetrainTurnGain.getValue() * Math.abs(throttle));
 
         // Calculate left and right motor values
-        //double t_left = move + turn;
-        //double t_right = move - turn;
+        double t_left = throttle + turn;
+        double t_right = throttle - turn;
 
         // Skim values and apply to the opposite side
-        //double left = t_left + (skim(t_right));
-        //double right = t_right + (skim(t_left));
+        double left = t_left + (skim(t_right));
+        double right = t_right + (skim(t_left));
 
         // Apply power to the motors
-        //setLeftAndRightMotors(left, right);
+        setLeftAndRightMotors(left, right);
     }
 
     /**
@@ -193,7 +203,7 @@ public class Drivetrain implements Subsystem {
         else
             _arcadeDrive(0.0, 0.0);
     }
-    
+
     /**
      * Turn the robot in place
      * @param angle the amount to turn by
@@ -207,7 +217,7 @@ public class Drivetrain implements Subsystem {
         double turn = angleController.run(startAngle + angle, getGyroAngle());
         _arcadeDrive(0.0, turn);
     }
-    
+
     /**
      * Shift into high gear
      */
@@ -215,7 +225,7 @@ public class Drivetrain implements Subsystem {
         highGear = true;
         shiftingSolenoid.set(true);
     }
-    
+
     /**
      * Shift into low gear
      */
@@ -247,14 +257,14 @@ public class Drivetrain implements Subsystem {
     public boolean isManualControl() {
         return manualControl;
     }
-    
+
     /**
      * Reset the gyro angle
      */
     public void resetGyro() {
         gyro.reset();
     }
-    
+
     /**
      * Reset the left and right encoders
      */
