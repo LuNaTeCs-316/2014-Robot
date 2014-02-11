@@ -3,7 +3,6 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.AnalogChannel;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -67,7 +66,7 @@ public class Shooter implements Subsystem {
         LiveWindow.addSensor("Shooter", "ballSwitch", ballSwitch);
         LiveWindow.addSensor("Shooter", "positionPot", positionPot);
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -91,8 +90,6 @@ public class Shooter implements Subsystem {
 
         // IterativeTimer ensures we don't try to re-engage the clutch too soon
         clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
-
-        reload();
     }
 
     /**
@@ -149,7 +146,7 @@ public class Shooter implements Subsystem {
 
     /**
      * Set the target position for the shooter arm
-     * @param target 
+     * @param target
      */
     public void setPosition(double target) {
         if (manualControl) {
@@ -159,7 +156,7 @@ public class Shooter implements Subsystem {
         double value = positionController.run(target, positionPot.getAverageVoltage());
         setWinch(value);
     }
-    
+
     /**
      * Directly control the winch
      * @param speed the speed of the winch
@@ -187,7 +184,7 @@ public class Shooter implements Subsystem {
             winchRight.set(speed);
         }
     }
-    
+
     /**
      * Check if the shooter is in the loading position
      * @return the status of the loading limit switch

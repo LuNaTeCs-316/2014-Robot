@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class EnhancedJoystick extends Joystick {
     public static final int kNumberOfButtons = 12;
-    private boolean[] previousValues;
+    private boolean[] previous;
+    private boolean[] current;
 
     /**
      * Default constructor
@@ -16,9 +17,27 @@ public class EnhancedJoystick extends Joystick {
      */
     public EnhancedJoystick(int port) {
         super(port);
-        previousValues = new boolean[kNumberOfButtons];
+
+        previous = new boolean[kNumberOfButtons];
         for (int i = 0; i < kNumberOfButtons; i++)
-            previousValues[i] = false;
+            previous[i] = false;
+        current = new boolean[kNumberOfButtons];
+        for (int i = 0; i < kNumberOfButtons; i++)
+            current[i] = false;
+    }
+
+    /**
+     * Read and store all the button values. Necessary so we can do multiple
+     * edge detection checks in the same loop
+     */
+    public void update() {
+        // Set the old values
+        System.arraycopy(current, 0, previous, 0, kNumberOfButtons);
+
+        // Read the new values
+        for (int i = 0; i < kNumberOfButtons; i++) {
+            current[i] = getRawButton(i+1);
+        }
     }
 
     /**
@@ -30,9 +49,7 @@ public class EnhancedJoystick extends Joystick {
     public boolean getButton(int button) {
         if (button <= 0 || button > kNumberOfButtons)
             Logger.error("EnhancedJoystick#getButton", "Invalid button number");
-        boolean current = getRawButton(button);
-        previousValues[button-1] = current;
-        return current;
+        return current[button-1];
     }
 
     /**
@@ -41,10 +58,9 @@ public class EnhancedJoystick extends Joystick {
      * @return whether or not the button was pressed
      */
     public boolean getButtonPressed(int button) {
-        boolean current = getRawButton(button);
-        boolean result = current && !previousValues[button-1];
-        previousValues[button-1] = current;
-        return result;
+        if (button <= 0 || button > kNumberOfButtons)
+            Logger.error("EnhancedJoystick#getButtonPressed", "Invalid button number");
+        return current[button-1] && !previous[button-1];
     }
 
     /**
@@ -53,10 +69,9 @@ public class EnhancedJoystick extends Joystick {
      * @return whether or not the button is being held
      */
     public boolean getButtonHeld(int button) {
-        boolean current = getRawButton(button);
-        boolean result = current && previousValues[button-1];
-        previousValues[button-1] = current;
-        return result;
+        if (button <= 0 || button > kNumberOfButtons)
+            Logger.error("EnhancedJoystick#getButtonHeld", "Invalid button number");
+        return current[button-1] && previous[button-1];
     }
 
     /**
@@ -65,9 +80,8 @@ public class EnhancedJoystick extends Joystick {
      * @return whether or not the button was released
      */
     public boolean getButtonReleased(int button) {
-        boolean current = getRawButton(button);
-        boolean result = !current && previousValues[button-1];
-        previousValues[button-1] = current;
-        return result;
+        if (button <= 0 || button > kNumberOfButtons)
+            Logger.error("EnhancedJoystick#getButtonReleased", "Invalid button number");
+        return !current[button-1] && previous[button-1];
     }
 }

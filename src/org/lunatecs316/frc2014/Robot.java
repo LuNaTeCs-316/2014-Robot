@@ -24,7 +24,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
- * 
+ *
  * @author Domenic Rodriguez
  * @author Christian Steward
  */
@@ -52,7 +52,7 @@ public class Robot extends IterativeRobot {
         drivetrain.init();
         pickup.init();
         shooter.init();
-        
+
         Logger.setLevel(Logger.Level.DEBUG);
         Logger.info("robotInit", "Robot initalization complete!");
     }
@@ -106,6 +106,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
+        teleop.updateJoysticks();
+
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
             drivetrain.resetGyro();
         }
@@ -114,7 +116,7 @@ public class Robot extends IterativeRobot {
         }
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
             Constants.update();
-        
+
         updateSmartDashboard();
     }
 
@@ -124,7 +126,7 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-    
+
     /**
      * Send data to the SmartDashboard
      */

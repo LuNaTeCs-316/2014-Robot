@@ -38,6 +38,8 @@ public class TeleopControl {
      * Run one iteration of Teleop mode
      */
     public void run() {
+        updateJoysticks();
+
         // Driving
         if (driverController.getButton(XboxController.ButtonA)) {
             drivetrain.driveStraight(0.6);
@@ -50,7 +52,7 @@ public class TeleopControl {
             // TODO: try using Drivetrain#driveStraight() when turn == 0
             drivetrain.arcadeDrive(move, turn);
         }
-        
+
 
         // Shifting
         if (driverController.getButton(XboxController.RightBumper)) {
@@ -68,23 +70,25 @@ public class TeleopControl {
 
         // Pickup Rollers
         double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getRawButton(2))
+        if (operatorJoystick.getButton(2))
             pickup.setRollerSpeed(-rollerSpeed);
-        else if (operatorJoystick.getRawButton(3))
+        else if (operatorJoystick.getButton(3))
             pickup.setRollerSpeed(rollerSpeed);
         else
             pickup.setRollerSpeed(0.0);
-        
+
         // Shooter
         if (operatorJoystick.getButtonPressed(1)) {
             shooter.fire();
+        } else if (operatorJoystick.getButtonReleased(1)) {
+            shooter.reload();
         } else if (operatorJoystick.getButtonPressed(6)) {
             shooter.bumpUp();
         } else if (operatorJoystick.getButtonPressed(7)) {
             shooter.bumpDown();
-        } else if (operatorJoystick.getRawButton(11)) {
+        } else if (operatorJoystick.getButton(11)) {
             shooter.setPosition(Constants.ShooterNearShot.getValue());
-        } else if (operatorJoystick.getRawButton(10)) {
+        } else if (operatorJoystick.getButton(10)) {
             shooter.setPosition(Constants.ShooterFarShot.getValue());
         } else if (operatorJoystick.getButtonPressed(9)) {
             shooter.reload();
@@ -93,6 +97,15 @@ public class TeleopControl {
             if (value != 0 || shooter.isManualControl() || operatorJoystick.getRawButton(8))
                 shooter.setWinch(value);
         }
+    }
+
+    /**
+     * Read the buttons on the joysticks. Required before using
+     * edge detection methods.
+     */
+    public void updateJoysticks() {
+        driverController.update();
+        operatorJoystick.update();
     }
 
     /**
