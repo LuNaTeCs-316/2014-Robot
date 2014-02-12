@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.RobotMap;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Pickup subsystem. <br>
@@ -39,6 +40,8 @@ public class Pickup implements Subsystem {
      * @inheritDoc
      */
     public void init() {
+        Logger.debug("Pickup#init", "Initalizing Pickup");
+
         LiveWindow.addActuator("Pickup", "Roller", roller);
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
         LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);

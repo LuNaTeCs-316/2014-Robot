@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.lib.IterativeTimer;
 import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
@@ -46,6 +47,10 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        Logger.setLevel(Logger.Level.DEBUG);
+        Logger.info("robotInit", "Robot intialization starting...");
+        IterativeTimer initTimer = new IterativeTimer();
+
         compressor.start();
         LiveWindow.addActuator("Default", "Compressor", compressor);
 
@@ -53,8 +58,11 @@ public class Robot extends IterativeRobot {
         pickup.init();
         shooter.init();
 
-        Logger.setLevel(Logger.Level.DEBUG);
-        Logger.info("robotInit", "Robot initalization complete!");
+        // Set default subsystem states
+        drivetrain.shiftDown();
+        pickup.raise();
+
+        Logger.info("robotInit", "Robot initalized! Completed in " + initTimer.getValue() + "ms");
     }
 
     /**

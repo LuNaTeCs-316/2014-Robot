@@ -12,6 +12,7 @@ import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Shooter subsystem
@@ -55,7 +56,7 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
-        positionPot.setVoltageForPID(true);
+        Logger.debug("Shooter#init", "Initalizing Shooter");
 
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winchLeft", winchLeft);
@@ -90,6 +91,8 @@ public class Shooter implements Subsystem {
 
         // IterativeTimer ensures we don't try to re-engage the clutch too soon
         clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
+
+        reload();
     }
 
     /**
@@ -155,6 +158,31 @@ public class Shooter implements Subsystem {
         }
         double value = positionController.run(target, positionPot.getAverageVoltage());
         setWinch(value);
+    }
+
+    /**
+     * Automatically position the shooter based on the distance to the target
+     */
+    public void autoAim() {
+        double distance = Drivetrain.getInstance().getRangeFinderDistance();
+        double target;
+
+        // Determine the proper setpoint
+        // TODO: extrapolate between points instead of using ranges
+        if (distance >= 0 && distance < 54.0) {             // 0ft - 4.5ft
+            target = Constants.Shooter3ft.getValue();
+        } else if (distance >= 54.0 && distance < 90.0) {   // 4.5ft - 7.5ft
+            target = Constants.Shooter6ft.getValue();
+        } else if (distance >= 90.0 && distance < 126.0) {  // 7.5ft - 10.5ft
+            target = Constants.Shooter9ft.getValue();
+        } else if (distance >= 126.0 && distance < 162.0) { // 10.5ft - 13.5ft
+            target = Constants.Shooter12ft.getValue();
+        } else if (distance >= 162.0 && distance < 198.0) { // 13.5ft - 16.5ft
+            target = Constants.Shooter15ft.getValue();
+        } else {                                            // > 16.5ft
+            target = Constants.Shooter18ft.getValue();
+        }
+        setPosition(target);
     }
 
     /**

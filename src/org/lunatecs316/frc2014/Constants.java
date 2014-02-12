@@ -35,15 +35,19 @@ public class Constants {
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
 
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
-    public static final Constant ShooterBump = new Constant("ShooterBump", 5);
+    public static final Constant ShooterBump = new Constant("ShooterBump", 3);
     public static final Constant ShooterPositionP = new Constant("ShooterPositionP", 1.0);
     public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 0.0);
     public static final Constant ShooterPositionD = new Constant("ShooterPositionD", 0.0);
     public static final Constant ShooterPositionTolerance = new Constant("ShooterPositionTolerance", 0.05);
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 4.95);
     public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 3.332);
-    public static final Constant ShooterNearShot = new Constant("ShooterNearShot", 4.175);
-    public static final Constant ShooterFarShot = new Constant("ShooterFarShot", 4.318);
+    public static final Constant Shooter3ft = new Constant("Shooter3ft", 0.0);
+    public static final Constant Shooter6ft = new Constant("Shooter6ft", 0.0);
+    public static final Constant Shooter9ft = new Constant("Shooter9ft", 0.0);
+    public static final Constant Shooter12ft = new Constant("Shooter12ft", 0.0);
+    public static final Constant Shooter15ft = new Constant("Shooter15ft", 0.0);
+    public static final Constant Shooter18ft = new Constant("Shooter18ft", 0.0);
     
     /**
      * Representation of a single constant value

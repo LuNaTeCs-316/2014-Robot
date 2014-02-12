@@ -1,8 +1,6 @@
 package org.lunatecs316.frc2014.autonomous;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import org.lunatecs316.frc2014.Constants;
-import org.lunatecs316.frc2014.Robot;
 import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
 
@@ -15,11 +13,11 @@ public class BasicAutonomous extends AutonomousMode {
     private static final int kCheckForHotGoal = 1;
     private static final int kWaitForHotGoal = 2;
     private static final int kFire = 3;
-    private static final int kReload = 4;
+    private static final int kWaitForReload = 4;
     private static final int kDone = 5;
 
     private NetworkTable visionData;
-    private IterativeTimer timer = new IterativeTimer();
+    private IterativeTimer stateTimer = new IterativeTimer();
     private int state;
 
     /**
@@ -33,12 +31,16 @@ public class BasicAutonomous extends AutonomousMode {
         // Set the intial states for the robot subsystems
         pickup.lower();
         drivetrain.shiftDown();
+        drivetrain.resetGyro();
+        drivetrain.resetEncoders();
 
         // Reset the state timer
-        timer.setExpiration(2000);
+        stateTimer.setExpiration(2000);
 
         // Set the default state
         state = kDrivingForwards;
+
+        Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
     }
 
     /**
@@ -47,37 +49,39 @@ public class BasicAutonomous extends AutonomousMode {
     public void run() {
         switch (state) {
             case kDrivingForwards:
-                drivetrain.arcadeDrive(0.7, 0.0);
-                if (timer.hasExpired()) {
+                drivetrain.driveStraight(-0.7);
+                if (stateTimer.hasExpired()) {
                     drivetrain.arcadeDrive(0.0, 0.0);
                     state = kCheckForHotGoal;
+                    Logger.debug("BasicAutonomous#run", "State: kCheckForHotGoal");
                 }
                 break;
             case kCheckForHotGoal:
                 if (visionData.getBoolean("goalIsHot", true)) {
+                    Logger.debug("BasicAutonomous#run", "State: kFire");
                     state = kFire;
                 } else {
                     state = kWaitForHotGoal;
-                    timer.setExpiration(3000);
+                    Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
+                    stateTimer.setExpiration(4000);
                 }
                 break;
             case kWaitForHotGoal:
-                if (timer.hasExpired()) {
+                if (stateTimer.hasExpired()) {
                     state = kFire;
-                    timer.setExpiration(Constants.ShooterResetTime.getValue() + 250);
+                    Logger.debug("BasicAutonomous#run", "State: kFire");
                 }
                 break;
             case kFire:
                 shooter.fire();
-                if (timer.hasExpired()) {
-                    state = kReload;
-                    timer.setExpiration(3000);
-                }
+                state = kWaitForReload;
+                Logger.debug("BasicAutonomous#run", "State: kWaitForReload");
+                stateTimer.setExpiration(3000);
                 break;
-            case kReload:
-                shooter.reload();
-                if (shooter.atLoadingPosition() || timer.hasExpired()) {
+            case kWaitForReload:
+                if (shooter.atLoadingPosition() || stateTimer.hasExpired()) {
                     state = kDone;
+                    Logger.debug("BasicAutonomous#run", "State: kDone");
                 }
                 break;
             case kDone:

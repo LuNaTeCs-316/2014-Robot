@@ -67,6 +67,8 @@ public class Drivetrain implements Subsystem {
      * @inheritDoc
      */
     public void init() {
+        Logger.debug("Drivetrain#init", "Initalizing Drivetrain");
+
         // Setup RobotDrive
         driveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
         driveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
@@ -248,6 +250,14 @@ public class Drivetrain implements Subsystem {
      */
     public double getGyroAngle() {
         return gyro.getAngle();
+    }
+
+    /**
+     * Get the current distance measured by the range finder
+     * @return distance to the object in front of the range finder (inches)
+     */
+    public double getRangeFinderDistance() {
+        return rangeFinder.getRangeInches();
     }
 
     /**
