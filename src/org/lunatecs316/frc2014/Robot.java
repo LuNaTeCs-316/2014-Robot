@@ -8,6 +8,7 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
@@ -133,6 +134,10 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
+    }
+
+    public static boolean manualOverride() {
+        return DriverStation.getInstance().getDigitalIn(1);
     }
 
     /**

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Timer;
 import java.util.TimerTask;
 import org.lunatecs316.frc2014.Constants;
+import org.lunatecs316.frc2014.Robot;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
@@ -87,20 +88,20 @@ public class Shooter implements Subsystem {
      * Fire the ball
      */
     public void fire() {
-        // IterativeTimer ensures we don't try to re-engage the clutch too soon
-        clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
-
-        taskTimer.schedule(new TimerTask() {
-            public void run() {
-                clutch.set(DoubleSolenoid.Value.kForward);
-
-                if (clutchTimer.hasExpired()) {
-                    clutch.set(DoubleSolenoid.Value.kReverse);
-                    reload();
-                    cancel();
+        if (ballIsLoaded() || Robot.manualOverride()) {
+            clutch.set(DoubleSolenoid.Value.kForward);
+            // IterativeTimer ensures we don't try to re-engage the clutch too soon
+            clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
+            taskTimer.schedule(new TimerTask() {
+                public void run() {
+                    if (clutchTimer.hasExpired()) {
+                        clutch.set(DoubleSolenoid.Value.kReverse);
+                        reload();
+                        cancel();
+                    }
                 }
-            }
-        }, 0L, 30);
+            }, 0L, 30);
+        }
     }
 
     /**
@@ -209,7 +210,7 @@ public class Shooter implements Subsystem {
     private void _setWinch(double speed) {
         // Ensure we've waited long enough after firing
         if (clutchTimer.hasExpired()) {
-            if ((speed > 0 && atLoadingPosition()))// || (speed < 0 && atMaxPosition()))
+            if (speed > 0 && atLoadingPosition() && !Robot.manualOverride())
                 speed = 0;
 
             // If we're trying to move, make sure the clutch is engaged

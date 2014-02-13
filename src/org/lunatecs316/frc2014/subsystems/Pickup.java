@@ -87,6 +87,7 @@ public class Pickup implements Subsystem {
      * @return true if pickup is lowered
      */
     public boolean isLowered() {
-        return lowerLimit.get();
+        //return lowerLimit.get();
+        return (solenoid.get() == DoubleSolenoid.Value.kForward);
     }
 }

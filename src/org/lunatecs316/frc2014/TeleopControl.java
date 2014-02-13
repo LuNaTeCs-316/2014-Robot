@@ -80,7 +80,7 @@ public class TeleopControl {
             pickup.setRollerSpeed(0.0);
 
         // Shooter
-        if (operatorJoystick.getButtonPressed(1)) {
+        if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || Robot.manualOverride())) {
             shooter.fire();
         } else if (operatorJoystick.getButtonPressed(6)) {
             shooter.bumpUp();
