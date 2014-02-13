@@ -87,12 +87,20 @@ public class Shooter implements Subsystem {
      * Fire the ball
      */
     public void fire() {
-        clutch.set(DoubleSolenoid.Value.kForward);
-
         // IterativeTimer ensures we don't try to re-engage the clutch too soon
         clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
 
-        reload();
+        taskTimer.schedule(new TimerTask() {
+            public void run() {
+                clutch.set(DoubleSolenoid.Value.kForward);
+
+                if (clutchTimer.hasExpired()) {
+                    clutch.set(DoubleSolenoid.Value.kReverse);
+                    reload();
+                    cancel();
+                }
+            }
+        }, 0L, 30);
     }
 
     /**

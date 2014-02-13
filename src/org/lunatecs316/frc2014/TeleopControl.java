@@ -45,6 +45,8 @@ public class TeleopControl {
             drivetrain.driveStraight(0.6);
         } else if (driverController.getButton(XboxController.ButtonB)) {
             drivetrain.turn(90, 50);
+        } else if (driverController.getButton(XboxController.ButtonX)) {
+            drivetrain.driveStraightDistance(4500, 0.6);
         } else {
             double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
             double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());

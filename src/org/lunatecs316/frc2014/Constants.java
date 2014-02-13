@@ -30,18 +30,18 @@ public class Constants {
     public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
     public static final Constant DrivetrainDistanceI = new Constant("DrivetrainDistanceI", 0.0);
     public static final Constant DrivetrainDistanceD = new Constant("DrivetrainDistanceD", 0.0);
-    public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", 1.0);
+    public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", -0.1);
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
 
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
     public static final Constant ShooterBump = new Constant("ShooterBump", 3);
-    public static final Constant ShooterPositionP = new Constant("ShooterPositionP", 1.0);
-    public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 0.0);
+    public static final Constant ShooterPositionP = new Constant("ShooterPositionP", 8.0);
+    public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 7.0);
     public static final Constant ShooterPositionD = new Constant("ShooterPositionD", 0.0);
     public static final Constant ShooterPositionTolerance = new Constant("ShooterPositionTolerance", 0.05);
-    public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 4.95);
-    public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 3.332);
+    public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.867);
+    public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 0.845);
     public static final Constant Shooter3ft = new Constant("Shooter3ft", 0.0);
     public static final Constant Shooter6ft = new Constant("Shooter6ft", 0.0);
     public static final Constant Shooter9ft = new Constant("Shooter9ft", 0.0);
