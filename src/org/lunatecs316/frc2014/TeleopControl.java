@@ -124,14 +124,16 @@ public class TeleopControl {
     public Joystick getOperatorJoystick() {
         return operatorJoystick;
     }
+
+    /**
+     * Record information while shooting
+     */
     public void logShot() {
-            double rangeDistance = Drivetrain.getInstance().getRangeFinderDistance();
-            double gyroAngle = Drivetrain.getInstance().getGyroAngle();
-            double armPosition = Shooter.getInstance().getArmPosition();
-            Logger.setFileloggingEnabled(true);
-            Logger.debug("shooter.fire", "arm position" + armPosition);
-            Logger.debug("shooter.fire", "rangefinder distance" + rangeDistance);
-            Logger.debug("shooter.fire", "gyro angle" + gyroAngle);
-            Logger.setFileloggingEnabled(false);
+        double distance = drivetrain.getRangeFinderDistance();
+        double angle = drivetrain.getGyroAngle();
+        double armPosition = shooter.getArmPosition();
+        Logger.enableFileLogging(true);
+        Logger.debug("logShot", "ArmPos: " + armPosition + " Dist: " + distance + " Angle: " + angle);
+        Logger.enableFileLogging(false);
     }
 }
