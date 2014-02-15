@@ -79,6 +79,7 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         auto.run();
+        updateSmartDashboard();
     }
 
     /**

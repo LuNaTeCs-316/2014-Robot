@@ -1,6 +1,7 @@
 package org.lunatecs316.frc2014.autonomous;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
 
@@ -33,9 +34,10 @@ public class BasicAutonomous extends AutonomousMode {
         drivetrain.shiftDown();
         drivetrain.resetGyro();
         drivetrain.resetEncoders();
+        drivetrain.disableSafety();
 
         // Reset the state timer
-        stateTimer.setExpiration(2000);
+        stateTimer.setExpiration(3250);
 
         // Set the default state
         state = kDrivingForwards;
@@ -49,9 +51,11 @@ public class BasicAutonomous extends AutonomousMode {
     public void run() {
         switch (state) {
             case kDrivingForwards:
-                drivetrain.driveStraight(-0.7);
+                drivetrain.driveStraightDistance(20700);
+                shooter.setPosition(Constants.Shooter10ft.getValue());
                 if (stateTimer.hasExpired()) {
                     drivetrain.arcadeDrive(0.0, 0.0);
+                    shooter.setWinch(0.0);
                     state = kCheckForHotGoal;
                     Logger.debug("BasicAutonomous#run", "State: kCheckForHotGoal");
                 }
@@ -63,7 +67,7 @@ public class BasicAutonomous extends AutonomousMode {
                 } else {
                     state = kWaitForHotGoal;
                     Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
-                    stateTimer.setExpiration(4000);
+                    stateTimer.setExpiration(2500);
                 }
                 break;
             case kWaitForHotGoal:
@@ -76,7 +80,7 @@ public class BasicAutonomous extends AutonomousMode {
                 shooter.fire();
                 state = kWaitForReload;
                 Logger.debug("BasicAutonomous#run", "State: kWaitForReload");
-                stateTimer.setExpiration(3000);
+                stateTimer.setExpiration(4000);
                 break;
             case kWaitForReload:
                 if (shooter.atLoadingPosition() || stateTimer.hasExpired()) {
@@ -86,6 +90,9 @@ public class BasicAutonomous extends AutonomousMode {
                 break;
             case kDone:
                 shooter.setWinch(0.0);
+                drivetrain.enableSafety();
+                drivetrain.arcadeDrive(0.0, 0.0);
+                break;
             default:
                 Logger.error("BasicAutonomous", "Invalid autonomous state");
                 break;

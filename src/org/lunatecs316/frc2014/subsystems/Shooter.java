@@ -176,21 +176,40 @@ public class Shooter implements Subsystem {
         double distance = Drivetrain.getInstance().getRangeFinderDistance();
         double target;
 
-        // Determine the proper setpoint
+        // Determine the proper setpoint. Ugly, but it works
         // TODO: extrapolate between points instead of using ranges
         if (distance >= 0 && distance < 54.0) {             // 0ft - 4.5ft
-            target = Constants.Shooter3ft.getValue();
-        } else if (distance >= 54.0 && distance < 90.0) {   // 4.5ft - 7.5ft
+            target = Constants.Shooter4ft.getValue();
+        } else if (distance >= 54.0 && distance < 66.0) {   // 4.5ft - 5.5ft
+            target = Constants.Shooter5ft.getValue();
+        } else if (distance >= 66.0 && distance < 78.0) {   // 5.5ft - 6.5ft
             target = Constants.Shooter6ft.getValue();
-        } else if (distance >= 90.0 && distance < 126.0) {  // 7.5ft - 10.5ft
+        } else if (distance >= 78.0 && distance < 90.0) {   // 6.5ft - 7.5ft
+            target = Constants.Shooter7ft.getValue();
+        } else if (distance >= 90.0 && distance < 102.0) {  // 7.5ft - 8.5ft
+            target = Constants.Shooter8ft.getValue();
+        } else if (distance >= 102.0 && distance < 114.0) {  // 8.5ft - 9.5ft
             target = Constants.Shooter9ft.getValue();
-        } else if (distance >= 126.0 && distance < 162.0) { // 10.5ft - 13.5ft
+        } else if (distance >= 114.0 && distance < 126.0) {  // 9.5ft - 10.5ft
+            target = Constants.Shooter10ft.getValue();
+        } else if (distance >= 126.0 && distance < 138.0) {  // 10.5ft - 11.5ft
+            target = Constants.Shooter11ft.getValue();
+        } else if (distance >= 138.0 && distance < 150.0) {  // 11.5ft - 12.5ft
             target = Constants.Shooter12ft.getValue();
-        } else if (distance >= 162.0 && distance < 198.0) { // 13.5ft - 16.5ft
+        } else if (distance >= 150.0 && distance < 162.0) {  // 12.5ft - 13.5ft
+            target = Constants.Shooter13ft.getValue();
+        } else if (distance >= 162.0 && distance < 174.0) {  // 13.5ft - 14.5ft
+            target = Constants.Shooter14ft.getValue();
+        } else if (distance >= 174.0 && distance < 186.0) {  // 14.5ft - 15.5ft
             target = Constants.Shooter15ft.getValue();
-        } else {                                            // > 16.5ft
+        } else if (distance >= 186.0 && distance < 198.0) {  // 15.5ft - 16.5ft
+            target = Constants.Shooter16ft.getValue();
+        } else if (distance >= 198.0 && distance < 210.0) {  // 16.5ft - 17.5ft
+            target = Constants.Shooter17ft.getValue();
+        } else {                                            // > 17.5ft
             target = Constants.Shooter18ft.getValue();
         }
+
         setPosition(target);
     }
 

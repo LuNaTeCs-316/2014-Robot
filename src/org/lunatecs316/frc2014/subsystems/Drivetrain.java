@@ -176,9 +176,8 @@ public class Drivetrain implements Subsystem {
     /**
      * Drive the robot straight for a specified distance
      * @param distance the distance to move
-     * @param speed the speed at which to move
      */
-    public void driveStraightDistance(double distance, double speed) {
+    public void driveStraightDistance(double distance) {
         if (manualControl) {
             manualControl = false;
             startAngle = getGyroAngle();
@@ -195,7 +194,7 @@ public class Drivetrain implements Subsystem {
      * @param distance the desired distance between the bot and the wall
      * @param speed how fast to drive
      */
-    public void driveToDistance(double distance, double speed) {
+    public void driveToRangeFinderDistance(double distance, double speed) {
         manualControl = false;
         double current = rangeFinder.getRangeInches();
         if (distance > current)
@@ -217,6 +216,13 @@ public class Drivetrain implements Subsystem {
             manualControl = false;
         }
         double turn = angleController.run(startAngle + angle, getGyroAngle());
+        _arcadeDrive(0.0, turn);
+    }
+
+    public void turnToAngle(double angle) {
+        manualControl = false;
+        Logger.debug("Drivetrain#turnToAngle", angle + " " + getGyroAngle());
+        double turn = angleController.run(angle, getGyroAngle());
         _arcadeDrive(0.0, turn);
     }
 
@@ -281,6 +287,14 @@ public class Drivetrain implements Subsystem {
     public void resetEncoders() {
         leftEncoder.reset();
         rightEncoder.reset();
+    }
+
+    public void disableSafety() {
+        driveMotors.setSafetyEnabled(false);
+    }
+
+    public void enableSafety() {
+        driveMotors.setSafetyEnabled(true);
     }
 
     /**

@@ -42,16 +42,16 @@ public class TeleopControl {
 
         // Driving
         if (driverController.getButton(XboxController.ButtonA)) {
+            drivetrain.turnToAngle(0);
+        } else if (driverController.getButton(XboxController.ButtonY)) {
             drivetrain.driveStraight(0.6);
         } else if (driverController.getButton(XboxController.ButtonB)) {
             drivetrain.turn(90, 50);
         } else if (driverController.getButton(XboxController.ButtonX)) {
-            drivetrain.driveStraightDistance(4500, 0.6);
+            drivetrain.driveStraightDistance(20700);
         } else {
             double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
             double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
-
-            // TODO: try using Drivetrain#driveStraight() when turn == 0
             drivetrain.arcadeDrive(move, turn);
         }
 
@@ -87,7 +87,7 @@ public class TeleopControl {
         } else if (operatorJoystick.getButtonPressed(7)) {
             shooter.bumpDown();
         } else if (operatorJoystick.getButton(10)) {
-            shooter.setPosition(Constants.Shooter6ft.getValue());
+            shooter.setPosition(Constants.Shooter10ft.getValue());
         } else if (operatorJoystick.getButton(11)) {
             shooter.autoAim();
         } else if (operatorJoystick.getButtonPressed(9)) {

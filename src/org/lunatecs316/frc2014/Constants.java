@@ -42,12 +42,21 @@ public class Constants {
     public static final Constant ShooterPositionTolerance = new Constant("ShooterPositionTolerance", 0.05);
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.867);
     public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 0.845);
-    public static final Constant Shooter3ft = new Constant("Shooter3ft", 0.0);
-    public static final Constant Shooter6ft = new Constant("Shooter6ft", 0.0);
-    public static final Constant Shooter9ft = new Constant("Shooter9ft", 0.0);
-    public static final Constant Shooter12ft = new Constant("Shooter12ft", 0.0);
-    public static final Constant Shooter15ft = new Constant("Shooter15ft", 0.0);
-    public static final Constant Shooter18ft = new Constant("Shooter18ft", 0.0);
+    public static final Constant Shooter4ft = new Constant("Shooter4ft", 1.675);
+    public static final Constant Shooter5ft = new Constant("Shooter5ft", 1.550);
+    public static final Constant Shooter6ft = new Constant("Shooter6ft", 1.450);
+    public static final Constant Shooter7ft = new Constant("Shooter7ft", 1.425);
+    public static final Constant Shooter8ft = new Constant("Shooter8ft", 1.400);
+    public static final Constant Shooter9ft = new Constant("Shooter9ft", 1.400);
+    public static final Constant Shooter10ft = new Constant("Shooter10ft", 1.400);
+    public static final Constant Shooter11ft = new Constant("Shooter11ft", 1.400);
+    public static final Constant Shooter12ft = new Constant("Shooter12ft", 1.475);
+    public static final Constant Shooter13ft = new Constant("Shooter13ft", 1.480);
+    public static final Constant Shooter14ft = new Constant("Shooter14ft", 1.525);
+    public static final Constant Shooter15ft = new Constant("Shooter15ft", 1.600);
+    public static final Constant Shooter16ft = new Constant("Shooter16ft", 1.650);
+    public static final Constant Shooter17ft = new Constant("Shooter17ft", 1.700);
+    public static final Constant Shooter18ft = new Constant("Shooter18ft", 1.675);
     
     /**
      * Representation of a single constant value
