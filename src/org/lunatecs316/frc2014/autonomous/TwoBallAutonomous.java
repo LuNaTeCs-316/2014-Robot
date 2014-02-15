@@ -1,34 +1,29 @@
 package org.lunatecs316.frc2014.autonomous;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import org.lunatecs316.frc2014.Constants;
-import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
- * Basic autonomous mode. Score the ball in the high goal
+ * More advanced autonomous. Fire two balls in autonomous
  * @author Domenic Rodriguez
  */
-public class BasicAutonomous extends AutonomousMode {
-    private static final int kDrivingForwards = 0;
-    private static final int kCheckForHotGoal = 1;
-    private static final int kWaitForHotGoal = 2;
-    private static final int kFire = 3;
+public class TwoBallAutonomous extends AutonomousMode {
+    private static final int kDriveForwards = 0;
+    private static final int kFire = 1;
+    private static final int kDriveBackAndReload = 2;
+    private static final int kPickupSecondBall = 3;
     private static final int kWaitForReload = 4;
     private static final int kDone = 5;
 
-    private NetworkTable visionData;
     private IterativeTimer stateTimer = new IterativeTimer();
     private int state;
+    private boolean firstShot;
 
     /**
      * @see AutonomousMode#init()
      */
     public void init() {
-        // Get the NetworkTable
-        visionData = NetworkTable.getTable("visionData");
-        visionData.putBoolean("enabled", true);
-
         // Set the intial states for the robot subsystems
         pickup.lower();
         pickup.setRollerSpeed(-1.0);
@@ -41,7 +36,8 @@ public class BasicAutonomous extends AutonomousMode {
         stateTimer.setExpiration(3250);
 
         // Set the default state
-        state = kDrivingForwards;
+        state = kDriveForwards;
+        firstShot = true;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
     }
@@ -51,38 +47,46 @@ public class BasicAutonomous extends AutonomousMode {
      */
     public void run() {
         switch (state) {
-            case kDrivingForwards:
+            case kDriveForwards:
                 drivetrain.driveStraightDistance(20700);
                 shooter.setPosition(Constants.Shooter10ft.getValue());
                 if (stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
                     shooter.setWinch(0.0);
-                    state = kCheckForHotGoal;
-                    Logger.debug("BasicAutonomous#run", "State: kCheckForHotGoal");
-                }
-                break;
-            case kCheckForHotGoal:
-                if (visionData.getBoolean("goalIsHot", true)) {
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
                     state = kFire;
-                } else {
-                    state = kWaitForHotGoal;
-                    Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
-                    stateTimer.setExpiration(2500);
-                }
-                break;
-            case kWaitForHotGoal:
-                if (stateTimer.hasExpired()) {
-                    state = kFire;
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
+                    Logger.debug("TwoBallAutonomous#run", "State: kFire");
+                    stateTimer.setExpiration(Constants.ShooterResetTime.getValue() + 100);
                 }
                 break;
             case kFire:
                 shooter.fire();
-                state = kWaitForReload;
-                Logger.debug("BasicAutonomous#run", "State: kWaitForReload");
-                stateTimer.setExpiration(4000);
+                if (stateTimer.hasExpired()) {
+                    if (firstShot) {
+                        firstShot = false;
+                        state = kDriveBackAndReload;
+                        Logger.debug("TwoBallAutonomous#run", "State: kDriveBackAndReload");
+                        stateTimer.setExpiration(3250);
+                    } else {
+                        state = kWaitForReload;
+                    }
+                }
+                break;
+            case kDriveBackAndReload:
+                drivetrain.driveStraightDistance(-20700);
+                if (stateTimer.hasExpired()) {
+                    drivetrain.arcadeDrive(0.0, 0.0);
+                    pickup.setRollerSpeed(-1.0);
+                    state = kPickupSecondBall;
+                    Logger.debug("TwoBallAutonomous#run", "State: kPickupSecondBall");
+                    stateTimer.setExpiration(1500);
+                }
+                break;
+            case kPickupSecondBall:
+                if (stateTimer.hasExpired()) {
+                    pickup.setRollerSpeed(0.0);
+                    state = kDriveForwards;
+                }
                 break;
             case kWaitForReload:
                 if (shooter.atLoadingPosition() || stateTimer.hasExpired()) {

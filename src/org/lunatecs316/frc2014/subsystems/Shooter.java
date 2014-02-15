@@ -246,7 +246,7 @@ public class Shooter implements Subsystem {
      * @return the status of the loading limit switch
      */
     public boolean atLoadingPosition() {
-        return loadSwitch.get();
+        return (getArmPosition() >= Constants.ShooterLoadPosition.getValue()) || loadSwitch.get();
     }
 
     /**

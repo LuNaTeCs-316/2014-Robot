@@ -46,6 +46,7 @@ public class Drivetrain implements Subsystem {
     private double startAngle;
     private boolean manualControl;
     private boolean highGear;
+    private boolean atTarget;
 
     /**
      * Default constructor
@@ -183,6 +184,7 @@ public class Drivetrain implements Subsystem {
             startAngle = getGyroAngle();
             resetEncoders();
         }
+        atTarget = (Math.abs(distance - getAverageEncoderValue()) < 200);
         double move = distanceController.run(distance, getAverageEncoderValue());
         double turn = angleController.run(startAngle, getGyroAngle());
         _arcadeDrive(move, turn);
@@ -219,6 +221,10 @@ public class Drivetrain implements Subsystem {
         _arcadeDrive(0.0, turn);
     }
 
+    /**
+     * Turn the robot to the specified angle
+     * @param angle the target angle for the robot
+     */
     public void turnToAngle(double angle) {
         manualControl = false;
         Logger.debug("Drivetrain#turnToAngle", angle + " " + getGyroAngle());
@@ -272,6 +278,14 @@ public class Drivetrain implements Subsystem {
      */
     public boolean isManualControl() {
         return manualControl;
+    }
+
+    /**
+     * Check if we're at the encoder distance target
+     * @return if we've arrived at our target or not
+     */
+    public boolean atTarget() {
+        return atTarget;
     }
 
     /**

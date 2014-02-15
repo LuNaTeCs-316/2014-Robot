@@ -40,8 +40,9 @@ public class Constants {
     public static final Constant ShooterPositionI = new Constant("ShooterPositionI", 7.0);
     public static final Constant ShooterPositionD = new Constant("ShooterPositionD", 0.0);
     public static final Constant ShooterPositionTolerance = new Constant("ShooterPositionTolerance", 0.05);
-    public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.867);
     public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 0.845);
+    public static final Constant ShooterBottomPosition = new Constant("ShooterBottomPosition", 1.867);
+    public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.75);
     public static final Constant Shooter4ft = new Constant("Shooter4ft", 1.675);
     public static final Constant Shooter5ft = new Constant("Shooter5ft", 1.550);
     public static final Constant Shooter6ft = new Constant("Shooter6ft", 1.450);

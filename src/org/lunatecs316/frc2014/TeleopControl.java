@@ -72,9 +72,9 @@ public class TeleopControl {
 
         // Pickup Rollers
         double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getButton(2))
+        if (operatorJoystick.getButton(7) && (shooter.atLoadingPosition() || Robot.manualOverride()))
             pickup.setRollerSpeed(-rollerSpeed);
-        else if (operatorJoystick.getButton(3))
+        else if (operatorJoystick.getButton(6))
             pickup.setRollerSpeed(rollerSpeed);
         else
             pickup.setRollerSpeed(0.0);
@@ -82,19 +82,19 @@ public class TeleopControl {
         // Shooter
         if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || Robot.manualOverride())) {
             shooter.fire();
-        } else if (operatorJoystick.getButtonPressed(6)) {
+        } else if (operatorJoystick.getButtonPressed(11)) {
             shooter.bumpUp();
-        } else if (operatorJoystick.getButtonPressed(7)) {
+        } else if (operatorJoystick.getButtonPressed(10)) {
             shooter.bumpDown();
-        } else if (operatorJoystick.getButton(10)) {
+        } else if (operatorJoystick.getButton(2)) {
             shooter.setPosition(Constants.Shooter10ft.getValue());
-        } else if (operatorJoystick.getButton(11)) {
+        } else if (operatorJoystick.getButton(3)) {
             shooter.autoAim();
-        } else if (operatorJoystick.getButtonPressed(9)) {
+        } else if (operatorJoystick.getButtonPressed(8)) {
             shooter.reload();
         } else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
-            if (value != 0 || shooter.isManualControl() || operatorJoystick.getRawButton(8))
+            if (value != 0 || shooter.isManualControl() || operatorJoystick.getRawButton(7))
                 shooter.setWinch(value);
         }
     }
