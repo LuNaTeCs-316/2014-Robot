@@ -1,5 +1,10 @@
 package org.lunatecs316.frc2014.lib;
-
+import java.util.Vector;
+import com.sun.squawk.microedition.io.FileConnection;
+import javax.microedition.io.Connector;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Enumeration;
 /**
  * Helper class for logging information to console output
  * @author Domenic Rodriguez
@@ -8,6 +13,7 @@ public class Logger {
     /**
      * Class to represent the detail level of the logger
      */
+    
     public static class Level {
         public static final Level INFO = new Level("INFO", 1);
         public static final Level WARNING = new Level("WARNING", 2);
@@ -33,7 +39,11 @@ public class Logger {
 
     private static IterativeTimer timer;
     private static Level currentLevel;
-
+    private static boolean tofile;
+    private static Vector logVector = new Vector();
+    
+    
+   
     static {
         timer = new IterativeTimer();
         currentLevel = Level.DEBUG;
@@ -83,6 +93,12 @@ public class Logger {
         log(Level.DEBUG, context, message);
     }
 
+    public static void setFileloggingEnabled(boolean enabled) {
+        tofile = enabled;
+    }
+    
+    
+    
     /**
      * Perform the actual logging operation
      * @param level the severity of the message
@@ -90,11 +106,38 @@ public class Logger {
      * @param message the message to print
      */
     private static void log(Level level, String context, String message) {
-        if (currentLevel.getValue() >= level.getValue()) {
-            if (level == Level.WARNING || level == Level.ERROR)
-                System.err.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
-            else
-                System.out.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
+            if (currentLevel.getValue() >= level.getValue()) {
+                String output = timer.getValue() + " [" + context + "] " + level + ": " + message;
+                if (level == Level.WARNING || level == Level.ERROR)
+                    System.err.println(output);
+                else
+                    System.out.println(output);
+            if (tofile) {
+                logVector.addElement(output);
+            }
+            }
+        }
+    private static void vectorDump(Vector vector) {
+        try {
+            //create and open a file
+            FileConnection file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
+            PrintStream writer = new PrintStream(file.openDataOutputStream());
+            //write each vector element
+            String l;
+            Enumeration e = logVector.elements();
+            while (e.hasMoreElements()) {
+                l = (String) e.nextElement();
+                writer.println(l);
+            }
+            //close the file
+            writer.close();
+            file.close();
+        }
+        catch (IOException e){
+            //log error messages
+            Logger.error("logger.vectorDump", "Error dumping shot log!");
+            Logger.error("logger.vectorDump", e.getMessage());
         }
     }
 }
+

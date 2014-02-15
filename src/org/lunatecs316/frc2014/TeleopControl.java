@@ -81,6 +81,7 @@ public class TeleopControl {
 
         // Shooter
         if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || Robot.manualOverride())) {
+            logShot();
             shooter.fire();
         } else if (operatorJoystick.getButtonPressed(6)) {
             shooter.bumpUp();
@@ -122,5 +123,15 @@ public class TeleopControl {
      */
     public Joystick getOperatorJoystick() {
         return operatorJoystick;
+    }
+    public void logShot() {
+            double rangeDistance = Drivetrain.getInstance().getRangeFinderDistance();
+            double gyroAngle = Drivetrain.getInstance().getGyroAngle();
+            double armPosition = Shooter.getInstance().getArmPosition();
+            Logger.setFileloggingEnabled(true);
+            Logger.debug("shooter.fire", "arm position" + armPosition);
+            Logger.debug("shooter.fire", "rangefinder distance" + rangeDistance);
+            Logger.debug("shooter.fire", "gyro angle" + gyroAngle);
+            Logger.setFileloggingEnabled(false);
     }
 }
