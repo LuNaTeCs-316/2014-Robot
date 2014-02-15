@@ -1,5 +1,11 @@
 package org.lunatecs316.frc2014.lib;
 
+import java.util.Vector;
+import com.sun.squawk.microedition.io.FileConnection;
+import javax.microedition.io.Connector;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Enumeration;
 /**
  * Helper class for logging information to console output
  * @author Domenic Rodriguez
@@ -33,9 +39,12 @@ public class Logger {
 
     private static IterativeTimer timer;
     private static Level currentLevel;
-
+    private static boolean tofile;
+    private static Vector messages;
+    
     static {
         timer = new IterativeTimer();
+        messages = new Vector();
         currentLevel = Level.DEBUG;
     }
 
@@ -84,6 +93,14 @@ public class Logger {
     }
 
     /**
+     * Enable or disable file logging
+     * @param enabled
+     */
+    public static void enableFileLogging(boolean enabled) {
+        tofile = enabled;
+    }
+    
+    /**
      * Perform the actual logging operation
      * @param level the severity of the message
      * @param context contextual information on the location of the program
@@ -91,10 +108,40 @@ public class Logger {
      */
     private static void log(Level level, String context, String message) {
         if (currentLevel.getValue() >= level.getValue()) {
+            String output = timer.getValue() + " [" + context + "] " + level + ": " + message;
             if (level == Level.WARNING || level == Level.ERROR)
-                System.err.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
+                System.err.println(output);
             else
-                System.out.println(timer.getValue() + " [" + context + "] " + level + ": " + message);
+                System.out.println(output);
+
+            if (tofile) {
+                messages.addElement(output);
+            }
+        }
+    }
+
+    /**
+     * Write the log data to a file
+     */
+    private static void writeToFile() {
+        try {
+            // Open the file
+            FileConnection file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
+            PrintStream writer = new PrintStream(file.openDataOutputStream());
+            
+            // Write each vector element
+            Enumeration e = messages.elements();
+            while (e.hasMoreElements()) {
+                String msg = (String) e.nextElement();
+                writer.println(msg);
+            }
+
+            // Close the file
+            writer.close();
+            file.close();
+        } catch (IOException e){
+            Logger.error("Logger.writeToFile", e.getMessage());
         }
     }
 }
+
