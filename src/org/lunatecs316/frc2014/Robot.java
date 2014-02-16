@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.autonomous.TwoBallAutonomous;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
 import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.XboxController;
@@ -33,7 +34,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
 public class Robot extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.PressureSwitch, RobotMap.CompressorRelay);
     private TeleopControl teleop = new TeleopControl();
-    private AutonomousMode auto = new BasicAutonomous();
+    private AutonomousMode auto;
 
     // Subsystems
     private Drivetrain drivetrain = Drivetrain.getInstance();
@@ -70,7 +71,22 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
-        Logger.info("autonomousInit", "Entering autonomous mode...");
+        int mode = (int) DriverStation.getInstance().getAnalogIn(1);
+
+        switch (mode) {
+            case 0:
+                auto = new BasicAutonomous();
+                Logger.info("autonomousInit", "Basic Autonomous");
+                break;
+            case 1:
+                auto = new TwoBallAutonomous();
+                Logger.info("autonomousInit", "Two Ball Autonomous");
+                break;
+            default:
+                Logger.warning("autonomousInit", "Selected autonomous mode is empty");
+                break;
+        }
+
         auto.init();
     }
 

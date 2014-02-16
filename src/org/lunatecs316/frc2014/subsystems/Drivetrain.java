@@ -70,10 +70,6 @@ public class Drivetrain implements Subsystem {
     public void init() {
         Logger.debug("Drivetrain#init", "Initalizing Drivetrain");
 
-        // Setup RobotDrive
-        driveMotors.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-        driveMotors.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-
         // Setup Gyro
         gyro.setSensitivity(0.007);
         resetGyro();

@@ -54,7 +54,7 @@ public class BasicAutonomous extends AutonomousMode {
             case kDrivingForwards:
                 drivetrain.driveStraightDistance(20700);
                 shooter.setPosition(Constants.Shooter10ft.getValue());
-                if (stateTimer.hasExpired()) {
+                if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
                     shooter.setWinch(0.0);

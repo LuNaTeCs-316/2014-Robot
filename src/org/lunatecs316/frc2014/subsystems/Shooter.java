@@ -114,6 +114,7 @@ public class Shooter implements Subsystem {
                 _setWinch(1.0);
                 if (atLoadingPosition() || manualControl) {
                     _setWinch(0.0);
+                    manualControl = true;
                     cancel();
                 }
             }

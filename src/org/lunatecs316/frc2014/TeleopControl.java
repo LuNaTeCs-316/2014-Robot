@@ -55,7 +55,6 @@ public class TeleopControl {
             drivetrain.arcadeDrive(move, turn);
         }
 
-
         // Shifting
         if (driverController.getButton(XboxController.RightBumper)) {
             drivetrain.shiftUp();
@@ -72,7 +71,7 @@ public class TeleopControl {
 
         // Pickup Rollers
         double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getButton(7) && (shooter.atLoadingPosition() || Robot.manualOverride()))
+        if (operatorJoystick.getButton(7))
             pickup.setRollerSpeed(-rollerSpeed);
         else if (operatorJoystick.getButton(6))
             pickup.setRollerSpeed(rollerSpeed);
@@ -95,7 +94,7 @@ public class TeleopControl {
             shooter.reload();
         } else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
-            if (value != 0 || shooter.isManualControl() || operatorJoystick.getRawButton(7))
+            if (shooter.isManualControl() || operatorJoystick.getRawButton(9))
                 shooter.setWinch(value);
         }
     }
