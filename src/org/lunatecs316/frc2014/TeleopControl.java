@@ -44,11 +44,11 @@ public class TeleopControl {
         if (driverController.getButton(XboxController.ButtonA)) {
             drivetrain.turnToAngle(0);
         } else if (driverController.getButton(XboxController.ButtonY)) {
-            drivetrain.driveStraight(0.6);
+            drivetrain.driveStraight(-0.5);
         } else if (driverController.getButton(XboxController.ButtonB)) {
             drivetrain.turn(180);
         } else if (driverController.getButton(XboxController.ButtonX)) {
-            drivetrain.driveStraightDistance(20700);
+            drivetrain.driveStraightDistance(Constants.DrivetrainSetpoint.getValue());
         } else {
             double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
             double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());

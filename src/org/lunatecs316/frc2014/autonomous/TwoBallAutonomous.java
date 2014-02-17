@@ -48,7 +48,7 @@ public class TwoBallAutonomous extends AutonomousMode {
     public void run() {
         switch (state) {
             case kDriveForwards:
-                drivetrain.driveStraightDistance(20700);
+                drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
                 shooter.setPosition(Constants.Shooter10ft.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
@@ -73,7 +73,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                 }
                 break;
             case kDriveBackAndReload:
-                drivetrain.driveStraightDistance(-20700);
+                drivetrain.driveStraightDistance(-Constants.Drivetrain8ft.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     drivetrain.arcadeDrive(0.0, 0.0);
                     pickup.setRollerSpeed(-1.0);

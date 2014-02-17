@@ -52,7 +52,7 @@ public class BasicAutonomous extends AutonomousMode {
     public void run() {
         switch (state) {
             case kDrivingForwards:
-                drivetrain.driveStraightDistance(20700);
+                drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
                 shooter.setPosition(Constants.Shooter10ft.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);

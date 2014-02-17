@@ -183,8 +183,8 @@ public class Drivetrain implements Subsystem {
             resetEncoders();
         }
         atTarget = (Math.abs(distance - getAverageEncoderValue()) < 200);
-        double move = distanceController.run(distance, getAverageEncoderValue());
-        double turn = angleController.run(startAngle, getGyroAngle());
+        double move = distanceController.run(distance, getAverageEncoderValue(), -0.8, 0.8);
+        double turn = angleController.run(startAngle, getGyroAngle(), -0.8, 0.8);
         _arcadeDrive(move, turn);
     }
 
@@ -224,7 +224,6 @@ public class Drivetrain implements Subsystem {
      */
     public void turnToAngle(double angle) {
         manualControl = false;
-        Logger.debug("Drivetrain#turnToAngle", angle + " " + getGyroAngle());
         double turn = angleController.run(angle, getGyroAngle());
         _arcadeDrive(0.0, turn);
     }

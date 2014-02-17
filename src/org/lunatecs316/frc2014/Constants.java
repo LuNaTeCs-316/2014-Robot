@@ -33,6 +33,8 @@ public class Constants {
     public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", -0.1);
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
+    public static final Constant DrivetrainSetpoint = new Constant("DrivetrainSetpoint", 0.0);
+    public static final Constant Drivetrain8ft = new Constant("Drivetrain8ft", 21500);
 
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
     public static final Constant ShooterBump = new Constant("ShooterBump", 3);
