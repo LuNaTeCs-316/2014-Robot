@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 import org.lunatecs316.frc2014.Constants;
+import org.lunatecs316.frc2014.Constants.Constant;
 import org.lunatecs316.frc2014.Robot;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
@@ -32,8 +34,10 @@ public class Shooter implements Subsystem {
     private AnalogChannel positionPot = new AnalogChannel(RobotMap.ShooterPot);
     private IterativePIDController positionController = new IterativePIDController(Constants.ShooterPositionP.getValue(),
                 Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
+
     private IterativeTimer clutchTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
+    private Vector setpoints = new Vector();
 
     private boolean manualControl;
 
@@ -59,6 +63,23 @@ public class Shooter implements Subsystem {
     public void init(){
         Logger.debug("Shooter#init", "Initalizing Shooter");
 
+        // Add shooter setpoints to lookup table
+        setpoints.addElement(Constants.Shooter4ft);
+        setpoints.addElement(Constants.Shooter5ft);
+        setpoints.addElement(Constants.Shooter6ft);
+        setpoints.addElement(Constants.Shooter7ft);
+        setpoints.addElement(Constants.Shooter8ft);
+        setpoints.addElement(Constants.Shooter9ft);
+        setpoints.addElement(Constants.Shooter10ft);
+        setpoints.addElement(Constants.Shooter11ft);
+        setpoints.addElement(Constants.Shooter12ft);
+        setpoints.addElement(Constants.Shooter13ft);
+        setpoints.addElement(Constants.Shooter14ft);
+        setpoints.addElement(Constants.Shooter15ft);
+        setpoints.addElement(Constants.Shooter16ft);
+        setpoints.addElement(Constants.Shooter17ft);
+        setpoints.addElement(Constants.Shooter18ft);
+
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winchLeft", winchLeft);
         LiveWindow.addActuator("Shooter", "winchRight", winchRight);
@@ -82,6 +103,24 @@ public class Shooter implements Subsystem {
     public void updateConstants() {
         positionController.setPID(Constants.ShooterPositionP.getValue(),
                 Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
+
+        // Update shooter setpoints
+        setpoints = new Vector();
+        setpoints.addElement(Constants.Shooter4ft);
+        setpoints.addElement(Constants.Shooter5ft);
+        setpoints.addElement(Constants.Shooter6ft);
+        setpoints.addElement(Constants.Shooter7ft);
+        setpoints.addElement(Constants.Shooter8ft);
+        setpoints.addElement(Constants.Shooter9ft);
+        setpoints.addElement(Constants.Shooter10ft);
+        setpoints.addElement(Constants.Shooter11ft);
+        setpoints.addElement(Constants.Shooter12ft);
+        setpoints.addElement(Constants.Shooter13ft);
+        setpoints.addElement(Constants.Shooter14ft);
+        setpoints.addElement(Constants.Shooter15ft);
+        setpoints.addElement(Constants.Shooter16ft);
+        setpoints.addElement(Constants.Shooter17ft);
+        setpoints.addElement(Constants.Shooter18ft);
     }
 
     /**
@@ -172,43 +211,26 @@ public class Shooter implements Subsystem {
 
     /**
      * Automatically position the shooter based on the distance to the target
+     * @param inches the distance to the target in inches
      */
-    public void autoAim() {
-        double distance = Drivetrain.getInstance().getRangeFinderDistance();
-        double target;
+    public void autoAim(double inches) {
+        // Convert from inches to feet
+        int index = (int) inches / 12;
 
-        // Determine the proper setpoint. Ugly, but it works
-        // TODO: extrapolate between points instead of using ranges
-        if (distance >= 0 && distance < 54.0) {             // 0ft - 4.5ft
+        // Calculate a setpoint
+        double target;
+        if (index < 4) {
             target = Constants.Shooter4ft.getValue();
-        } else if (distance >= 54.0 && distance < 66.0) {   // 4.5ft - 5.5ft
-            target = Constants.Shooter5ft.getValue();
-        } else if (distance >= 66.0 && distance < 78.0) {   // 5.5ft - 6.5ft
-            target = Constants.Shooter6ft.getValue();
-        } else if (distance >= 78.0 && distance < 90.0) {   // 6.5ft - 7.5ft
-            target = Constants.Shooter7ft.getValue();
-        } else if (distance >= 90.0 && distance < 102.0) {  // 7.5ft - 8.5ft
-            target = Constants.Shooter8ft.getValue();
-        } else if (distance >= 102.0 && distance < 114.0) {  // 8.5ft - 9.5ft
-            target = Constants.Shooter9ft.getValue();
-        } else if (distance >= 114.0 && distance < 126.0) {  // 9.5ft - 10.5ft
-            target = Constants.Shooter10ft.getValue();
-        } else if (distance >= 126.0 && distance < 138.0) {  // 10.5ft - 11.5ft
-            target = Constants.Shooter11ft.getValue();
-        } else if (distance >= 138.0 && distance < 150.0) {  // 11.5ft - 12.5ft
-            target = Constants.Shooter12ft.getValue();
-        } else if (distance >= 150.0 && distance < 162.0) {  // 12.5ft - 13.5ft
-            target = Constants.Shooter13ft.getValue();
-        } else if (distance >= 162.0 && distance < 174.0) {  // 13.5ft - 14.5ft
-            target = Constants.Shooter14ft.getValue();
-        } else if (distance >= 174.0 && distance < 186.0) {  // 14.5ft - 15.5ft
-            target = Constants.Shooter15ft.getValue();
-        } else if (distance >= 186.0 && distance < 198.0) {  // 15.5ft - 16.5ft
-            target = Constants.Shooter16ft.getValue();
-        } else if (distance >= 198.0 && distance < 210.0) {  // 16.5ft - 17.5ft
-            target = Constants.Shooter17ft.getValue();
-        } else {                                            // > 17.5ft
+        } else if (index > 18) {
             target = Constants.Shooter18ft.getValue();
+        } else {
+            // Equation for a line from 2 points: [(x_1, y_1), (x_2, y_2)]
+            // y = y_1 + m(x - x_1)
+            // m = (y_1 - y_2) / (x_1 - x_2)
+            double low = ((Constant) setpoints.elementAt(index - 4)).getValue();  // y_1
+            double high = ((Constant) setpoints.elementAt(index - 3)).getValue(); // y_2
+            double slope = (low - high) / (index - (index + 1));
+            target = low + slope * (inches - (index * 12));
         }
 
         setPosition(target);

@@ -46,7 +46,7 @@ public class TeleopControl {
         } else if (driverController.getButton(XboxController.ButtonY)) {
             drivetrain.driveStraight(0.6);
         } else if (driverController.getButton(XboxController.ButtonB)) {
-            drivetrain.turn(90, 50);
+            drivetrain.turn(180);
         } else if (driverController.getButton(XboxController.ButtonX)) {
             drivetrain.driveStraightDistance(20700);
         } else {
@@ -56,18 +56,20 @@ public class TeleopControl {
         }
 
         // Shifting
-        if (driverController.getButton(XboxController.RightBumper)) {
-            drivetrain.shiftUp();
-        } else {
+        if (driverController.getButton(XboxController.RightBumper))
             drivetrain.shiftDown();
-        }
+        else
+            drivetrain.shiftUp();
+
+        // Catching Aid
+        if (driverController.getButtonPressed(XboxController.LeftBumper))
+            drivetrain.toggleCatchingAid();
 
         // Pickup Position
-        if (operatorJoystick.getButtonPressed(4)) {
+        if (operatorJoystick.getButtonPressed(4))
             pickup.raise();
-        } else if (operatorJoystick.getButtonPressed(5)) {
+        else if (operatorJoystick.getButtonPressed(5))
             pickup.lower();
-        }
 
         // Pickup Rollers
         double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
@@ -89,7 +91,7 @@ public class TeleopControl {
         } else if (operatorJoystick.getButton(2)) {
             shooter.setPosition(Constants.Shooter10ft.getValue());
         } else if (operatorJoystick.getButton(3)) {
-            shooter.autoAim();
+            shooter.autoAim(drivetrain.getRangeFinderDistance());
         } else if (operatorJoystick.getButtonPressed(8)) {
             shooter.reload();
         } else {

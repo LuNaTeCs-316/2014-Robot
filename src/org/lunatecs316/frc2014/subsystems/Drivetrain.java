@@ -1,6 +1,7 @@
 package org.lunatecs316.frc2014.subsystems;
 
 import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -28,6 +29,7 @@ public class Drivetrain implements Subsystem {
     private Victor rearRight = new Victor(RobotMap.RearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
+    private DoubleSolenoid catchingAidSolenoid = new DoubleSolenoid(RobotMap.CatchingAidForward, RobotMap.CatchingAidReverse);
 
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
@@ -206,9 +208,8 @@ public class Drivetrain implements Subsystem {
     /**
      * Turn the robot in place
      * @param angle the amount to turn by
-     * @param speed the speed at which to make the turn
      */
-    public void turn(double angle, double speed) {
+    public void turn(double angle) {
         if (manualControl) {
             startAngle = getGyroAngle();
             manualControl = false;
@@ -242,6 +243,30 @@ public class Drivetrain implements Subsystem {
     public void shiftDown() {
         highGear = false;
         shiftingSolenoid.set(false);
+    }
+
+    /**
+     * Raise the catching aid arms
+     */
+    public void raiseCatchingAid() {
+        catchingAidSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    /**
+     * Lower the catching aid arms
+     */
+    public void lowerCatchingAid() {
+        catchingAidSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    /**
+     * Toggle the position of the catching aid arms
+     */
+    public void toggleCatchingAid() {
+        if (catchingAidSolenoid.get() == DoubleSolenoid.Value.kForward)
+            catchingAidSolenoid.set(DoubleSolenoid.Value.kReverse);
+        else
+            catchingAidSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     /**

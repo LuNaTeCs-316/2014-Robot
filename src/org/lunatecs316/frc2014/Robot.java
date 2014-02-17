@@ -61,7 +61,8 @@ public class Robot extends IterativeRobot {
         shooter.init();
 
         // Set default subsystem states
-        drivetrain.shiftDown();
+        drivetrain.shiftUp();
+        drivetrain.raiseCatchingAid();
         pickup.raise();
 
         Logger.info("robotInit", "Robot initalized! Completed in " + initTimer.getValue() + "ms");

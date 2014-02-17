@@ -24,6 +24,8 @@ public class RobotMap {
     public static final int PickupSolenoidReverse = 3;
     public static final int ShooterClutchForward = 4;
     public static final int ShooterClutchReverse = 5;
+    public static final int CatchingAidForward = 6;
+    public static final int CatchingAidReverse = 7;
     
     // Joystick Input (Max 6)
     public static final int DriverController = 1;
