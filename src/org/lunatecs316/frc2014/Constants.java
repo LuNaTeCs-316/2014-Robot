@@ -78,27 +78,41 @@ public class Constants {
      */
     public static void update() {
         Logger.info("Constants.update", "Reading constants from file '" + kFilename + "'");
+        FileConnection file = null;
+        BufferedReader reader = null;
+        Vector lines = null;
+
         try {
             // Open the connection to the file
-            FileConnection file = (FileConnection) Connector.open("file:///" + kFilename, Connector.READ);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(file.openDataInputStream()));
+            file = (FileConnection) Connector.open("file:///" + kFilename, Connector.READ);
+            reader = new BufferedReader(new InputStreamReader(file.openDataInputStream()));
             
             // Read in each line of the constants file
-            Vector lines = new Vector();
+            lines = new Vector();
             String l;
             while ((l = reader.readLine()) != null) {
                 lines.addElement(l);
             }
-            
-            // Close the file connections
-            reader.close();
-            file.close();
-            
+        } catch (IOException e) {
+            Logger.error("Constants.update", "Error reading constants file!");
+            Logger.error("Constants.update", e.getMessage());
+        } finally {
+            try {
+                if (reader != null)
+                    reader.close();
+                if (file != null)
+                    file.close();
+            } catch (IOException ex) {
+                Logger.error("Constants.update", "Error closing file");
+            }
+        }
+
+        if (lines != null) {
             // Parse each line
             Enumeration e = lines.elements();
             while (e.hasMoreElements()) {
                 // Get the next line
-                l = (String) e.nextElement();
+                String l = (String) e.nextElement();
 
                 // Ignore comment lines and whitespace
                 if (l.startsWith("#") || l.equals(""))
@@ -106,12 +120,12 @@ public class Constants {
 
                 // Seperate into name and value
                 int index = l.indexOf("=");
-                
+
                 // Ensure that the equals sign was found
                 if (index != -1) {
                     String key = l.substring(0, index).trim();
                     double value = Double.parseDouble(l.substring(index + 1));
-                
+
                     // Look for the matching Constant
                     Constant c = (Constant) constants.get(key);
                     if (c != null) {
@@ -123,10 +137,7 @@ public class Constants {
                     Logger.error("Constants.update", "Invalid syntax: '=' not found");
                 }
             }
-        } catch (IOException e) {
-            Logger.error("Constants.update", "Error reading constants file!");
-            Logger.error("Constants.update", e.getMessage());
-        }
+        }      
 
         // Trigger update in subsystems
         Drivetrain.getInstance().updateConstants();

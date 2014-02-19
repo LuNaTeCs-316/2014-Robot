@@ -14,6 +14,7 @@ import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.Gyro;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
 import org.lunatecs316.frc2014.lib.Logger;
+import org.lunatecs316.frc2014.lib.Util;
 
 /**
  * Drivetrain subsystem
@@ -29,13 +30,14 @@ public class Drivetrain implements Subsystem {
     private Victor rearRight = new Victor(RobotMap.RearRightMotor);
     private RobotDrive driveMotors = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
-    private DoubleSolenoid catchingAidSolenoid = new DoubleSolenoid(RobotMap.CatchingAidForward, RobotMap.CatchingAidReverse);
+    private DoubleSolenoid catchingAidSolenoid = new DoubleSolenoid(RobotMap.CatchingAidForward,
+                                                                    RobotMap.CatchingAidReverse);
 
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
-            false, CounterBase.EncodingType.k4X);
+                                              false, CounterBase.EncodingType.k4X);
     private Encoder rightEncoder = new Encoder(RobotMap.RightDriveEncoderA, RobotMap.RightDriveEncoderB,
-            false, CounterBase.EncodingType.k4X);
+                                               false, CounterBase.EncodingType.k4X);
     private Gyro gyro = new Gyro(RobotMap.Gyro);
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.RangeFinderPing, RobotMap.RangeFinderEcho);
 
@@ -47,7 +49,6 @@ public class Drivetrain implements Subsystem {
 
     private double startAngle;
     private boolean manualControl;
-    private boolean highGear;
     private boolean atTarget;
 
     /**
@@ -160,6 +161,33 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
+     * Utility function. Skim excess values above 1.0
+     * @param value the value to skim
+     * @return If value is positive and greater than 1.0, return value - 1.0.
+     * If value is negative and less than -1.0, return value + 1.0.
+     */
+    private double skim(double value) {
+        if (value > 1.0)
+            return -((value - 1.0) * Constants.DrivetrainSkimGain.getValue());
+        else if (value < -1.0)
+            return -((value + 1.0) * Constants.DrivetrainSkimGain.getValue());
+        else
+            return 0.0;
+    }
+
+    /**
+     * Set the values of the left and right drive motors
+     * @param left the value for the left motors
+     * @param right the value for the right motors
+     */
+    private void setLeftAndRightMotors(double left, double right) {
+        frontLeft.set(left);
+        rearLeft.set(left);
+        frontRight.set(right);
+        rearRight.set(right);
+    }
+
+    /**
      * Drive the robot straight forwards
      * @param speed the speed at which to move
      */
@@ -193,6 +221,7 @@ public class Drivetrain implements Subsystem {
      * in front of it (typically the wall).
      * @param distance the desired distance between the bot and the wall
      * @param speed how fast to drive
+     * TODO: Needs to be tested; should probably use PID instead of the current method
      */
     public void driveToRangeFinderDistance(double distance, double speed) {
         manualControl = false;
@@ -232,7 +261,6 @@ public class Drivetrain implements Subsystem {
      * Shift into high gear
      */
     public void shiftUp() {
-        highGear = true;
         shiftingSolenoid.set(true);
     }
 
@@ -240,7 +268,6 @@ public class Drivetrain implements Subsystem {
      * Shift into low gear
      */
     public void shiftDown() {
-        highGear = false;
         shiftingSolenoid.set(false);
     }
 
@@ -273,7 +300,7 @@ public class Drivetrain implements Subsystem {
      * @return the average between the left and right encoders
      */
     public double getAverageEncoderValue() {
-        return (leftEncoder.get() + rightEncoder.get()) / 2;
+        return Util.average(leftEncoder.get(), rightEncoder.get());
     }
 
     /**
@@ -344,32 +371,5 @@ public class Drivetrain implements Subsystem {
      */
     public void enableSafety() {
         driveMotors.setSafetyEnabled(true);
-    }
-
-    /**
-     * Utility function. Skim excess values above 1.0
-     * @param value the value to skim
-     * @return If value is positive and greater than 1.0, return value - 1.0.
-     * If value is negative and less than -1.0, return value + 1.0.
-     */
-    private double skim(double value) {
-        if (value > 1.0)
-            return -((value - 1.0) * Constants.DrivetrainSkimGain.getValue());
-        else if (value < -1.0)
-            return -((value + 1.0) * Constants.DrivetrainSkimGain.getValue());
-        else
-            return 0.0;
-    }
-
-    /**
-     * Set the values of the left and right drive motors
-     * @param left the value for the left motors
-     * @param right the value for the right motors
-     */
-    private void setLeftAndRightMotors(double left, double right) {
-        frontLeft.set(left);
-        rearLeft.set(left);
-        frontRight.set(right);
-        rearRight.set(right);
     }
 }

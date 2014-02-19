@@ -23,12 +23,6 @@ public class TeleopControl {
     private Shooter shooter = Shooter.getInstance();
 
     /**
-     * Default constructor
-     */
-    public TeleopControl() {
-    }
-
-    /**
      * Setup for Teleop mode
      */
     public void init() {
@@ -41,15 +35,15 @@ public class TeleopControl {
         updateJoysticks();
 
         // Driving
-        if (driverController.getButton(XboxController.ButtonA)) {
+        if (driverController.getButton(XboxController.ButtonA))
             drivetrain.turnToAngle(0);
-        } else if (driverController.getButton(XboxController.ButtonY)) {
+        else if (driverController.getButton(XboxController.ButtonY))
             drivetrain.driveStraight(-0.5);
-        } else if (driverController.getButton(XboxController.ButtonB)) {
+        else if (driverController.getButton(XboxController.ButtonB))
             drivetrain.turn(180);
-        } else if (driverController.getButton(XboxController.ButtonX)) {
+        else if (driverController.getButton(XboxController.ButtonX))
             drivetrain.driveStraightDistance(Constants.DrivetrainSetpoint.getValue());
-        } else {
+        else {
             double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
             double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
             drivetrain.arcadeDrive(move, turn);
@@ -84,17 +78,17 @@ public class TeleopControl {
         if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || SamXV.manualOverride())) {
             logShot();
             shooter.fire();
-        } else if (operatorJoystick.getButtonPressed(11)) {
+        } else if (operatorJoystick.getButtonPressed(11))
             shooter.bumpUp();
-        } else if (operatorJoystick.getButtonPressed(10)) {
+        else if (operatorJoystick.getButtonPressed(10))
             shooter.bumpDown();
-        } else if (operatorJoystick.getButton(2)) {
+        else if (operatorJoystick.getButton(2))
             shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
-        } else if (operatorJoystick.getButton(3)) {
+        else if (operatorJoystick.getButton(3))
             shooter.autoAim(drivetrain.getRangeFinderDistance());
-        } else if (operatorJoystick.getButtonPressed(8)) {
+        else if (operatorJoystick.getButtonPressed(8))
             shooter.reload();
-        } else {
+        else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
             if (shooter.isManualControl() || operatorJoystick.getRawButton(9))
                 shooter.setWinch(value);
@@ -134,7 +128,7 @@ public class TeleopControl {
         double angle = drivetrain.getGyroAngle();
         double armPosition = shooter.getArmPosition();
         Logger.enableFileLogging(true);
-        Logger.debug("logShot", "ArmPos: " + armPosition + " Dist: " + distance + " Angle: " + angle);
+        Logger.debug("logShot", "ArmPos: " + armPosition + " Dist: " + distance + " GyroAngle: " + angle);
         Logger.enableFileLogging(false);
     }
 }

@@ -124,10 +124,13 @@ public class Logger {
      * Write the log data to a file
      */
     private static void writeToFile() {
+        FileConnection file = null;
+        PrintStream writer = null;
+
         try {
             // Open the file
-            FileConnection file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
-            PrintStream writer = new PrintStream(file.openDataOutputStream());
+            file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
+            writer = new PrintStream(file.openDataOutputStream());
             
             // Write each vector element
             Enumeration e = messages.elements();
@@ -136,11 +139,18 @@ public class Logger {
                 writer.println(msg);
             }
 
-            // Close the file
-            writer.close();
-            file.close();
+            messages.removeAllElements();
         } catch (IOException e){
             Logger.error("Logger.writeToFile", e.getMessage());
+        } finally {
+            try {
+                if (writer != null)
+                    writer.close();
+                if (file != null)
+                    file.close();
+            } catch (IOException ex) {
+                Logger.error("Logger.writeToFile", "Error closing file");
+            }
         }
     }
 }

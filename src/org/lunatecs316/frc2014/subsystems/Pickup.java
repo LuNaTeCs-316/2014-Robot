@@ -18,7 +18,7 @@ public class Pickup implements Subsystem {
 
     private Talon roller = new Talon(RobotMap.PickupRoller);
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
-    private DigitalInput lowerLimit = new DigitalInput(RobotMap.PickupLoweredSwitch);
+    private DigitalInput loweredSwitch = new DigitalInput(RobotMap.PickupLoweredSwitch);
     
     /**
      * Default constructor
@@ -44,7 +44,7 @@ public class Pickup implements Subsystem {
 
         LiveWindow.addActuator("Pickup", "Roller", roller);
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
-        LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
+        LiveWindow.addSensor("Pickup", "Lowered Switch", loweredSwitch);
     }
     
     /**

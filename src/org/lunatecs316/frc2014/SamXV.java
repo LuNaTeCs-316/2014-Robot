@@ -50,13 +50,16 @@ public class SamXV extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+        // Setup the Logger
         Logger.setLevel(Logger.Level.DEBUG);
         Logger.info("robotInit", "Robot intialization starting...");
         IterativeTimer initTimer = new IterativeTimer();
 
+        // Start the compressor
         compressor.start();
         LiveWindow.addActuator("Default", "Compressor", compressor);
 
+        // Intialize the subsystems
         drivetrain.init();
         pickup.init();
         shooter.init();
@@ -73,23 +76,23 @@ public class SamXV extends IterativeRobot {
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
+        // Choose an autonomous mode
         int mode = (int) DriverStation.getInstance().getAnalogIn(1);
-
         switch (mode) {
             case 0:
                 auto = new BasicAutonomous();
                 Logger.info("autonomousInit", "Basic Autonomous");
                 break;
             case 1:
-                auto = new TwoBallAutonomous();
-                Logger.info("autonomousInit", "Two Ball Autonomous");
-                break;
-            case 2:
                 auto = new StationaryTwoBallAutonomous();
                 Logger.info("autonomousInit", "Stationary Two Ball Autonomous");
                 break;
+            case 2:
+                auto = new TwoBallAutonomous();
+                Logger.info("autonomousInit", "Two Ball Autonomous");
+                break;
             default:
-                Logger.warning("autonomousInit", "Selected autonomous mode is empty");
+                Logger.warning("autonomousInit", "Invalid Autonomous Mode");
                 break;
         }
 
@@ -140,15 +143,12 @@ public class SamXV extends IterativeRobot {
     public void disabledPeriodic() {
         teleop.updateJoysticks();
 
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA))
             drivetrain.reinitGyro();
-        }
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB))
             drivetrain.resetEncoders();
-        }
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX)) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
             Constants.update();
-        }
 
         updateSmartDashboard();
     }
@@ -160,6 +160,10 @@ public class SamXV extends IterativeRobot {
         LiveWindow.run();
     }
 
+    /**
+     * Check to see if manual override mode is active
+     * @return
+     */
     public static boolean manualOverride() {
         return DriverStation.getInstance().getDigitalIn(1);
     }
