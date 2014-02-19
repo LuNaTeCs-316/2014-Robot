@@ -81,7 +81,7 @@ public class TeleopControl {
             pickup.setRollerSpeed(0.0);
 
         // Shooter
-        if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || Robot.manualOverride())) {
+        if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || SamXV.manualOverride())) {
             logShot();
             shooter.fire();
         } else if (operatorJoystick.getButtonPressed(11)) {
@@ -89,7 +89,7 @@ public class TeleopControl {
         } else if (operatorJoystick.getButtonPressed(10)) {
             shooter.bumpDown();
         } else if (operatorJoystick.getButton(2)) {
-            shooter.setPosition(Constants.Shooter10ft.getValue());
+            shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
         } else if (operatorJoystick.getButton(3)) {
             shooter.autoAim(drivetrain.getRangeFinderDistance());
         } else if (operatorJoystick.getButtonPressed(8)) {

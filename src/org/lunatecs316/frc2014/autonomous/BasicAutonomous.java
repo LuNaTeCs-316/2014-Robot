@@ -36,6 +36,7 @@ public class BasicAutonomous extends AutonomousMode {
         drivetrain.resetGyro();
         drivetrain.resetEncoders();
         drivetrain.disableSafety();
+        drivetrain.lowerCatchingAid();
 
         // Reset the state timer
         stateTimer.setExpiration(3250);
@@ -53,7 +54,7 @@ public class BasicAutonomous extends AutonomousMode {
         switch (state) {
             case kDrivingForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(Constants.Shooter10ft.getValue());
+                shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);

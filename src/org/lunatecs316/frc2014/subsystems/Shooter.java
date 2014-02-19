@@ -6,10 +6,12 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 import org.lunatecs316.frc2014.Constants;
-import org.lunatecs316.frc2014.Robot;
+import org.lunatecs316.frc2014.SamXV;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
@@ -35,6 +37,8 @@ public class Shooter implements Subsystem {
     private IterativeTimer clutchTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
+    private Vector distances = new Vector();
+    private Vector setpoints;
     private boolean manualControl;
 
     /**
@@ -57,7 +61,13 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
+        // Setup the distances vector
+        for (int i = 48; i <= 216; i += 12)
+            distances.addElement(new Double(i));
+
         Logger.debug("Shooter#init", "Initalizing Shooter");
+
+        updateSetpoints();
 
         // Setup LiveWindow
         LiveWindow.addActuator("Shooter", "winchLeft", winchLeft);
@@ -82,13 +92,36 @@ public class Shooter implements Subsystem {
     public void updateConstants() {
         positionController.setPID(Constants.ShooterPositionP.getValue(),
                 Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
+        updateSetpoints();
+    }
+
+    /**
+     * Update the setpoints lookup table
+     */
+    private void updateSetpoints() {
+        setpoints = new Vector();
+        setpoints.addElement(new Double(1.675 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.550 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.450 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.425 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.475 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.480 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.525 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.600 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.650 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
     }
 
     /**
      * Fire the ball
      */
     public void fire() {
-        if (ballIsLoaded() || Robot.manualOverride()) {
+        if (ballIsLoaded() || SamXV.manualOverride()) {
             clutch.set(DoubleSolenoid.Value.kForward);
             // IterativeTimer ensures we don't try to re-engage the clutch too soon
             clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
@@ -175,40 +208,29 @@ public class Shooter implements Subsystem {
      * @param distance the distance from the goal
      */
     public void autoAim(double distance) {
-        double target;
+        double target = 1.700 + Constants.ShooterOffset.getValue();
 
-        // Determine the proper setpoint. Ugly, but it works
-        // TODO: extrapolate between points instead of using ranges
-        if (distance >= 0 && distance < 54.0) {             // 0ft - 4.5ft
-            target = Constants.Shooter4ft.getValue();
-        } else if (distance >= 54.0 && distance < 66.0) {   // 4.5ft - 5.5ft
-            target = Constants.Shooter5ft.getValue();
-        } else if (distance >= 66.0 && distance < 78.0) {   // 5.5ft - 6.5ft
-            target = Constants.Shooter6ft.getValue();
-        } else if (distance >= 78.0 && distance < 90.0) {   // 6.5ft - 7.5ft
-            target = Constants.Shooter7ft.getValue();
-        } else if (distance >= 90.0 && distance < 102.0) {  // 7.5ft - 8.5ft
-            target = Constants.Shooter8ft.getValue();
-        } else if (distance >= 102.0 && distance < 114.0) {  // 8.5ft - 9.5ft
-            target = Constants.Shooter9ft.getValue();
-        } else if (distance >= 114.0 && distance < 126.0) {  // 9.5ft - 10.5ft
-            target = Constants.Shooter10ft.getValue();
-        } else if (distance >= 126.0 && distance < 138.0) {  // 10.5ft - 11.5ft
-            target = Constants.Shooter11ft.getValue();
-        } else if (distance >= 138.0 && distance < 150.0) {  // 11.5ft - 12.5ft
-            target = Constants.Shooter12ft.getValue();
-        } else if (distance >= 150.0 && distance < 162.0) {  // 12.5ft - 13.5ft
-            target = Constants.Shooter13ft.getValue();
-        } else if (distance >= 162.0 && distance < 174.0) {  // 13.5ft - 14.5ft
-            target = Constants.Shooter14ft.getValue();
-        } else if (distance >= 174.0 && distance < 186.0) {  // 14.5ft - 15.5ft
-            target = Constants.Shooter15ft.getValue();
-        } else if (distance >= 186.0 && distance < 198.0) {  // 15.5ft - 16.5ft
-            target = Constants.Shooter16ft.getValue();
-        } else if (distance >= 198.0 && distance < 210.0) {  // 16.5ft - 17.5ft
-            target = Constants.Shooter17ft.getValue();
-        } else {                                            // > 17.5ft
-            target = Constants.Shooter18ft.getValue();
+        // Calculate the shooter setpoint
+        Double lowDistance = new Double(-1.0);
+        Double lowSetpoint = new Double(-1.0);
+
+        // Find the target range for the given distance and then interpolate between points
+        for (int i = 0; i < distances.size(); i++) {
+            Double highDistance = (Double) distances.elementAt(i);
+
+            if (distance < highDistance.doubleValue()) {
+                Double highSetpoint = (Double) setpoints.elementAt(i);
+                if (lowDistance.doubleValue() > 0.0) {
+                    double m = (highSetpoint.doubleValue() - lowSetpoint.doubleValue()) / (highDistance.doubleValue() - lowDistance.doubleValue());
+                    target = highSetpoint.doubleValue() + m * (distance - lowDistance.doubleValue());
+                } else {
+                    target = highSetpoint.doubleValue();
+                }
+                break;
+            } else {
+                lowDistance = highDistance;
+                lowSetpoint = (Double) setpoints.elementAt(i);
+            }
         }
 
         setPosition(target);
@@ -230,7 +252,7 @@ public class Shooter implements Subsystem {
     private void _setWinch(double speed) {
         // Ensure we've waited long enough after firing
         if (clutchTimer.hasExpired()) {
-            if (speed > 0 && atLoadingPosition() && !Robot.manualOverride())
+            if (speed > 0 && atLoadingPosition() && !SamXV.manualOverride())
                 speed = 0;
 
             // If we're trying to move, make sure the clutch is engaged

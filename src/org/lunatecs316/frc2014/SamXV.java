@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
 import org.lunatecs316.frc2014.autonomous.TwoBallAutonomous;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
 import org.lunatecs316.frc2014.lib.Logger;
@@ -31,7 +32,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Domenic Rodriguez
  * @author Christian Steward
  */
-public class Robot extends IterativeRobot {
+public class SamXV extends IterativeRobot {
     private Compressor compressor = new Compressor(RobotMap.PressureSwitch, RobotMap.CompressorRelay);
     private TeleopControl teleop = new TeleopControl();
     private AutonomousMode auto;
@@ -82,6 +83,10 @@ public class Robot extends IterativeRobot {
             case 1:
                 auto = new TwoBallAutonomous();
                 Logger.info("autonomousInit", "Two Ball Autonomous");
+                break;
+            case 2:
+                auto = new StationaryTwoBallAutonomous();
+                Logger.info("autonomousInit", "Stationary Two Ball Autonomous");
                 break;
             default:
                 Logger.warning("autonomousInit", "Selected autonomous mode is empty");
@@ -136,13 +141,14 @@ public class Robot extends IterativeRobot {
         teleop.updateJoysticks();
 
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
-            drivetrain.resetGyro();
+            drivetrain.reinitGyro();
         }
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
             drivetrain.resetEncoders();
         }
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX)) {
             Constants.update();
+        }
 
         updateSmartDashboard();
     }

@@ -31,6 +31,7 @@ public class TwoBallAutonomous extends AutonomousMode {
         drivetrain.resetGyro();
         drivetrain.resetEncoders();
         drivetrain.disableSafety();
+        drivetrain.lowerCatchingAid();
 
         // Reset the state timer
         stateTimer.setExpiration(3250);
@@ -49,14 +50,14 @@ public class TwoBallAutonomous extends AutonomousMode {
         switch (state) {
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(Constants.Shooter10ft.getValue());
+                shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
                     shooter.setWinch(0.0);
                     state = kFire;
                     Logger.debug("TwoBallAutonomous#run", "State: kFire");
-                    stateTimer.setExpiration(Constants.ShooterResetTime.getValue() + 100);
+                    stateTimer.setExpiration(Constants.ShooterResetTime.getValue());
                 }
                 break;
             case kFire:
@@ -66,7 +67,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                         firstShot = false;
                         state = kDriveBackAndReload;
                         Logger.debug("TwoBallAutonomous#run", "State: kDriveBackAndReload");
-                        stateTimer.setExpiration(3250);
+                        stateTimer.setExpiration(3000);
                     } else {
                         state = kWaitForReload;
                     }
@@ -74,6 +75,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                 break;
             case kDriveBackAndReload:
                 drivetrain.driveStraightDistance(-Constants.Drivetrain8ft.getValue());
+                pickup.setRollerSpeed(-1.0);
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     drivetrain.arcadeDrive(0.0, 0.0);
                     pickup.setRollerSpeed(-1.0);
@@ -85,6 +87,7 @@ public class TwoBallAutonomous extends AutonomousMode {
             case kPickupSecondBall:
                 if (stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
+                    stateTimer.setExpiration(3000);
                     state = kDriveForwards;
                 }
                 break;

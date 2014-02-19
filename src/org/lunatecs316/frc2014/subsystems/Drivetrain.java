@@ -3,7 +3,6 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -12,6 +11,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.Constants;
 import org.lunatecs316.frc2014.RobotMap;
+import org.lunatecs316.frc2014.lib.Gyro;
 import org.lunatecs316.frc2014.lib.IterativePIDController;
 import org.lunatecs316.frc2014.lib.Logger;
 
@@ -316,6 +316,15 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
+     * Recalculate the gyro offset
+     */
+    public void reinitGyro() {
+        Logger.info("Drivetrain#reinitGyro", "Reinitializing gyro... hold still!");
+        gyro.initGyro();
+        Logger.info("Drivetrain#reinitGyro", "Gyro initialization complete!");
+    }
+
+    /**
      * Reset the left and right encoders
      */
     public void resetEncoders() {
@@ -323,10 +332,16 @@ public class Drivetrain implements Subsystem {
         rightEncoder.reset();
     }
 
+    /**
+     * Turn off motor safety for the drive motors
+     */
     public void disableSafety() {
         driveMotors.setSafetyEnabled(false);
     }
 
+    /**
+     * Turn on motor safety for the drive motors
+     */
     public void enableSafety() {
         driveMotors.setSafetyEnabled(true);
     }

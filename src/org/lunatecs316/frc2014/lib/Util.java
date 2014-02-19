@@ -15,4 +15,15 @@ public class Util {
     public static double deadband(double value, double db) {
         return (Math.abs(value) < Math.abs(db)) ? 0 : value;
     }
+
+    /**
+     * Check if a value is within a given range
+     * @param value the value to check
+     * @param lower the lower bound
+     * @param upper the upper bound
+     * @return true if the value is in between the lower and upper bounds, else
+     */
+    public static boolean inRange(double value, double lower, double upper) {
+        return value >= lower && value < upper;
+    }
 }
