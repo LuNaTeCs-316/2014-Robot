@@ -1,7 +1,8 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.lib.EnhancedJoystick;
+import org.lunatecs316.frc2014.lib.Logger;
 import org.lunatecs316.frc2014.lib.Util;
 import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
@@ -14,8 +15,8 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * @author Domenic Rodriguez
  */
 public class TeleopControl {
-    private XboxController driverJoystick = new XboxController(RobotMap.kDriverJoystick);
-    private Joystick operatorJoystick = new Joystick(RobotMap.kOperatorJoystick);
+    private XboxController driverController = new XboxController(RobotMap.DriverController);
+    private EnhancedJoystick operatorJoystick = new EnhancedJoystick(RobotMap.OperatorJoystick);
 
     private Drivetrain drivetrain = Drivetrain.getInstance();
     private Pickup pickup = Pickup.getInstance();
@@ -31,61 +32,90 @@ public class TeleopControl {
      * Setup for Teleop mode
      */
     public void init() {
-        // Nothing to do yet
     }
 
     /**
      * Run one iteration of Teleop mode
      */
     public void run() {
-        boolean emergencyMode = SmartDashboard.getBoolean("EmergencyMode", false);
-        
+        updateJoysticks();
+
         // Driving
-        double move = Util.deadband(driverJoystick.getLeftY(), Constants.kJoystickDeadband.getValue());
-        double turn = Util.deadband(driverJoystick.getRightX(), Constants.kJoystickDeadband.getValue());
-        drivetrain.arcadeDrive(move, turn);
+        if (driverController.getButton(XboxController.ButtonA)) {
+            drivetrain.turnToAngle(0);
+        } else if (driverController.getButton(XboxController.ButtonY)) {
+            drivetrain.driveStraight(-0.5);
+        } else if (driverController.getButton(XboxController.ButtonB)) {
+            drivetrain.turn(180);
+        } else if (driverController.getButton(XboxController.ButtonX)) {
+            drivetrain.driveStraightDistance(Constants.DrivetrainSetpoint.getValue());
+        } else {
+            double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
+            double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
+            drivetrain.arcadeDrive(move, turn);
+        }
 
         // Shifting
-        if (driverJoystick.getButtonPressed(XboxController.kLeftBumper)) {
+        if (driverController.getButton(XboxController.RightBumper))
             drivetrain.shiftDown();
-        } else if (driverJoystick.getButtonPressed(XboxController.kRightBumper)) {
+        else
             drivetrain.shiftUp();
-        }
+
+        // Catching Aid
+        if (driverController.getButtonPressed(XboxController.LeftBumper))
+            drivetrain.toggleCatchingAid();
 
         // Pickup Position
-        if (operatorJoystick.getRawButton(4) && (shooter.atLoadingPosition() || emergencyMode)) {
+        if (operatorJoystick.getButtonPressed(4))
             pickup.raise();
-        } else if (operatorJoystick.getRawButton(5)) {
+        else if (operatorJoystick.getButtonPressed(5))
             pickup.lower();
-        }
 
         // Pickup Rollers
         double rollerSpeed = ((0.25 * -operatorJoystick.getZ()) + 0.75);
-        if (operatorJoystick.getRawButton(3) && (shooter.atLoadingPosition() || emergencyMode)) {
-            pickup.setRollerSpeed(rollerSpeed);
-        } else if (operatorJoystick.getRawButton(2) && (shooter.atLoadingPosition()) || emergencyMode) {
+        if (operatorJoystick.getButton(7))
             pickup.setRollerSpeed(-rollerSpeed);
-        } else {
+        else if (operatorJoystick.getButton(6))
+            pickup.setRollerSpeed(rollerSpeed);
+        else
             pickup.setRollerSpeed(0.0);
-        }
-        System.out.println(rollerSpeed);
-        
+
         // Shooter
-        if (operatorJoystick.getRawButton(1) && (pickup.isLowered() || emergencyMode)) {
+        if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || SamXV.manualOverride())) {
+            logShot();
             shooter.fire();
-        } else if (operatorJoystick.getRawButton(11) && (pickup.isLowered() || emergencyMode)) {
+        } else if (operatorJoystick.getButtonPressed(11)) {
+            shooter.bumpUp();
+        } else if (operatorJoystick.getButtonPressed(10)) {
+            shooter.bumpDown();
+        } else if (operatorJoystick.getButton(2)) {
+            shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
+        } else if (operatorJoystick.getButton(3)) {
+            shooter.autoAim(drivetrain.getRangeFinderDistance());
+        } else if (operatorJoystick.getButtonPressed(8)) {
             shooter.reload();
         } else {
-            shooter.setWinch(Util.deadband(operatorJoystick.getY(), Constants.kJoystickDeadband.getValue()));
+            double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
+            if (shooter.isManualControl() || operatorJoystick.getRawButton(9))
+                shooter.setWinch(value);
         }
+    }
+
+    /**
+     * Read the buttons on the joysticks. Required before using
+     * edge detection methods.
+     */
+    public void updateJoysticks() {
+        driverController.update();
+        operatorJoystick.update();
     }
 
     /**
      * Get the driver's joystick
      * @return the driver controller
      */
-    public XboxController getDriverJoystick() {
-        return driverJoystick;
+    public XboxController getDriverController() {
+        return driverController;
     }
 
     /**
@@ -94,5 +124,17 @@ public class TeleopControl {
      */
     public Joystick getOperatorJoystick() {
         return operatorJoystick;
+    }
+
+    /**
+     * Record information while shooting
+     */
+    public void logShot() {
+        double distance = drivetrain.getRangeFinderDistance();
+        double angle = drivetrain.getGyroAngle();
+        double armPosition = shooter.getArmPosition();
+        Logger.enableFileLogging(true);
+        Logger.debug("logShot", "ArmPos: " + armPosition + " Dist: " + distance + " Angle: " + angle);
+        Logger.enableFileLogging(false);
     }
 }

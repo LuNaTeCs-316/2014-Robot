@@ -14,4 +14,9 @@ public interface Subsystem {
      * Send data to the SmartDashboard
      */
     public void updateSmartDashboard();
+
+    /**
+     * Set any values read from constants
+     */
+    public void updateConstants();
 }

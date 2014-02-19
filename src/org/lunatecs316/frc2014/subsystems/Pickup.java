@@ -1,10 +1,11 @@
 package org.lunatecs316.frc2014.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.RobotMap;
+import org.lunatecs316.frc2014.lib.Logger;
 
 /**
  * Pickup subsystem. <br>
@@ -13,15 +14,11 @@ import org.lunatecs316.frc2014.RobotMap;
  * @author Domenic Rodriguez
  */
 public class Pickup implements Subsystem {
-    public static final double kForward = 1.0;
-    public static final double kReverse = -1.0;
-    
-    private Talon roller = new Talon(RobotMap.kPickupRoller);
-    private Solenoid solenoid = new Solenoid(RobotMap.kPickupSolenoid);
-    private DigitalInput lowerLimit = new DigitalInput(RobotMap.kPickupLowerLimit);
-    private DigitalInput upperLimit = new DigitalInput(RobotMap.kPickupUpperLimit);
-    
     private static Pickup instance;
+
+    private Talon roller = new Talon(RobotMap.PickupRoller);
+    private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
+    private DigitalInput lowerLimit = new DigitalInput(RobotMap.PickupLoweredSwitch);
     
     /**
      * Default constructor
@@ -34,9 +31,8 @@ public class Pickup implements Subsystem {
      * @return the pickup subsystem
      */
     public static Pickup getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new Pickup();
-        }
         return instance;
     }
 
@@ -44,10 +40,11 @@ public class Pickup implements Subsystem {
      * @inheritDoc
      */
     public void init() {
+        Logger.debug("Pickup#init", "Initalizing Pickup");
+
         LiveWindow.addActuator("Pickup", "Roller", roller);
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
         LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
-        LiveWindow.addSensor("Pickup", "Upper Limit", upperLimit);
     }
     
     /**
@@ -55,35 +52,34 @@ public class Pickup implements Subsystem {
      */
     public void updateSmartDashboard() {
     }
+
+    /**
+     * @inheritDoc
+     */
+    public void updateConstants() {
+    }
    
     /**
      * Move the pickup to the raised position. 
      */
     public void raise(){
-        solenoid.set(true);
+        solenoid.set(DoubleSolenoid.Value.kReverse);
     }
     
     /**
      * Move the pickup to the lowered position through actuation of the Solenoid
      */        
     public void lower() {
-        solenoid.set(false);
+        solenoid.set(DoubleSolenoid.Value.kForward);
     }
     
     /**
      * Sets speed of the roller for max versatility 
-     * @param speed the speed of the roller
+     * @param speed the speed of the roller. Use negative values for picking up
+     * the ball, and positive values for letting go of the ball.
      */
     public void setRollerSpeed(double speed) {
         roller.set(speed);
-    }
-    
-    /**
-     * Get the state of the upper limit switch
-     * @return true if pickup is raised
-      */
-    public boolean isRaised() {
-        return upperLimit.get();
     }
     
     /**
@@ -91,6 +87,7 @@ public class Pickup implements Subsystem {
      * @return true if pickup is lowered
      */
     public boolean isLowered() {
-        return lowerLimit.get();
+        //return lowerLimit.get();
+        return (solenoid.get() == DoubleSolenoid.Value.kForward);
     }
 }

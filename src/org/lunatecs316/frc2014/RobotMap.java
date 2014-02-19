@@ -7,38 +7,44 @@ package org.lunatecs316.frc2014;
 public class RobotMap {
     
     // PWM Output (Max 10)
-    public static final int kFrontLeftMotor = 1;
-    public static final int kRearLeftMotor = 2;
-    public static final int kFrontRightMotor = 3;
-    public static final int kRearRightMotor = 4;
-    public static final int kPickupRoller = 5;
-    public static final int kShooterWinch = 6;
+    public static final int FrontLeftMotor = 1;
+    public static final int RearLeftMotor = 2;
+    public static final int FrontRightMotor = 3;
+    public static final int RearRightMotor = 4;
+    public static final int PickupRoller = 5;
+    public static final int ShooterWinchLeft = 6;
+    public static final int ShooterWinchRight = 7;
     
     // Relay Output (Max 8)
-    public static final int kCompressorRelay = 1;
+    public static final int CompressorRelay = 1;
     
     // Solenoid Output (Max 8)
-    public static final int kShiftingSolenoid = 1;
-    public static final int kPickupSolenoid = 2;
-    public static final int kShooterClutch = 3;
+    public static final int ShiftingSolenoid = 1;
+    public static final int PickupSolenoidForward = 2;
+    public static final int PickupSolenoidReverse = 3;
+    public static final int ShooterClutchForward = 4;
+    public static final int ShooterClutchReverse = 5;
+    public static final int CatchingAidForward = 6;
+    public static final int CatchingAidReverse = 7;
     
     // Joystick Input (Max 6)
-    public static final int kDriverJoystick = 1;
-    public static final int kOperatorJoystick = 2;
+    public static final int DriverController = 1;
+    public static final int OperatorJoystick = 2;
     
     // Digital I/O (Max 14)
-    public static final int kPressureSwitch = 1;
-    public static final int kLeftDriveEncoderA = 2;
-    public static final int kLeftDriveEncoderB = 3;
-    public static final int kRightDriveEncoderA = 4;
-    public static final int kRightDriveEncoderB = 5;
-    public static final int kRangeFinderPing = 6;
-    public static final int kRangeFinderEcho = 7;
-    public static final int kPickupLowerLimit = 8;
-    public static final int kPickupUpperLimit = 9;
-    public static final int kShooterLoad = 10;
-    public static final int kShooterMax = 11;
+    public static final int PressureSwitch = 1;
+    public static final int RightDriveEncoderA = 2;
+    public static final int RightDriveEncoderB = 3;
+    public static final int LeftDriveEncoderA = 4;
+    public static final int LeftDriveEncoderB = 5;
+    public static final int RangeFinderPing = 6;
+    public static final int RangeFinderEcho = 7;
+    public static final int PickupLoweredSwitch = 8;
+    public static final int ShooterLoadSwitch = 9;
+    public static final int ShooterMaxSwitch = 10;
+    public static final int BallSwitch = 11;
     
     // Analog I/O (Max 8)
-    public static final int kGyro = 1;
+    public static final int Gyro = 1;
+    public static final int ShooterPot = 3;
 }

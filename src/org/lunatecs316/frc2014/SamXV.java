@@ -8,9 +8,16 @@
 package org.lunatecs316.frc2014;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.lunatecs316.frc2014.autonomous.AutonomousMode;
+import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
+import org.lunatecs316.frc2014.autonomous.TwoBallAutonomous;
+import org.lunatecs316.frc2014.lib.IterativeTimer;
+import org.lunatecs316.frc2014.lib.Logger;
+import org.lunatecs316.frc2014.lib.XboxController;
 import org.lunatecs316.frc2014.subsystems.Drivetrain;
 import org.lunatecs316.frc2014.subsystems.Pickup;
 import org.lunatecs316.frc2014.subsystems.Shooter;
@@ -21,13 +28,14 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the manifest file in the resource
  * directory.
- * 
+ *
  * @author Domenic Rodriguez
  * @author Christian Steward
  */
-public class Robot extends IterativeRobot {
-    private Compressor compressor = new Compressor(RobotMap.kPressureSwitch, RobotMap.kCompressorRelay);
+public class SamXV extends IterativeRobot {
+    private Compressor compressor = new Compressor(RobotMap.PressureSwitch, RobotMap.CompressorRelay);
     private TeleopControl teleop = new TeleopControl();
+    private AutonomousMode auto;
 
     // Subsystems
     private Drivetrain drivetrain = Drivetrain.getInstance();
@@ -38,46 +46,70 @@ public class Robot extends IterativeRobot {
     private int loopCount = 0;
 
     /**
-     * Robot Constructor
-     */
-    public Robot() {
-    }
-
-    /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        Logger.setLevel(Logger.Level.DEBUG);
+        Logger.info("robotInit", "Robot intialization starting...");
+        IterativeTimer initTimer = new IterativeTimer();
+
         compressor.start();
+        LiveWindow.addActuator("Default", "Compressor", compressor);
 
         drivetrain.init();
         pickup.init();
         shooter.init();
-        
-        SmartDashboard.putBoolean("EmergencyMode", false);
-        SmartDashboard.putBoolean("DebugMode", false);
+
+        // Set default subsystem states
+        drivetrain.shiftUp();
+        drivetrain.raiseCatchingAid();
+        pickup.raise();
+
+        Logger.info("robotInit", "Robot initalized! Completed in " + initTimer.getValue() + "ms");
     }
 
     /**
      * This function is called once at the start of autonomous
      */
     public void autonomousInit() {
+        int mode = (int) DriverStation.getInstance().getAnalogIn(1);
 
+        switch (mode) {
+            case 0:
+                auto = new BasicAutonomous();
+                Logger.info("autonomousInit", "Basic Autonomous");
+                break;
+            case 1:
+                auto = new TwoBallAutonomous();
+                Logger.info("autonomousInit", "Two Ball Autonomous");
+                break;
+            case 2:
+                auto = new StationaryTwoBallAutonomous();
+                Logger.info("autonomousInit", "Stationary Two Ball Autonomous");
+                break;
+            default:
+                Logger.warning("autonomousInit", "Selected autonomous mode is empty");
+                break;
+        }
+
+        auto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
+        auto.run();
+        updateSmartDashboard();
     }
 
     /**
      * This function is called once at the start of operator control
      */
     public void teleopInit() {
+        Logger.info("teleopInit", "Entering teleop mode...");
         teleop.init();
-        loopCount = 0;
     }
 
     /**
@@ -85,7 +117,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         teleop.run();
-        
         updateSmartDashboard();
     }
 
@@ -93,30 +124,33 @@ public class Robot extends IterativeRobot {
      * This function is called once at the start of being disabled
      */
     public void disabledInit() {
+        Logger.info("disabledInit", "Entering disabled mode...");
         Constants.update();
-        loopCount = 0;
+
+        // Set default states of the subsystems
+        drivetrain.arcadeDrive(0, 0);
+        drivetrain.shiftDown();
+        pickup.setRollerSpeed(0.0);
+        shooter.setWinch(0.0);
     }
 
     /**
      * This function is called periodically while the robot is disabled
      */
     public void disabledPeriodic() {
-        if (teleop.getDriverJoystick().getButtonA()) {
-            drivetrain.resetGyro();
-        }
+        teleop.updateJoysticks();
 
-        if (teleop.getDriverJoystick().getButtonB()) {
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
+            drivetrain.reinitGyro();
+        }
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
             drivetrain.resetEncoders();
         }
-        
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX)) {
+            Constants.update();
+        }
+
         updateSmartDashboard();
-    }
-
-    /**
-     * This function is called once at the start of test mode
-     */
-    public void testInit() {
-
     }
 
     /**
@@ -125,12 +159,16 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-    
+
+    public static boolean manualOverride() {
+        return DriverStation.getInstance().getDigitalIn(1);
+    }
+
     /**
      * Send data to the SmartDashboard
      */
     private void updateSmartDashboard() {
-        if (loopCount >= Constants.kDashboardUpdateFrequency.getValue()) {
+        if (loopCount >= Constants.DashboardUpdateFrequency.getValue()) {
             drivetrain.updateSmartDashboard();
             pickup.updateSmartDashboard();
             shooter.updateSmartDashboard();
