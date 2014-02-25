@@ -21,7 +21,7 @@ public class Constants {
     private static final String kFilename = "Constants.txt";
     // This MUST come before the creation of any constants!
     private static Hashtable constants = new Hashtable();
-    
+
     public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
 
@@ -45,29 +45,30 @@ public class Constants {
     public static final Constant ShooterTopPosition = new Constant("ShooterTopPosition", 0.845);
     public static final Constant ShooterBottomPosition = new Constant("ShooterBottomPosition", 1.867);
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.75);
-    public static final Constant ShooterOffset = new Constant("ShooterOffset", 0.0);
-    
+    public static final Constant ShooterAngleOffset = new Constant("ShooterAngleOffset", 0.0);
+    public static final Constant ShooterDistanceOffset = new Constant("ShooterDistanceOffset", 0.0);
+
     /**
      * Representation of a single constant value
      */
     public static final class Constant {
         private String name;
         private double value;
-        
+
         public Constant(String name, double val) {
             this.name = name;
             value = val;
             Constants.constants.put(name, this);
         }
-        
+
         public void setValue(double val) {
             value = val;
         }
-        
+
         public double getValue() {
             return value;
         }
-        
+
         public String getName() {
             return name;
         }
@@ -86,7 +87,7 @@ public class Constants {
             // Open the connection to the file
             file = (FileConnection) Connector.open("file:///" + kFilename, Connector.READ);
             reader = new BufferedReader(new InputStreamReader(file.openDataInputStream()));
-            
+
             // Read in each line of the constants file
             lines = new Vector();
             String l;
@@ -137,7 +138,7 @@ public class Constants {
                     Logger.error("Constants.update", "Invalid syntax: '=' not found");
                 }
             }
-        }      
+        }
 
         // Trigger update in subsystems
         Drivetrain.getInstance().updateConstants();

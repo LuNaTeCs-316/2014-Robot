@@ -30,13 +30,7 @@ public class BasicAutonomous extends AutonomousMode {
         visionData.putBoolean("enabled", true);
 
         // Set the intial states for the robot subsystems
-        pickup.lower();
         pickup.setRollerSpeed(-1.0);
-        drivetrain.shiftDown();
-        drivetrain.resetGyro();
-        drivetrain.resetEncoders();
-        drivetrain.disableSafety();
-        drivetrain.lowerCatchingAid();
 
         // Reset the state timer
         stateTimer.setExpiration(3250);
@@ -54,7 +48,7 @@ public class BasicAutonomous extends AutonomousMode {
         switch (state) {
             case kDrivingForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
+                shooter.setPosition(1.4 + Constants.ShooterAngleOffset.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
@@ -93,8 +87,6 @@ public class BasicAutonomous extends AutonomousMode {
                 break;
             case kDone:
                 shooter.setWinch(0.0);
-                drivetrain.enableSafety();
-                drivetrain.arcadeDrive(0.0, 0.0);
                 break;
             default:
                 Logger.error("BasicAutonomous", "Invalid autonomous state");

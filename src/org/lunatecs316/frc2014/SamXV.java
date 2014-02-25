@@ -81,21 +81,30 @@ public class SamXV extends IterativeRobot {
         switch (mode) {
             case 0:
                 auto = new BasicAutonomous();
-                Logger.info("autonomousInit", "Basic Autonomous");
+                Logger.info("autonomousInit", "Running BasicAutonomous");
                 break;
             case 1:
                 auto = new StationaryTwoBallAutonomous();
-                Logger.info("autonomousInit", "Stationary Two Ball Autonomous");
+                Logger.info("autonomousInit", "Running StationaryTwoBallAutonomous");
                 break;
-            case 2:
+            case 5:
                 auto = new TwoBallAutonomous();
-                Logger.info("autonomousInit", "Two Ball Autonomous");
+                Logger.info("autonomousInit", "Running TwoBallAutonomous");
                 break;
             default:
                 Logger.warning("autonomousInit", "Invalid Autonomous Mode");
                 break;
         }
 
+        // Common setup for all autonomous modes
+        drivetrain.shiftDown();
+        drivetrain.resetGyro();
+        drivetrain.resetEncoders();
+        drivetrain.disableSafety();
+        drivetrain.lowerCatchingAid();
+        pickup.lower();
+
+        // Initialize the autonomous mode
         auto.init();
     }
 

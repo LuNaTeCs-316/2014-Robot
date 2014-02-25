@@ -25,13 +25,7 @@ public class TwoBallAutonomous extends AutonomousMode {
      */
     public void init() {
         // Set the intial states for the robot subsystems
-        pickup.lower();
         pickup.setRollerSpeed(-1.0);
-        drivetrain.shiftDown();
-        drivetrain.resetGyro();
-        drivetrain.resetEncoders();
-        drivetrain.disableSafety();
-        drivetrain.lowerCatchingAid();
 
         // Reset the state timer
         stateTimer.setExpiration(3250);
@@ -40,7 +34,7 @@ public class TwoBallAutonomous extends AutonomousMode {
         state = kDriveForwards;
         firstShot = true;
 
-        Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
+        Logger.debug("TwoBallAutonomous#init", "State: kDrivingForwards");
     }
 
     /**
@@ -50,7 +44,7 @@ public class TwoBallAutonomous extends AutonomousMode {
         switch (state) {
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
+                shooter.setPosition(1.4 + Constants.ShooterAngleOffset.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
@@ -94,16 +88,14 @@ public class TwoBallAutonomous extends AutonomousMode {
             case kWaitForReload:
                 if (shooter.atLoadingPosition() || stateTimer.hasExpired()) {
                     state = kDone;
-                    Logger.debug("BasicAutonomous#run", "State: kDone");
+                    Logger.debug("TwoBallAutonomous#run", "State: kDone");
                 }
                 break;
             case kDone:
                 shooter.setWinch(0.0);
-                drivetrain.enableSafety();
-                drivetrain.arcadeDrive(0.0, 0.0);
                 break;
             default:
-                Logger.error("BasicAutonomous", "Invalid autonomous state");
+                Logger.error("TwoBallAutonomous", "Invalid autonomous state");
                 break;
         }
     }

@@ -60,10 +60,6 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
-        // Setup the distances vector
-        for (int i = 48; i <= 216; i += 12)
-            distances.addElement(new Double(i));
-
         Logger.debug("Shooter#init", "Initalizing Shooter");
 
         // Update the setpoint lookup table
@@ -99,22 +95,28 @@ public class Shooter implements Subsystem {
      * Update the setpoints lookup table
      */
     private void updateSetpoints() {
+        // Distances
+        distances.removeAllElements();
+        for (int i = 48; i <= 216; i += 12)
+            distances.addElement(new Double(i + Constants.ShooterDistanceOffset.getValue()));
+
+        // Angle setpoints
         setpoints.removeAllElements();
-        setpoints.addElement(new Double(1.675 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.550 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.450 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.425 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.475 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.480 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.525 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.600 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.650 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
+        setpoints.addElement(new Double(1.675 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.550 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.450 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.425 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.475 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.480 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.525 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.600 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.650 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.700 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.700 + Constants.ShooterAngleOffset.getValue()));
     }
 
     /**
@@ -207,7 +209,7 @@ public class Shooter implements Subsystem {
      * @param distance the distance from the goal
      */
     public void autoAim(double distance) {
-        double target = 1.700 + Constants.ShooterOffset.getValue();
+        double target = 1.700 + Constants.ShooterAngleOffset.getValue();
 
         // Calculate the shooter setpoint
         Double lowDistance = new Double(-1.0);
@@ -224,7 +226,7 @@ public class Shooter implements Subsystem {
                 {
                     double m = (highSetpoint.doubleValue() - lowSetpoint.doubleValue())
                              / (highDistance.doubleValue() - lowDistance.doubleValue());
-                    target = highSetpoint.doubleValue() + m * (distance - lowDistance.doubleValue());
+                    target = highSetpoint.doubleValue() + (m * (distance - lowDistance.doubleValue()));
                 }
                 else
                     target = highSetpoint.doubleValue();
@@ -270,7 +272,7 @@ public class Shooter implements Subsystem {
      * @return the status of the loading limit switch
      */
     public boolean atLoadingPosition() {
-        return (getArmPosition() >= Constants.ShooterLoadPosition.getValue()) || loadSwitch.get();
+        return loadSwitch.get();
     }
 
     /**
