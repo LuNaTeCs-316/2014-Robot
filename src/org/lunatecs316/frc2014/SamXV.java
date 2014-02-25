@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
-import org.lunatecs316.frc2014.autonomous.BasicAutonomousSequence;
 import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
 import org.lunatecs316.frc2014.autonomous.TwoBallAutonomous;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
@@ -81,42 +80,30 @@ public class SamXV extends IterativeRobot {
         int mode = (int) DriverStation.getInstance().getAnalogIn(1);
         switch (mode) {
             case 0:
-                auto = null;
-                Logger.info("autonomousInit", "No Autonomous");
-                break;
-            case 1:
                 auto = new BasicAutonomous();
                 Logger.info("autonomousInit", "Basic Autonomous");
                 break;
-            case 2:
+            case 1:
                 auto = new StationaryTwoBallAutonomous();
                 Logger.info("autonomousInit", "Stationary Two Ball Autonomous");
                 break;
-            case 3:
+            case 2:
                 auto = new TwoBallAutonomous();
                 Logger.info("autonomousInit", "Two Ball Autonomous");
-                break;
-            case 4:
-                auto = new BasicAutonomousSequence();
-                Logger.info("autonomousInit", "Basic Autonomous Sequence");
-                break;
-            case 5:
                 break;
             default:
                 Logger.warning("autonomousInit", "Invalid Autonomous Mode");
                 break;
         }
 
-        if (auto != null)
-            auto.init();
+        auto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        if (auto != null)
-            auto.run();
+        auto.run();
         updateSmartDashboard();
     }
 
