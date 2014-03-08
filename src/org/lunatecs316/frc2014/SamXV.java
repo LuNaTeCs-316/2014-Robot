@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
 import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
 import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
@@ -101,7 +102,7 @@ public class SamXV extends IterativeRobot {
         drivetrain.resetGyro();
         drivetrain.resetEncoders();
         drivetrain.disableSafety();
-        drivetrain.lowerCatchingAid();
+        drivetrain.raiseCatchingAid();
         pickup.lower();
 
         // Initialize the autonomous mode
@@ -185,6 +186,7 @@ public class SamXV extends IterativeRobot {
             drivetrain.updateSmartDashboard();
             pickup.updateSmartDashboard();
             shooter.updateSmartDashboard();
+            SmartDashboard.putBoolean(("Override"), manualOverride());
             loopCount = 0;
         } else {
             loopCount++;

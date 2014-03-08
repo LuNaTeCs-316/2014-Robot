@@ -34,6 +34,7 @@ public class Shooter implements Subsystem {
     private IterativePIDController positionController = new IterativePIDController(Constants.ShooterPositionP.getValue(),
                 Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
     private IterativeTimer clutchTimer = new IterativeTimer();
+    private IterativeTimer reloadTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
     private Vector distances = new Vector();
@@ -143,12 +144,14 @@ public class Shooter implements Subsystem {
      */
     public void reload() {
         manualControl = false;
+        reloadTimer.reset();
         taskTimer.schedule(new TimerTask() {
             public void run() {
                 _setWinch(1.0);
                 if (atLoadingPosition() || manualControl) {
                     _setWinch(0.0);
                     manualControl = true;
+                    Logger.debug("Shooter#reload", "Reload time: " + reloadTimer.getValue());
                     cancel();
                 }
             }

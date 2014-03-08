@@ -76,7 +76,7 @@ public class TeleopControl {
             pickup.setRollerSpeed(0.0);
 
         // Shooter
-        if (operatorJoystick.getButtonPressed(1) && (pickup.isLowered() || SamXV.manualOverride())) {
+        if (operatorJoystick.getButtonPressed(1) && ((pickup.isLowered() && shooter.ballIsLoaded()) || SamXV.manualOverride())) {
             logShot();
             shooter.fire();
         } else if (operatorJoystick.getButtonPressed(11))
