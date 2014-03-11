@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
-import org.lunatecs316.frc2014.autonomous.BasicAutonomous;
+import org.lunatecs316.frc2014.autonomous.HighGoalAutonomous;
+import org.lunatecs316.frc2014.autonomous.LowGoalAutonomous;
 import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
 import org.lunatecs316.frc2014.autonomous.TwoBallAutonomous;
 import org.lunatecs316.frc2014.lib.IterativeTimer;
@@ -81,16 +82,16 @@ public class SamXV extends IterativeRobot {
         int mode = (int) DriverStation.getInstance().getAnalogIn(1);
         switch (mode) {
             case 0:
-                auto = new BasicAutonomous();
-                Logger.info("autonomousInit", "Running BasicAutonomous");
+                auto = new HighGoalAutonomous();
                 break;
             case 1:
                 auto = new StationaryTwoBallAutonomous();
-                Logger.info("autonomousInit", "Running StationaryTwoBallAutonomous");
                 break;
-            case 5:
+            case 2:
+                auto = new LowGoalAutonomous();
+                break;
+            case 3:
                 auto = new TwoBallAutonomous();
-                Logger.info("autonomousInit", "Running TwoBallAutonomous");
                 break;
             default:
                 Logger.warning("autonomousInit", "Invalid Autonomous Mode");
@@ -106,14 +107,18 @@ public class SamXV extends IterativeRobot {
         pickup.lower();
 
         // Initialize the autonomous mode
-        auto.init();
+        if (auto != null) {
+            Logger.info("autonomousInit", "Running " + auto.getClass().getName());
+            auto.init();
+        }
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        auto.run();
+        if (auto != null)
+            auto.run();
         updateSmartDashboard();
     }
 
@@ -159,6 +164,8 @@ public class SamXV extends IterativeRobot {
             drivetrain.resetEncoders();
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
             Constants.update();
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonY))
+            Logger.writeToFile();
 
         updateSmartDashboard();
     }

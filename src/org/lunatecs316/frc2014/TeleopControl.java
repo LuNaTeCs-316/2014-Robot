@@ -84,7 +84,7 @@ public class TeleopControl {
         else if (operatorJoystick.getButtonPressed(10))
             shooter.bumpDown();
         else if (operatorJoystick.getButton(2))
-            shooter.setPosition(1.4 + Constants.ShooterAngleOffset.getValue());
+            shooter.setPosition(1.4);
         else if (operatorJoystick.getButton(3))
             shooter.autoAim(drivetrain.getRangeFinderDistance());
         else if (operatorJoystick.getButtonPressed(8))

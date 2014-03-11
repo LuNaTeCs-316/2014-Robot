@@ -9,7 +9,7 @@ import org.lunatecs316.frc2014.lib.IterativeTimer;
  * Basic autonomous mode. Score the ball in the high goal
  * @author Domenic Rodriguez
  */
-public class BasicAutonomous extends AutonomousMode {
+public class HighGoalAutonomous extends AutonomousMode {
     private static final int kDriveForwards = 0;
     private static final int kCheckForHotGoal = 1;
     private static final int kWaitForHotGoal = 2;
@@ -48,7 +48,7 @@ public class BasicAutonomous extends AutonomousMode {
         switch (state) {
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4 + Constants.ShooterAngleOffset.getValue());
+                shooter.setPosition(1.4);
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);

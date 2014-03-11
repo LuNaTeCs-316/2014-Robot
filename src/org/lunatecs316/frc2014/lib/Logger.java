@@ -39,7 +39,7 @@ public class Logger {
 
     private static IterativeTimer timer;
     private static Level currentLevel;
-    private static boolean tofile;
+    private static boolean toFile;
     private static Vector messages;
     
     static {
@@ -97,7 +97,7 @@ public class Logger {
      * @param enabled
      */
     public static void enableFileLogging(boolean enabled) {
-        tofile = enabled;
+        toFile = enabled;
     }
     
     /**
@@ -114,7 +114,7 @@ public class Logger {
             else
                 System.out.println(output);
 
-            if (tofile) {
+            if (toFile) {
                 messages.addElement(output);
             }
         }
@@ -123,13 +123,13 @@ public class Logger {
     /**
      * Write the log data to a file
      */
-    private static void writeToFile() {
+    public static void writeToFile() {
         FileConnection file = null;
         PrintStream writer = null;
 
         try {
             // Open the file
-            file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
+            file = (FileConnection) Connector.open("file:///logs/match" + timer.getValue() + ".log", Connector.WRITE);
             writer = new PrintStream(file.openDataOutputStream());
             
             // Write each vector element
@@ -138,7 +138,6 @@ public class Logger {
                 String msg = (String) e.nextElement();
                 writer.println(msg);
             }
-
             messages.removeAllElements();
         } catch (IOException e){
             Logger.error("Logger.writeToFile", e.getMessage());

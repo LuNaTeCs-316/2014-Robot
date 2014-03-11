@@ -81,6 +81,7 @@ public class Shooter implements Subsystem {
      */
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Arm Position", getArmPosition());
+        SmartDashboard.putBoolean("Ball is loaded?", ballIsLoaded());
     }
 
     /**
@@ -103,21 +104,21 @@ public class Shooter implements Subsystem {
 
         // Angle setpoints
         setpoints.removeAllElements();
-        setpoints.addElement(new Double(1.675 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.550 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.450 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.425 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.475 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.480 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.525 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.600 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.650 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterAngleOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterAngleOffset.getValue()));
+        setpoints.addElement(new Double(1.675));
+        setpoints.addElement(new Double(1.550));
+        setpoints.addElement(new Double(1.450));
+        setpoints.addElement(new Double(1.425));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.475));
+        setpoints.addElement(new Double(1.480));
+        setpoints.addElement(new Double(1.525));
+        setpoints.addElement(new Double(1.600));
+        setpoints.addElement(new Double(1.650));
+        setpoints.addElement(new Double(1.700));
+        setpoints.addElement(new Double(1.700));
     }
 
     /**
@@ -203,7 +204,8 @@ public class Shooter implements Subsystem {
             manualControl = false;
             positionController.reset();
         }
-        double value = positionController.run(target, positionPot.getAverageVoltage());
+        double value = positionController.run(target + Constants.ShooterAngleOffset.getValue(),
+                                              positionPot.getAverageVoltage());
         setWinch(value);
     }
 
@@ -212,7 +214,7 @@ public class Shooter implements Subsystem {
      * @param distance the distance from the goal
      */
     public void autoAim(double distance) {
-        double target = 1.700 + Constants.ShooterAngleOffset.getValue();
+        double target = 1.700;
 
         // Calculate the shooter setpoint
         Double lowDistance = new Double(-1.0);
