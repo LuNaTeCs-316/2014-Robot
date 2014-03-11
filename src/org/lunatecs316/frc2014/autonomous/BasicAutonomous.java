@@ -10,7 +10,7 @@ import org.lunatecs316.frc2014.lib.IterativeTimer;
  * @author Domenic Rodriguez
  */
 public class BasicAutonomous extends AutonomousMode {
-    private static final int kDrivingForwards = 0;
+    private static final int kDriveForwards = 0;
     private static final int kCheckForHotGoal = 1;
     private static final int kWaitForHotGoal = 2;
     private static final int kFire = 3;
@@ -36,7 +36,7 @@ public class BasicAutonomous extends AutonomousMode {
         stateTimer.setExpiration(3250);
 
         // Set the default state
-        state = kDrivingForwards;
+        state = kDriveForwards;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
     }
@@ -46,7 +46,7 @@ public class BasicAutonomous extends AutonomousMode {
      */
     public void run() {
         switch (state) {
-            case kDrivingForwards:
+            case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
                 shooter.setPosition(1.4 + Constants.ShooterAngleOffset.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
@@ -89,7 +89,7 @@ public class BasicAutonomous extends AutonomousMode {
                 shooter.setWinch(0.0);
                 break;
             default:
-                Logger.error("BasicAutonomous", "Invalid autonomous state");
+                Logger.error("BasicAutonomous#run", "Invalid autonomous state");
                 break;
         }
     }
