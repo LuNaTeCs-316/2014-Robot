@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -35,10 +34,11 @@ public class Shooter implements Subsystem {
     private IterativePIDController positionController = new IterativePIDController(Constants.ShooterPositionP.getValue(),
                 Constants.ShooterPositionI.getValue(), Constants.ShooterPositionD.getValue());
     private IterativeTimer clutchTimer = new IterativeTimer();
+    private IterativeTimer reloadTimer = new IterativeTimer();
     private Timer taskTimer = new Timer();
 
     private Vector distances = new Vector();
-    private Vector setpoints;
+    private Vector setpoints = new Vector();
     private boolean manualControl;
 
     /**
@@ -61,12 +61,9 @@ public class Shooter implements Subsystem {
      * @inheritDoc
      */
     public void init(){
-        // Setup the distances vector
-        for (int i = 48; i <= 216; i += 12)
-            distances.addElement(new Double(i));
-
         Logger.debug("Shooter#init", "Initalizing Shooter");
 
+        // Update the setpoint lookup table
         updateSetpoints();
 
         // Setup LiveWindow
@@ -84,6 +81,7 @@ public class Shooter implements Subsystem {
      */
     public void updateSmartDashboard() {
         SmartDashboard.putNumber("Arm Position", getArmPosition());
+        SmartDashboard.putBoolean("Ball is loaded?", ballIsLoaded());
     }
 
     /**
@@ -99,22 +97,28 @@ public class Shooter implements Subsystem {
      * Update the setpoints lookup table
      */
     private void updateSetpoints() {
-        setpoints = new Vector();
-        setpoints.addElement(new Double(1.675 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.550 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.450 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.425 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.400 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.475 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.480 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.525 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.600 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.650 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
-        setpoints.addElement(new Double(1.700 + Constants.ShooterOffset.getValue()));
+        // Distances
+        distances.removeAllElements();
+        for (int i = 48; i <= 216; i += 12)
+            distances.addElement(new Double(i + Constants.ShooterDistanceOffset.getValue()));
+
+        // Angle setpoints
+        setpoints.removeAllElements();
+        setpoints.addElement(new Double(1.675));
+        setpoints.addElement(new Double(1.550));
+        setpoints.addElement(new Double(1.450));
+        setpoints.addElement(new Double(1.425));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.400));
+        setpoints.addElement(new Double(1.475));
+        setpoints.addElement(new Double(1.480));
+        setpoints.addElement(new Double(1.525));
+        setpoints.addElement(new Double(1.600));
+        setpoints.addElement(new Double(1.650));
+        setpoints.addElement(new Double(1.700));
+        setpoints.addElement(new Double(1.700));
     }
 
     /**
@@ -123,7 +127,6 @@ public class Shooter implements Subsystem {
     public void fire() {
         if (ballIsLoaded() || SamXV.manualOverride()) {
             clutch.set(DoubleSolenoid.Value.kForward);
-            // IterativeTimer ensures we don't try to re-engage the clutch too soon
             clutchTimer.setExpiration(Constants.ShooterResetTime.getValue());
             taskTimer.schedule(new TimerTask() {
                 public void run() {
@@ -142,12 +145,14 @@ public class Shooter implements Subsystem {
      */
     public void reload() {
         manualControl = false;
+        reloadTimer.reset();
         taskTimer.schedule(new TimerTask() {
             public void run() {
                 _setWinch(1.0);
                 if (atLoadingPosition() || manualControl) {
                     _setWinch(0.0);
                     manualControl = true;
+                    Logger.debug("Shooter#reload", "Reload time: " + reloadTimer.getValue());
                     cancel();
                 }
             }
@@ -164,7 +169,7 @@ public class Shooter implements Subsystem {
             public void run() {
                 count++;
                 _setWinch(-0.6);
-                if (count >= Constants.ShooterBump.getValue() || manualControl) {
+                if (count > Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
                 }
@@ -182,7 +187,7 @@ public class Shooter implements Subsystem {
             public void run() {
                 count++;
                 _setWinch(0.6);
-                if (count >= Constants.ShooterBump.getValue() || manualControl) {
+                if (count > Constants.ShooterBump.getValue() || manualControl) {
                     _setWinch(0.0);
                     cancel();
                 }
@@ -199,7 +204,8 @@ public class Shooter implements Subsystem {
             manualControl = false;
             positionController.reset();
         }
-        double value = positionController.run(target, positionPot.getAverageVoltage());
+        double value = positionController.run(target + Constants.ShooterAngleOffset.getValue(),
+                                              positionPot.getAverageVoltage());
         setWinch(value);
     }
 
@@ -208,26 +214,31 @@ public class Shooter implements Subsystem {
      * @param distance the distance from the goal
      */
     public void autoAim(double distance) {
-        double target = 1.700 + Constants.ShooterOffset.getValue();
+        double target = 1.700;
 
         // Calculate the shooter setpoint
         Double lowDistance = new Double(-1.0);
         Double lowSetpoint = new Double(-1.0);
 
         // Find the target range for the given distance and then interpolate between points
-        for (int i = 0; i < distances.size(); i++) {
+        for (int i = 0; i < distances.size(); i++)
+        {
             Double highDistance = (Double) distances.elementAt(i);
-
-            if (distance < highDistance.doubleValue()) {
+            if (distance < highDistance.doubleValue())
+            {
                 Double highSetpoint = (Double) setpoints.elementAt(i);
-                if (lowDistance.doubleValue() > 0.0) {
-                    double m = (highSetpoint.doubleValue() - lowSetpoint.doubleValue()) / (highDistance.doubleValue() - lowDistance.doubleValue());
-                    target = highSetpoint.doubleValue() + m * (distance - lowDistance.doubleValue());
-                } else {
-                    target = highSetpoint.doubleValue();
+                if (lowDistance.doubleValue() > 0.0)
+                {
+                    double m = (highSetpoint.doubleValue() - lowSetpoint.doubleValue())
+                             / (highDistance.doubleValue() - lowDistance.doubleValue());
+                    target = highSetpoint.doubleValue() + (m * (distance - lowDistance.doubleValue()));
                 }
+                else
+                    target = highSetpoint.doubleValue();
                 break;
-            } else {
+            }
+            else
+            {
                 lowDistance = highDistance;
                 lowSetpoint = (Double) setpoints.elementAt(i);
             }
@@ -255,9 +266,6 @@ public class Shooter implements Subsystem {
             if (speed > 0 && atLoadingPosition() && !SamXV.manualOverride())
                 speed = 0;
 
-            // If we're trying to move, make sure the clutch is engaged
-            clutch.set(DoubleSolenoid.Value.kReverse);
-
             // Set the winch motors
             winchLeft.set(speed);
             winchRight.set(speed);
@@ -269,7 +277,7 @@ public class Shooter implements Subsystem {
      * @return the status of the loading limit switch
      */
     public boolean atLoadingPosition() {
-        return (getArmPosition() >= Constants.ShooterLoadPosition.getValue()) || loadSwitch.get();
+        return loadSwitch.get();
     }
 
     /**

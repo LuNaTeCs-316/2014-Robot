@@ -9,8 +9,8 @@ import org.lunatecs316.frc2014.lib.IterativeTimer;
  * Basic autonomous mode. Score the ball in the high goal
  * @author Domenic Rodriguez
  */
-public class BasicAutonomous extends AutonomousMode {
-    private static final int kDrivingForwards = 0;
+public class HighGoalAutonomous extends AutonomousMode {
+    private static final int kDriveForwards = 0;
     private static final int kCheckForHotGoal = 1;
     private static final int kWaitForHotGoal = 2;
     private static final int kFire = 3;
@@ -30,19 +30,13 @@ public class BasicAutonomous extends AutonomousMode {
         visionData.putBoolean("enabled", true);
 
         // Set the intial states for the robot subsystems
-        pickup.lower();
         pickup.setRollerSpeed(-1.0);
-        drivetrain.shiftDown();
-        drivetrain.resetGyro();
-        drivetrain.resetEncoders();
-        drivetrain.disableSafety();
-        drivetrain.lowerCatchingAid();
 
         // Reset the state timer
         stateTimer.setExpiration(3250);
 
         // Set the default state
-        state = kDrivingForwards;
+        state = kDriveForwards;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
     }
@@ -52,9 +46,9 @@ public class BasicAutonomous extends AutonomousMode {
      */
     public void run() {
         switch (state) {
-            case kDrivingForwards:
+            case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4 + Constants.ShooterOffset.getValue());
+                shooter.setPosition(1.4);
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
@@ -93,11 +87,9 @@ public class BasicAutonomous extends AutonomousMode {
                 break;
             case kDone:
                 shooter.setWinch(0.0);
-                drivetrain.enableSafety();
-                drivetrain.arcadeDrive(0.0, 0.0);
                 break;
             default:
-                Logger.error("BasicAutonomous", "Invalid autonomous state");
+                Logger.error("BasicAutonomous#run", "Invalid autonomous state");
                 break;
         }
     }

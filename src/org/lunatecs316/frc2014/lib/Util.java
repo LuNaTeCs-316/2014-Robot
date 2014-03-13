@@ -17,6 +17,16 @@ public class Util {
     }
 
     /**
+     * Average two numbers
+     * @param x
+     * @param y
+     * @return the average of x and y
+     */
+    public static double average(double x, double y) {
+        return (x + y) / 2;
+    }
+
+    /**
      * Check if a value is within a given range
      * @param value the value to check
      * @param lower the lower bound

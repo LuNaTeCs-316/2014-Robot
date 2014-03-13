@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.RobotMap;
 import org.lunatecs316.frc2014.lib.Logger;
 
@@ -18,7 +19,7 @@ public class Pickup implements Subsystem {
 
     private Talon roller = new Talon(RobotMap.PickupRoller);
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
-    private DigitalInput lowerLimit = new DigitalInput(RobotMap.PickupLoweredSwitch);
+    private DigitalInput loweredSwitch = new DigitalInput(RobotMap.PickupLoweredSwitch);
     
     /**
      * Default constructor
@@ -44,13 +45,14 @@ public class Pickup implements Subsystem {
 
         LiveWindow.addActuator("Pickup", "Roller", roller);
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
-        LiveWindow.addSensor("Pickup", "Lower Limit", lowerLimit);
+        LiveWindow.addSensor("Pickup", "Lowered Switch", loweredSwitch);
     }
     
     /**
      * @inheritDoc
      */
     public void updateSmartDashboard() {
+        SmartDashboard.putBoolean("Pickup Lowered", isLowered());
     }
 
     /**
@@ -87,7 +89,6 @@ public class Pickup implements Subsystem {
      * @return true if pickup is lowered
      */
     public boolean isLowered() {
-        //return lowerLimit.get();
-        return (solenoid.get() == DoubleSolenoid.Value.kForward);
+        return !loweredSwitch.get();
     }
 }

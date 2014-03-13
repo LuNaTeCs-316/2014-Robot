@@ -39,7 +39,7 @@ public class Logger {
 
     private static IterativeTimer timer;
     private static Level currentLevel;
-    private static boolean tofile;
+    private static boolean toFile;
     private static Vector messages;
     
     static {
@@ -97,7 +97,7 @@ public class Logger {
      * @param enabled
      */
     public static void enableFileLogging(boolean enabled) {
-        tofile = enabled;
+        toFile = enabled;
     }
     
     /**
@@ -114,7 +114,7 @@ public class Logger {
             else
                 System.out.println(output);
 
-            if (tofile) {
+            if (toFile) {
                 messages.addElement(output);
             }
         }
@@ -123,11 +123,14 @@ public class Logger {
     /**
      * Write the log data to a file
      */
-    private static void writeToFile() {
+    public static void writeToFile() {
+        FileConnection file = null;
+        PrintStream writer = null;
+
         try {
             // Open the file
-            FileConnection file = (FileConnection) Connector.open("file:///" + "matchlog", Connector.WRITE);
-            PrintStream writer = new PrintStream(file.openDataOutputStream());
+            file = (FileConnection) Connector.open("file:///logs/match" + timer.getValue() + ".log", Connector.WRITE);
+            writer = new PrintStream(file.openDataOutputStream());
             
             // Write each vector element
             Enumeration e = messages.elements();
@@ -135,12 +138,18 @@ public class Logger {
                 String msg = (String) e.nextElement();
                 writer.println(msg);
             }
-
-            // Close the file
-            writer.close();
-            file.close();
+            messages.removeAllElements();
         } catch (IOException e){
             Logger.error("Logger.writeToFile", e.getMessage());
+        } finally {
+            try {
+                if (writer != null)
+                    writer.close();
+                if (file != null)
+                    file.close();
+            } catch (IOException ex) {
+                Logger.error("Logger.writeToFile", "Error closing file");
+            }
         }
     }
 }

@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.parsing.ISensor;
 import edu.wpi.first.wpilibj.tables.ITable;
-import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * Use a rate gyro to return the robots heading relative to a starting position.
