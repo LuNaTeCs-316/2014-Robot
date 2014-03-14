@@ -42,14 +42,15 @@ public class Drivetrain implements Subsystem {
     private Ultrasonic rangeFinder = new Ultrasonic(RobotMap.RangeFinderPing, RobotMap.RangeFinderEcho);
 
     // PID Controllers
-    private IterativePIDController distanceController = new IterativePIDController(Constants.DrivetrainDistanceP.getValue(),
-            Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
+    private IterativePIDController distanceController = new IterativePIDController(Constants.DrivetrainDistancePLow.getValue(),
+            Constants.DrivetrainDistanceILow.getValue(), Constants.DrivetrainDistanceDLow.getValue());
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
 
     private double startAngle;
     private boolean manualControl;
     private boolean atTarget;
+    private boolean highGear;
 
     /**
      * Default constructor
@@ -110,8 +111,13 @@ public class Drivetrain implements Subsystem {
      * @inheritDoc
      */
     public void updateConstants() {
-        distanceController.setPID(Constants.DrivetrainDistanceP.getValue(),
-                Constants.DrivetrainDistanceI.getValue(), Constants.DrivetrainDistanceD.getValue());
+        if (highGear){
+            distanceController.setPID(Constants.DrivetrainDistancePHigh.getValue(),
+                Constants.DrivetrainDistanceIHigh.getValue(), Constants.DrivetrainDistanceDHigh.getValue());
+        } else {
+            distanceController.setPID(Constants.DrivetrainDistancePLow.getValue(),
+                Constants.DrivetrainDistanceILow.getValue(), Constants.DrivetrainDistanceDLow.getValue());
+        }
         angleController.setPID(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
     }
@@ -211,9 +217,8 @@ public class Drivetrain implements Subsystem {
             resetEncoders();
         }
         atTarget = (Math.abs(distance - getAverageEncoderValue()) < 200);
-        double move = distanceController.run(distance, getAverageEncoderValue(), -0.8, 0.8);
-        double turn = angleController.run(startAngle, getGyroAngle(), -0.8, 0.8);
-        _arcadeDrive(move, turn);
+        double move = distanceController.run(distance, getAverageEncoderValue(), -0.7, 0.7);
+        _arcadeDrive(move, 0.0);
     }
 
     /**
@@ -261,6 +266,8 @@ public class Drivetrain implements Subsystem {
      * Shift into high gear
      */
     public void shiftUp() {
+        distanceController.setPID(Constants.DrivetrainDistancePHigh.getValue(),
+                Constants.DrivetrainDistanceIHigh.getValue(), Constants.DrivetrainDistanceDHigh.getValue());
         shiftingSolenoid.set(true);
     }
 
@@ -268,6 +275,8 @@ public class Drivetrain implements Subsystem {
      * Shift into low gear
      */
     public void shiftDown() {
+        distanceController.setPID(Constants.DrivetrainDistancePLow.getValue(),
+                Constants.DrivetrainDistanceILow.getValue(), Constants.DrivetrainDistanceDLow.getValue());
         shiftingSolenoid.set(false);
     }
 

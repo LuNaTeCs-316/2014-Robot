@@ -27,9 +27,12 @@ public class Constants {
 
     public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
     public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 1.2);
-    public static final Constant DrivetrainDistanceP = new Constant("DrivetrainDistanceP", 1.0);
-    public static final Constant DrivetrainDistanceI = new Constant("DrivetrainDistanceI", 0.0);
-    public static final Constant DrivetrainDistanceD = new Constant("DrivetrainDistanceD", 0.0);
+    public static final Constant DrivetrainDistancePLow = new Constant("DrivetrainDistancePLow", 1.0);
+    public static final Constant DrivetrainDistanceILow = new Constant("DrivetrainDistanceILow", 0.0);
+    public static final Constant DrivetrainDistanceDLow = new Constant("DrivetrainDistanceDLow", 0.0);
+    public static final Constant DrivetrainDistancePHigh = new Constant("DrivetrainDistancePHigh", 1.0);
+    public static final Constant DrivetrainDistanceIHigh = new Constant("DrivetrainDistanceIHigh", 0.0);
+    public static final Constant DrivetrainDistanceDHigh = new Constant("DrivetrainDistanceDHigh", 0.0);
     public static final Constant DrivetrainAngleP = new Constant("DrivetrainAngleP", -0.1);
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
