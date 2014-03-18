@@ -32,13 +32,13 @@ public class HighGoalAutonomous extends AutonomousMode {
         // Set the intial states for the robot subsystems
         pickup.setRollerSpeed(-1.0);
 
-        // Reset the state timer
-        stateTimer.setExpiration(3250);
-
         // Set the default state
-        state = kDriveForwards;
+        state = kCheckForHotGoal;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
+        
+        // Reset the state timer
+        stateTimer.setExpiration(1100);
     }
 
     /**
@@ -46,6 +46,26 @@ public class HighGoalAutonomous extends AutonomousMode {
      */
     public void run() {
         switch (state) {
+            case kCheckForHotGoal:
+                if (stateTimer.hasExpired()) {
+                    if (visionData.getBoolean("goalIsHot", true)) {
+                        Logger.debug("BasicAutonomous#run", "State: kFire");
+                        state = kDriveForwards;
+                        stateTimer.setExpiration(3250);
+                    } else {
+                        state = kWaitForHotGoal;
+                        Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
+                        stateTimer.setExpiration(3750);
+                    }
+                    break;
+                }
+            case kWaitForHotGoal:
+                if (stateTimer.hasExpired()) {
+                    state = kDriveForwards;
+                    Logger.debug("BasicAutonomous#run", "State: kFire");
+                    stateTimer.setExpiration(3250);
+                }
+                break;
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
                 shooter.setPosition(1.4);
@@ -53,24 +73,8 @@ public class HighGoalAutonomous extends AutonomousMode {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);
                     shooter.setWinch(0.0);
-                    state = kCheckForHotGoal;
+                    state = kFire;
                     Logger.debug("BasicAutonomous#run", "State: kCheckForHotGoal");
-                }
-                break;
-            case kCheckForHotGoal:
-                if (visionData.getBoolean("goalIsHot", true)) {
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
-                    state = kFire;
-                } else {
-                    state = kWaitForHotGoal;
-                    Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
-                    stateTimer.setExpiration(2500);
-                }
-                break;
-            case kWaitForHotGoal:
-                if (stateTimer.hasExpired()) {
-                    state = kFire;
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
                 }
                 break;
             case kFire:

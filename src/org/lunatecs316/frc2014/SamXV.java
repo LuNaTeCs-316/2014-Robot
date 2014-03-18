@@ -158,14 +158,19 @@ public class SamXV extends IterativeRobot {
     public void disabledPeriodic() {
         teleop.updateJoysticks();
 
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA))
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonA)) {
             drivetrain.reinitGyro();
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB))
+        }
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
             drivetrain.resetEncoders();
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX))
+            drivetrain.resetGyro();
+        }
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX)) {
             Constants.update();
-        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonY))
+        }
+        if (teleop.getDriverController().getButtonPressed(XboxController.ButtonY)) {
             Logger.writeToFile();
+        }
 
         updateSmartDashboard();
     }
