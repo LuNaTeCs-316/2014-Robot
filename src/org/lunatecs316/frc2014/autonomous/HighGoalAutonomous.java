@@ -36,7 +36,7 @@ public class HighGoalAutonomous extends AutonomousMode {
         state = kCheckForHotGoal;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
-        
+
         // Reset the state timer
         stateTimer.setExpiration(1100);
     }
@@ -68,7 +68,7 @@ public class HighGoalAutonomous extends AutonomousMode {
                 break;
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4);
+                shooter.setPosition(Constants.AutonomousShooterSetpoint.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);

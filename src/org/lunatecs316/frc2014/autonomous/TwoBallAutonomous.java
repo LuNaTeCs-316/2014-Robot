@@ -29,7 +29,7 @@ public class TwoBallAutonomous extends AutonomousMode {
         drivetrain.shiftUp();
 
         // Reset the state timer
-        stateTimer.setExpiration(3500);
+        stateTimer.setExpiration(3750);
 
         // Set the default state
         state = kDriveForwards;
@@ -49,7 +49,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                         stateTimer.reset();
                     } else {
                         drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                        shooter.setPosition(1.4);
+                        shooter.setPosition(Constants.AutonomousShooterSetpoint.getValue());
                         if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                             pickup.setRollerSpeed(0.5);
                             drivetrain.arcadeDrive(0.0, 0.0);
@@ -65,11 +65,11 @@ public class TwoBallAutonomous extends AutonomousMode {
                     shooter.fire();
                     state = kWaitForReload;
                     Logger.debug("TwoBallAutonomous#run", "State: kWaitForReload");
-                    stateTimer.setExpiration(3750);
+                    stateTimer.setExpiration(3500);
                     break;
                 case kWaitForReload:
                     if (stateTimer.getValue() > Constants.ShooterResetTime.getValue())
-                        shooter.setPosition(1.4);
+                        shooter.setPosition(Constants.AutonomousShooterSetpoint.getValue());
                     if (stateTimer.hasExpired()) {
                         state = kReload;
                         Logger.debug("TwoBallAutonomous#run", "State: kReload");
@@ -78,6 +78,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                     break;
                 case kReload:
                     pickup.setRollerSpeed(-1.0);
+                    shooter.setPosition(Constants.AutonomousShooterSetpoint.getValue());
                     if (stateTimer.hasExpired()) {
                         pickup.setRollerSpeed(0.0);
                         state = kFireSecondShot;
@@ -86,7 +87,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                     }
                     break;
                 case kFireSecondShot:
-                    if (stateTimer.getValue() > 1000) {
+                    if (stateTimer.getValue() > 500) {
                         shooter.setWinch(0.0);
                         shooter.fire();
                         done = true;
