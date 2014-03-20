@@ -263,6 +263,20 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
+     * Maintain the current position of the robot
+     */
+    public void holdPosition() {
+        if (manualControl) {
+            manualControl = false;
+            resetEncoders();
+            startAngle = getGyroAngle();
+        }
+        double move = distanceController.run(0.0, getAverageEncoderValue(), -0.7, 0.7);
+        double turn = angleController.run(startAngle, getGyroAngle());
+        _arcadeDrive(move, turn);
+    }
+
+    /**
      * Shift into high gear
      */
     public void shiftUp() {

@@ -36,15 +36,16 @@ public class TeleopControl {
         updateJoysticks();
 
         // Driving
-        if (driverController.getButton(XboxController.ButtonA))
-            drivetrain.turnToAngle(0);
-        else if (driverController.getButton(XboxController.ButtonY))
+        if (driverController.getButton(XboxController.ButtonA)) {
+            drivetrain.holdPosition();
+        } else if (driverController.getButton(XboxController.ButtonB)) {
             drivetrain.driveStraight(-0.5);
-        else if (driverController.getButton(XboxController.ButtonB))
-            drivetrain.turn(180);
-        else if (driverController.getButton(XboxController.ButtonX))
+        } else if (driverController.getButton(XboxController.ButtonX)) {
             drivetrain.driveStraightDistance(Constants.DrivetrainSetpoint.getValue());
-        else {
+        } else if (driverController.getButton(XboxController.ButtonY)) {
+            drivetrain.resetGyro();
+            drivetrain.resetEncoders();
+        } else {
             double move = Util.deadband(driverController.getLeftY(), Constants.JoystickDeadband.getValue());
             double turn = Util.deadband(driverController.getRightX(), Constants.JoystickDeadband.getValue());
             drivetrain.arcadeDrive(move, turn);
@@ -73,7 +74,7 @@ public class TeleopControl {
         else if (operatorJoystick.getButton(6))
             pickup.setRollerSpeed(rollerSpeed);
         else
-            pickup.setRollerSpeed(0.0);
+            pickup.stopRollers();
 
         // Shooter
         if (operatorJoystick.getButtonPressed(1) && ((pickup.isLowered() && shooter.ballIsLoaded()) || SamXV.manualOverride())) {
