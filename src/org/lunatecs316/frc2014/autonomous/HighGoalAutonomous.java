@@ -51,11 +51,11 @@ public class HighGoalAutonomous extends AutonomousMode {
                     if (visionData.getBoolean("goalIsHot", true)) {
                         Logger.debug("BasicAutonomous#run", "State: kFire");
                         state = kDriveForwards;
-                        stateTimer.setExpiration(3250);
+                        stateTimer.setExpiration(4000);
                     } else {
                         state = kWaitForHotGoal;
                         Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
-                        stateTimer.setExpiration(3750);
+                        stateTimer.setExpiration(3000);
                     }
                     break;
                 }

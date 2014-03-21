@@ -25,11 +25,11 @@ public class TwoBallAutonomous extends AutonomousMode {
      */
     public void init() {
         // Set the intial states for the robot subsystems
-        pickup.setRollerSpeed(-1.0);
+        pickup.setRollerSpeed(-0.85);
         drivetrain.shiftUp();
 
         // Reset the state timer
-        stateTimer.setExpiration(3750);
+        stateTimer.setExpiration(3500);
 
         // Set the default state
         state = kDriveForwards;
@@ -65,7 +65,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                     shooter.fire();
                     state = kWaitForReload;
                     Logger.debug("TwoBallAutonomous#run", "State: kWaitForReload");
-                    stateTimer.setExpiration(3500);
+                    stateTimer.setExpiration(3250);
                     break;
                 case kWaitForReload:
                     if (stateTimer.getValue() > Constants.ShooterResetTime.getValue())
@@ -73,7 +73,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                     if (stateTimer.hasExpired()) {
                         state = kReload;
                         Logger.debug("TwoBallAutonomous#run", "State: kReload");
-                        stateTimer.setExpiration(1500);
+                        stateTimer.setExpiration(1350);
                     }
                     break;
                 case kReload:
