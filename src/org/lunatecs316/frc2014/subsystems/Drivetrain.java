@@ -3,6 +3,7 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -32,6 +33,7 @@ public class Drivetrain implements Subsystem {
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
     private DoubleSolenoid catchingAidSolenoid = new DoubleSolenoid(RobotMap.CatchingAidForward,
                                                                     RobotMap.CatchingAidReverse);
+    private Relay underglowRelay = new Relay(RobotMap.UnderglowRelay);
 
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
@@ -46,7 +48,7 @@ public class Drivetrain implements Subsystem {
             Constants.DrivetrainDistanceILow.getValue(), Constants.DrivetrainDistanceDLow.getValue());
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
-
+    
     private double startAngle;
     private boolean manualControl;
     private boolean atTarget;
@@ -85,6 +87,9 @@ public class Drivetrain implements Subsystem {
 
         // Setup range finder
         rangeFinder.setAutomaticMode(true);
+        
+        // Turn on the relay for the underglow
+        underglowRelay.set(Relay.Value.kForward);
 
         // Setup LiveWindow for test mode
         LiveWindow.addActuator("Drivetrain", "frontLeft", frontLeft);

@@ -19,7 +19,7 @@ public class LowGoalAutonomous extends AutonomousMode {
         pickup.raise();
         state = kDriveToGoal;
         done = false;
-        stateTimer.setExpiration(3000);
+        stateTimer.setExpiration(5000);
     }
 
     public void run() {

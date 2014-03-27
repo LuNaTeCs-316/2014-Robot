@@ -49,9 +49,9 @@ public class HighGoalAutonomous extends AutonomousMode {
             case kCheckForHotGoal:
                 if (stateTimer.hasExpired()) {
                     if (visionData.getBoolean("goalIsHot", true)) {
-                        Logger.debug("BasicAutonomous#run", "State: kFire");
+                        Logger.debug("BasicAutonomous#run", "State: kDriveForwards");
                         state = kDriveForwards;
-                        stateTimer.setExpiration(4000);
+                        stateTimer.setExpiration(3500);
                     } else {
                         state = kWaitForHotGoal;
                         Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
@@ -62,8 +62,8 @@ public class HighGoalAutonomous extends AutonomousMode {
             case kWaitForHotGoal:
                 if (stateTimer.hasExpired()) {
                     state = kDriveForwards;
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
-                    stateTimer.setExpiration(3250);
+                    Logger.debug("BasicAutonomous#run", "State: kDriveForwards");
+                    stateTimer.setExpiration(3500);
                 }
                 break;
             case kDriveForwards:
