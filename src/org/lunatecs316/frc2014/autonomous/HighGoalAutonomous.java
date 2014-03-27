@@ -36,7 +36,7 @@ public class HighGoalAutonomous extends AutonomousMode {
         state = kCheckForHotGoal;
 
         Logger.debug("BasicAutonomous#init", "State: kDrivingForwards");
-        
+
         // Reset the state timer
         stateTimer.setExpiration(1100);
     }
@@ -49,26 +49,26 @@ public class HighGoalAutonomous extends AutonomousMode {
             case kCheckForHotGoal:
                 if (stateTimer.hasExpired()) {
                     if (visionData.getBoolean("goalIsHot", true)) {
-                        Logger.debug("BasicAutonomous#run", "State: kFire");
+                        Logger.debug("BasicAutonomous#run", "State: kDriveForwards");
                         state = kDriveForwards;
-                        stateTimer.setExpiration(3250);
+                        stateTimer.setExpiration(3500);
                     } else {
                         state = kWaitForHotGoal;
                         Logger.debug("BasicAutonomous#run", "State: kWaitForHotGoal");
-                        stateTimer.setExpiration(3750);
+                        stateTimer.setExpiration(3000);
                     }
                     break;
                 }
             case kWaitForHotGoal:
                 if (stateTimer.hasExpired()) {
                     state = kDriveForwards;
-                    Logger.debug("BasicAutonomous#run", "State: kFire");
-                    stateTimer.setExpiration(3250);
+                    Logger.debug("BasicAutonomous#run", "State: kDriveForwards");
+                    stateTimer.setExpiration(3500);
                 }
                 break;
             case kDriveForwards:
                 drivetrain.driveStraightDistance(Constants.Drivetrain8ft.getValue());
-                shooter.setPosition(1.4);
+                shooter.setPosition(Constants.AutonomousShooterSetpoint.getValue());
                 if (drivetrain.atTarget() || stateTimer.hasExpired()) {
                     pickup.setRollerSpeed(0.0);
                     drivetrain.arcadeDrive(0.0, 0.0);

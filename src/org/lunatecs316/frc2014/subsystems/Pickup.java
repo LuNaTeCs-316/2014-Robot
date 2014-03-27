@@ -20,7 +20,7 @@ public class Pickup implements Subsystem {
     private Talon roller = new Talon(RobotMap.PickupRoller);
     private DoubleSolenoid solenoid = new DoubleSolenoid(RobotMap.PickupSolenoidForward, RobotMap.PickupSolenoidReverse);
     private DigitalInput loweredSwitch = new DigitalInput(RobotMap.PickupLoweredSwitch);
-    
+
     /**
      * Default constructor
      */
@@ -47,7 +47,7 @@ public class Pickup implements Subsystem {
         LiveWindow.addActuator("Pickup", "Solenoid", solenoid);
         LiveWindow.addSensor("Pickup", "Lowered Switch", loweredSwitch);
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -60,30 +60,37 @@ public class Pickup implements Subsystem {
      */
     public void updateConstants() {
     }
-   
+
     /**
-     * Move the pickup to the raised position. 
+     * Move the pickup to the raised position.
      */
-    public void raise(){
+    public void raise() {
         solenoid.set(DoubleSolenoid.Value.kReverse);
     }
-    
+
     /**
      * Move the pickup to the lowered position through actuation of the Solenoid
-     */        
+     */
     public void lower() {
         solenoid.set(DoubleSolenoid.Value.kForward);
     }
-    
+
     /**
-     * Sets speed of the roller for max versatility 
+     * Sets speed of the roller for max versatility
      * @param speed the speed of the roller. Use negative values for picking up
      * the ball, and positive values for letting go of the ball.
      */
     public void setRollerSpeed(double speed) {
         roller.set(speed);
     }
-    
+
+    /**
+     * Convenience method to stop the rollers.
+     */
+    public void stopRollers() {
+        roller.set(0.0);
+    }
+
     /**
      * Get the state of the lower limit switch
      * @return true if pickup is lowered

@@ -83,15 +83,19 @@ public class SamXV extends IterativeRobot {
         switch (mode) {
             case 0:
                 auto = new HighGoalAutonomous();
+                Logger.info("autonomousInit", "Running HighGoalAutonomous");
                 break;
             case 1:
-                auto = new StationaryTwoBallAutonomous();
+                auto = new TwoBallAutonomous();
+                Logger.info("autonomousInit", "Running TwoBallAutonomous");
                 break;
             case 2:
-                auto = new LowGoalAutonomous();
+                auto = new StationaryTwoBallAutonomous();
+                Logger.info("autonomousInit", "Running StationaryTwoBallAutonomous");
                 break;
             case 3:
-                auto = new TwoBallAutonomous();
+                auto = new LowGoalAutonomous();
+                Logger.info("autonomousInit", "Running LowGoalAutonomous");
                 break;
             default:
                 Logger.warning("autonomousInit", "Invalid Autonomous Mode");
@@ -107,10 +111,8 @@ public class SamXV extends IterativeRobot {
         pickup.lower();
 
         // Initialize the autonomous mode
-        if (auto != null) {
-            Logger.info("autonomousInit", "Running " + auto.getClass().getName());
+        if (auto != null)
             auto.init();
-        }
     }
 
     /**
@@ -162,14 +164,14 @@ public class SamXV extends IterativeRobot {
             drivetrain.reinitGyro();
         }
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonB)) {
-            drivetrain.resetEncoders();
-            drivetrain.resetGyro();
+            Logger.writeToFile();
         }
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonX)) {
             Constants.update();
         }
         if (teleop.getDriverController().getButtonPressed(XboxController.ButtonY)) {
-            Logger.writeToFile();
+            drivetrain.resetEncoders();
+            drivetrain.resetGyro();
         }
 
         updateSmartDashboard();

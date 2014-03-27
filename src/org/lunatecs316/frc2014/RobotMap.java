@@ -17,6 +17,7 @@ public class RobotMap {
     
     // Relay Output (Max 8)
     public static final int CompressorRelay = 1;
+    public static final int UnderglowRelay = 2;
     
     // Solenoid Output (Max 8)
     public static final int ShiftingSolenoid = 1;

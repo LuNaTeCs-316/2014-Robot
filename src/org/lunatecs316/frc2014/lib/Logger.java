@@ -41,7 +41,7 @@ public class Logger {
     private static Level currentLevel;
     private static boolean toFile;
     private static Vector messages;
-    
+
     static {
         timer = new IterativeTimer();
         messages = new Vector();
@@ -99,7 +99,7 @@ public class Logger {
     public static void enableFileLogging(boolean enabled) {
         toFile = enabled;
     }
-    
+
     /**
      * Perform the actual logging operation
      * @param level the severity of the message
@@ -124,32 +124,36 @@ public class Logger {
      * Write the log data to a file
      */
     public static void writeToFile() {
-        FileConnection file = null;
-        PrintStream writer = null;
+        if (messages.size() > 0) {
+            FileConnection file = null;
+            PrintStream writer = null;
 
-        try {
-            // Open the file
-            file = (FileConnection) Connector.open("file:///logs/match" + timer.getValue() + ".log", Connector.WRITE);
-            writer = new PrintStream(file.openDataOutputStream());
-            
-            // Write each vector element
-            Enumeration e = messages.elements();
-            while (e.hasMoreElements()) {
-                String msg = (String) e.nextElement();
-                writer.println(msg);
-            }
-            messages.removeAllElements();
-        } catch (IOException e){
-            Logger.error("Logger.writeToFile", e.getMessage());
-        } finally {
             try {
-                if (writer != null)
-                    writer.close();
-                if (file != null)
-                    file.close();
-            } catch (IOException ex) {
-                Logger.error("Logger.writeToFile", "Error closing file");
+                // Open the file
+                file = (FileConnection) Connector.open("file:///logs/match" + timer.getValue() + ".log", Connector.WRITE);
+                writer = new PrintStream(file.openDataOutputStream());
+
+                // Write each vector element
+                Enumeration e = messages.elements();
+                while (e.hasMoreElements()) {
+                    String msg = (String) e.nextElement();
+                    writer.println(msg);
+                }
+                messages.removeAllElements();
+            } catch (IOException e){
+                Logger.error("Logger.writeToFile", e.getMessage());
+            } finally {
+                try {
+                    if (writer != null)
+                        writer.close();
+                    if (file != null)
+                        file.close();
+                } catch (IOException ex) {
+                    Logger.error("Logger.writeToFile", "Error closing file");
+                }
             }
+        } else {
+            Logger.info("Logger.writeToFile", "No messages to write");
         }
     }
 }

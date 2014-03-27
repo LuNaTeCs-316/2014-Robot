@@ -50,6 +50,8 @@ public class Constants {
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.75);
     public static final Constant ShooterAngleOffset = new Constant("ShooterAngleOffset", 0.0);
     public static final Constant ShooterDistanceOffset = new Constant("ShooterDistanceOffset", 0.0);
+    public static final Constant AutonomousShooterSetpoint = new Constant("AutonomousShooterSetpoint", 1.4);
+    public static final Constant StaticShooterSetpoint = new Constant("StaticShooterSetpoint", 1.4);
 
     /**
      * Representation of a single constant value

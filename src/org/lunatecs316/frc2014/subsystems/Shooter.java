@@ -257,6 +257,13 @@ public class Shooter implements Subsystem {
     }
 
     /**
+     * Convenience method to stop movement of the winch.
+     */
+    public void stopWinch() {
+        setWinch(0.0);
+    }
+
+    /**
      * Control the winch motors
      * @param speed the output value for the winch motors
      */
