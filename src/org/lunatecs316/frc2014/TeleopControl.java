@@ -64,7 +64,7 @@ public class TeleopControl {
         // Pickup Position
         if (operatorJoystick.getButtonPressed(11) || operatorJoystick.getButtonPressed(4))
             pickup.raise();
-        else if (operatorJoystick.getButtonPressed(10) || operatorJoystick.getButtonPressed(5)) //button 5 be broke
+        else if (operatorJoystick.getButtonPressed(5)) //button 5 be broke
             pickup.lower();
 
         // Pickup Rollers
@@ -82,13 +82,15 @@ public class TeleopControl {
             shooter.fire();
         } else if (operatorJoystick.getButton(2))
             shooter.setPosition(Constants.StaticShooterSetpoint.getValue());
+        else if (operatorJoystick.getButton(9))
+            shooter.setPosition(1.8);
         else if (operatorJoystick.getButton(3))
             shooter.autoAim(drivetrain.getRangeFinderDistance());
         else if (operatorJoystick.getButtonPressed(8))
             shooter.reload();
         else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
-            if (shooter.isManualControl() || operatorJoystick.getRawButton(9))
+            if (shooter.isManualControl() || operatorJoystick.getRawButton(10))
                 shooter.setWinch(value);
         }
     }
