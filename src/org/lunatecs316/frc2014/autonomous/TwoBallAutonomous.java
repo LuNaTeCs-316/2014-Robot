@@ -87,7 +87,7 @@ public class TwoBallAutonomous extends AutonomousMode {
                     }
                     break;
                 case kFireSecondShot:
-                    if (stateTimer.getValue() > 500) {
+                    if (stateTimer.getValue() > 750) {
                         shooter.setWinch(0.0);
                         shooter.fire();
                         done = true;
