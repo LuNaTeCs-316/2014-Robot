@@ -106,7 +106,7 @@ public class SamXV extends IterativeRobot {
         drivetrain.shiftDown();
         drivetrain.resetGyro();
         drivetrain.resetEncoders();
-        drivetrain.disableSafety();
+        drivetrain.setSafetyEnabled(false);
         drivetrain.raiseCatchingAid();
         pickup.lower();
 

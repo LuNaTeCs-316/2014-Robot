@@ -17,7 +17,7 @@ import org.lunatecs316.frc2014.subsystems.Shooter;
  * Robot Constants manager. All constants have a String key and double value
  * @author Domenic Rodriguez
  */
-public class Constants {
+public final class Constants {
     private static final String kFilename = "Constants.txt";
     // This MUST come before the creation of any constants!
     private static Hashtable constants = new Hashtable();
@@ -25,7 +25,7 @@ public class Constants {
     public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
 
-    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
+    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 1.0);
     public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 1.2);
     public static final Constant DrivetrainDistancePLow = new Constant("DrivetrainDistancePLow", 1.0);
     public static final Constant DrivetrainDistanceILow = new Constant("DrivetrainDistanceILow", 0.0);
@@ -38,6 +38,7 @@ public class Constants {
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
     public static final Constant DrivetrainSetpoint = new Constant("DrivetrainSetpoint", 0.0);
     public static final Constant Drivetrain8ft = new Constant("Drivetrain8ft", 21500);
+    public static final Constant WheelNonLinearity = new Constant("WheelNonLinearity", 0.5);
 
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
     public static final Constant ShooterBump = new Constant("ShooterBump", 3);

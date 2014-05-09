@@ -26,7 +26,7 @@ public class TeleopControl {
      * Setup for Teleop mode
      */
     public void init() {
-        drivetrain.enableSafety();
+        drivetrain.setSafetyEnabled(true);
     }
 
     /**
@@ -36,9 +36,7 @@ public class TeleopControl {
         updateJoysticks();
 
         // Driving
-        if (driverController.getButton(XboxController.ButtonA)) {
-            drivetrain.holdPosition();
-        } else if (driverController.getButton(XboxController.ButtonB)) {
+        if (driverController.getButton(XboxController.ButtonB)) {
             drivetrain.driveStraight(-0.5);
         } else if (driverController.getButton(XboxController.ButtonX)) {
             drivetrain.driveStraightDistance(Constants.DrivetrainSetpoint.getValue());
@@ -80,15 +78,15 @@ public class TeleopControl {
         if (operatorJoystick.getButtonPressed(1) && ((pickup.isLowered() && shooter.ballIsLoaded()) || SamXV.manualOverride())) {
             logShot();
             shooter.fire();
-        } else if (operatorJoystick.getButton(2))
+        } else if (operatorJoystick.getButton(2)) {
             shooter.setPosition(Constants.StaticShooterSetpoint.getValue());
-        else if (operatorJoystick.getButton(9))
+        } else if (operatorJoystick.getButton(9)) {
             shooter.setPosition(1.8);
-        else if (operatorJoystick.getButton(3))
+        } else if (operatorJoystick.getButton(3)) {
             shooter.autoAim(drivetrain.getRangeFinderDistance());
-        else if (operatorJoystick.getButtonPressed(8))
+        } else if (operatorJoystick.getButtonPressed(8)) {
             shooter.reload();
-        else {
+        } else {
             double value = Util.deadband(operatorJoystick.getY(), Constants.JoystickDeadband.getValue());
             if (shooter.isManualControl() || operatorJoystick.getRawButton(10))
                 shooter.setWinch(value);

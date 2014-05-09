@@ -33,8 +33,6 @@ public class Drivetrain implements Subsystem {
     private Solenoid shiftingSolenoid = new Solenoid(RobotMap.ShiftingSolenoid);
     private DoubleSolenoid catchingAidSolenoid = new DoubleSolenoid(RobotMap.CatchingAidForward,
                                                                     RobotMap.CatchingAidReverse);
-    private Relay underglowRelay = new Relay(RobotMap.UnderglowRelay);
-
     // Sensors
     private Encoder leftEncoder = new Encoder(RobotMap.LeftDriveEncoderA, RobotMap.LeftDriveEncoderB,
                                               false, CounterBase.EncodingType.k4X);
@@ -48,7 +46,7 @@ public class Drivetrain implements Subsystem {
             Constants.DrivetrainDistanceILow.getValue(), Constants.DrivetrainDistanceDLow.getValue());
     private IterativePIDController angleController = new IterativePIDController(Constants.DrivetrainAngleP.getValue(),
             Constants.DrivetrainAngleI.getValue(), Constants.DrivetrainAngleD.getValue());
-    
+
     private double startAngle;
     private boolean manualControl;
     private boolean atTarget;
@@ -87,9 +85,6 @@ public class Drivetrain implements Subsystem {
 
         // Setup range finder
         rangeFinder.setAutomaticMode(true);
-        
-        // Turn on the relay for the underglow
-        underglowRelay.set(Relay.Value.kForward);
 
         // Setup LiveWindow for test mode
         LiveWindow.addActuator("Drivetrain", "frontLeft", frontLeft);
@@ -147,7 +142,7 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
-     * Custom arcade drive inspired by Team 254
+     * Custom drive code based on Team 254's algorithms
      * @param throttle forward-reverse movement
      * @param turn left-right steering
      */
@@ -155,43 +150,35 @@ public class Drivetrain implements Subsystem {
         // Negate throttle to remain consistent with Joysticks
         throttle = -throttle;
 
-        // Amp up the turn value
-        if (Math.abs(throttle) > 0.5)
-            turn = turn * (Constants.DrivetrainTurnGain.getValue() * Math.abs(throttle));
+        turn = Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue() * turn) /
+                Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue());
+        turn = Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue() * turn) /
+                Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue());
+        turn = Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue() * turn) /
+                Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue());
 
-        // Calculate left and right motor values
-        double t_left = throttle + turn;
-        double t_right = throttle - turn;
+        // Quickturn
+        if (Math.abs(throttle) > 0.3)
+            turn = turn * Constants.DrivetrainTurnGain.getValue() * Math.abs(throttle);
 
-        // Skim values and apply to the opposite side
-        double left = t_left + (skim(t_right));
-        double right = t_right + (skim(t_left));
+        double left = throttle + turn;
+        double right = throttle - turn;
 
-        // Apply power to the motors
-        setLeftAndRightMotors(left, right);
-    }
+        // "Skimming"
+        if (left > 1.0) {
+            right -= Constants.DrivetrainSkimGain.getValue() * (left - 1.0);
+            left = 1.0;
+        } else if (right > 1.0) {
+            left -= Constants.DrivetrainSkimGain.getValue() * (right - 1.0);
+            right = 1.0;
+        } else if (left < -1.0) {
+            right += Constants.DrivetrainSkimGain.getValue() * (-1.0 - left);
+            left = -1.0;
+        } else if (right < -1.0) {
+            left += Constants.DrivetrainSkimGain.getValue() * (-1.0 - right);
+            right = -1.0;
+        }
 
-    /**
-     * Utility function. Skim excess values above 1.0
-     * @param value the value to skim
-     * @return If value is positive and greater than 1.0, return value - 1.0.
-     * If value is negative and less than -1.0, return value + 1.0.
-     */
-    private double skim(double value) {
-        if (value > 1.0)
-            return -((value - 1.0) * Constants.DrivetrainSkimGain.getValue());
-        else if (value < -1.0)
-            return -((value + 1.0) * Constants.DrivetrainSkimGain.getValue());
-        else
-            return 0.0;
-    }
-
-    /**
-     * Set the values of the left and right drive motors
-     * @param left the value for the left motors
-     * @param right the value for the right motors
-     */
-    private void setLeftAndRightMotors(double left, double right) {
         frontLeft.set(left);
         rearLeft.set(left);
         frontRight.set(right);
@@ -265,20 +252,6 @@ public class Drivetrain implements Subsystem {
         manualControl = false;
         double turn = angleController.run(angle, getGyroAngle());
         _arcadeDrive(0.0, turn);
-    }
-
-    /**
-     * Maintain the current position of the robot
-     */
-    public void holdPosition() {
-        if (manualControl) {
-            manualControl = false;
-            resetEncoders();
-            startAngle = getGyroAngle();
-        }
-        double move = distanceController.run(0.0, getAverageEncoderValue(), -0.7, 0.7);
-        double turn = angleController.run(startAngle, getGyroAngle());
-        _arcadeDrive(move, turn);
     }
 
     /**
@@ -388,16 +361,10 @@ public class Drivetrain implements Subsystem {
     }
 
     /**
-     * Turn off motor safety for the drive motors
+     * Enable/disable motor safety
+     * @param enabled
      */
-    public void disableSafety() {
-        driveMotors.setSafetyEnabled(false);
-    }
-
-    /**
-     * Turn on motor safety for the drive motors
-     */
-    public void enableSafety() {
-        driveMotors.setSafetyEnabled(true);
+    public void setSafetyEnabled(boolean enabled) {
+        driveMotors.setSafetyEnabled(enabled);
     }
 }
