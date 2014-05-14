@@ -22,13 +22,14 @@ public class TeleopControl {
     private Pickup pickup = Pickup.getInstance();
     private Shooter shooter = Shooter.getInstance();
 
-    private boolean cheesyMode = false;
+    private boolean cheesyMode;
 
     /**
      * Setup for Teleop mode
      */
     public void init() {
-        drivetrain.setSafetyEnabled(true);
+        drivetrain.setSafetyEnabled(false);
+        cheesyMode = true;
     }
 
     /**
@@ -40,10 +41,12 @@ public class TeleopControl {
         // Driving
         if (driverController.getButtonPressed(XboxController.ButtonA)) {
             if (cheesyMode) {
+                drivetrain.setSafetyEnabled(true);
                 Logger.info("TeleopControl#run", "Switching to Arcade Drive Mode");
                 cheesyMode = false;
             } else {
                 Logger.info("TeleopControl#run", "Switching to Cheesy Drive Mode");
+                drivetrain.setSafetyEnabled(false);
                 cheesyMode = true;
             }
         }

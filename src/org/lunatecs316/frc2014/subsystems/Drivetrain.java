@@ -3,7 +3,6 @@ package org.lunatecs316.frc2014.subsystems;
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -149,7 +148,7 @@ public class Drivetrain implements Subsystem {
     public void cheesyDrive(double throttle, double turn) {
         // Negate throttle to remain consistent with Joysticks
         throttle = -throttle;
-
+        
         turn = Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue() * turn) /
                 Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue());
         turn = Math.sin(((Math.PI)/2.0) * Constants.WheelNonLinearity.getValue() * turn) /
@@ -178,9 +177,9 @@ public class Drivetrain implements Subsystem {
             left += Constants.DrivetrainSkimGain.getValue() * (-1.0 - right);
             right = -1.0;
         }
-
-        frontLeft.set(left);
-        rearLeft.set(left);
+        
+        frontLeft.set(-left);
+        rearLeft.set(-left);
         frontRight.set(right);
         rearRight.set(right);
     }
