@@ -196,7 +196,7 @@ public class Drivetrain implements Subsystem {
         double turn = angleController.run(startAngle, getGyroAngle());
         _arcadeDrive(speed, turn);
     }
-
+    
     /**
      * Drive the robot straight for a specified distance
      * @param distance the distance to move

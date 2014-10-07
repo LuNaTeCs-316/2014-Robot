@@ -31,7 +31,7 @@ public class HighGoalAutonomous extends AutonomousMode {
 
         // Set the intial states for the robot subsystems
         pickup.setRollerSpeed(-1.0);
-
+        drivetrain.shiftUp();
         // Set the default state
         state = kCheckForHotGoal;
 

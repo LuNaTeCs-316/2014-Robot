@@ -70,9 +70,9 @@ public class TeleopControl {
 
         // Shifting
         if (driverController.getButton(XboxController.RightBumper))
-            drivetrain.shiftDown();
-        else
             drivetrain.shiftUp();
+        else
+            drivetrain.shiftDown();
 
         // Catching Aid
         if (driverController.getButtonPressed(XboxController.LeftBumper))
@@ -100,7 +100,7 @@ public class TeleopControl {
         } else if (operatorJoystick.getButton(2)) {
             shooter.setPosition(Constants.StaticShooterSetpoint.getValue());
         } else if (operatorJoystick.getButton(9)) {
-            shooter.setPosition(1.8);
+            shooter.setPosition(Constants.TrussShotSetpoint.getValue());
         } else if (operatorJoystick.getButton(3)) {
             shooter.autoAim(drivetrain.getRangeFinderDistance());
         } else if (operatorJoystick.getButtonPressed(8)) {

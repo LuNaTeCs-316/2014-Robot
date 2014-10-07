@@ -25,7 +25,7 @@ public final class Constants {
     public static final Constant DashboardUpdateFrequency = new Constant("DashboardUpdateFrequency", 10.0);
     public static final Constant JoystickDeadband = new Constant("JoystickDeadband", 0.2);
 
-    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 1.0);
+    public static final Constant DrivetrainSkimGain = new Constant("DrivetrainSkimGain", 0.2);
     public static final Constant DrivetrainTurnGain = new Constant("DrivetrainTurnGain", 1.2);
     public static final Constant DrivetrainDistancePLow = new Constant("DrivetrainDistancePLow", 1.0);
     public static final Constant DrivetrainDistanceILow = new Constant("DrivetrainDistanceILow", 0.0);
@@ -37,7 +37,8 @@ public final class Constants {
     public static final Constant DrivetrainAngleI = new Constant("DrivetrainAngleI", 0.0);
     public static final Constant DrivetrainAngleD = new Constant("DrivetrainAngleD", 0.0);
     public static final Constant DrivetrainSetpoint = new Constant("DrivetrainSetpoint", 0.0);
-    public static final Constant Drivetrain8ft = new Constant("Drivetrain8ft", 21500);
+    public static final Constant Drivetrain8ft = new Constant("Drivetrain8ft", 28000);
+    public static final Constant Drivetrain4ft = new Constant("Drivetrain8ft", 14000);
     public static final Constant WheelNonLinearity = new Constant("WheelNonLinearity", 0.5);
 
     public static final Constant ShooterResetTime = new Constant("ShooterResetTime", 500);
@@ -51,8 +52,10 @@ public final class Constants {
     public static final Constant ShooterLoadPosition = new Constant("ShooterLoadPosition", 1.75);
     public static final Constant ShooterAngleOffset = new Constant("ShooterAngleOffset", 0.0);
     public static final Constant ShooterDistanceOffset = new Constant("ShooterDistanceOffset", 0.0);
-    public static final Constant AutonomousShooterSetpoint = new Constant("AutonomousShooterSetpoint", 1.4);
-    public static final Constant StaticShooterSetpoint = new Constant("StaticShooterSetpoint", 1.4);
+    public static final Constant AutonomousShooterSetpoint = new Constant("AutonomousShooterSetpoint", 1.53);
+    public static final Constant StaticShooterSetpoint = new Constant("StaticShooterSetpoint", 1.53);
+    public static final Constant TrussShotSetpoint = new Constant("TrussShotSetpoint", 1.8);
+    
 
     /**
      * Representation of a single constant value

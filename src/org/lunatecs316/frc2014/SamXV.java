@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.lunatecs316.frc2014.autonomous.AutonomousMode;
+import org.lunatecs316.frc2014.autonomous.DriveForwardAutonomous;
 import org.lunatecs316.frc2014.autonomous.HighGoalAutonomous;
 import org.lunatecs316.frc2014.autonomous.LowGoalAutonomous;
 import org.lunatecs316.frc2014.autonomous.StationaryTwoBallAutonomous;
@@ -67,7 +68,7 @@ public class SamXV extends IterativeRobot {
         shooter.init();
 
         // Set default subsystem states
-        drivetrain.shiftUp();
+        drivetrain.shiftDown();
         drivetrain.raiseCatchingAid();
         pickup.raise();
 
@@ -96,6 +97,10 @@ public class SamXV extends IterativeRobot {
             case 3:
                 auto = new LowGoalAutonomous();
                 Logger.info("autonomousInit", "Running LowGoalAutonomous");
+                break;
+            case 4:
+                auto= new DriveForwardAutonomous();
+                Logger.info("autonomousInit", "Running DriveForwardAutonomous");
                 break;
             default:
                 Logger.warning("autonomousInit", "Invalid Autonomous Mode");
